@@ -6,10 +6,18 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.TuneTurnToAngle;
+import frc.robot.commands.TurnToAngle;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.FalconDrive;
+import frc.robot.subsystems.NeoDrive;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -21,6 +29,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final DriveTrain _driveTrain = new FalconDrive(); // change to neoDrive for a neo bot
+  private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
+  private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
+
+  private final Joystick _functionJoystick = new Joystick(1);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -28,6 +41,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
     // Configure the trigger bindings
     configureBindings();
   }
@@ -42,6 +56,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
+    // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
+    r7.onTrue(new TuneTurnToAngle(_driveTrain));
+
+    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
+    // r8.whileHeld(new TurnToAngle(_driveTrain, 0, 0));
+    r8.onTrue(new TurnToAngle(_driveTrain, 0, 0));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
