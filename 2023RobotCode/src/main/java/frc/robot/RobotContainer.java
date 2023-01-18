@@ -8,7 +8,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.TuneTurnToAngle;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -57,9 +56,9 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
+    // JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
-    r7.onTrue(new TuneTurnToAngle(_driveTrain));
+    // r7.onTrue(new TuneTurnToAngle(_driveTrain));
 
     JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
     // r8.whileHeld(new TurnToAngle(_driveTrain, 0, 0));
