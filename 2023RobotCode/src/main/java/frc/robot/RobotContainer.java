@@ -62,7 +62,7 @@ public class RobotContainer {
 
     JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
     // r8.whileHeld(new TurnToAngle(_driveTrain, 0, 0));
-    r8.onTrue(new TurnToAngle(_driveTrain, 0, 0));
+    r8.onTrue(new TurnToAngle(_driveTrain, 0, 5));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));

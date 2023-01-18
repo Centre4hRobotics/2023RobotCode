@@ -21,8 +21,6 @@ public abstract class DriveTrain extends SubsystemBase {
   //private final AHRS gyro = new AHRS(I2C.Port.kMXP);
   private final AHRS gyro = new AHRS(SPI.Port.kMXP);  //Use SPI instead of I2C
   private final DifferentialDriveOdometry _odometry;
-  private double _kP=0, _kI=0, _IRange=0, _kD=0;
-
 
   /** Creates a new DriveTrain. */
   public DriveTrain() { 
@@ -111,18 +109,4 @@ public abstract class DriveTrain extends SubsystemBase {
 
   public abstract void resetEncoders();
 
-  public void setPID(double kP, double kI, double IRange, double kD) {
-    this._kP = kP;
-    this._kI = kI;
-    this._IRange = IRange;
-    this._kD = kD;
-    
-    
-  }
-
-  public double getkP() {return _kP;}
-  public double getkI() {return _kI;}
-  public double getIRange() {return _IRange;}
-  public double getkD() {return _kD;}
-  
 }
