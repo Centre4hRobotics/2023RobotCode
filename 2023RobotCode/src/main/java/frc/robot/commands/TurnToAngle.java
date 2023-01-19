@@ -64,20 +64,21 @@ public class TurnToAngle extends CommandBase {
   public void execute() {
     setPID();
     if(Math.abs(_targetAngle-_driveTrain.getAngle())<IRange) {
+      // changing the behavior of IRange to accumulate integral only while within IRange, instead of using it as a max for the accumulation.
       _PidController.setPID(kp, ki, kd);
     }
     else {
       _PidController.setPID(kp, 0, kd);
     }
     double pidValue = -_PidController.calculate(_driveTrain.getAngle(), _targetAngle);
-    if(pidValue>0) {
+    if(pidValue>0) { //adds a base motor power to overcome friction
       pidValue+=base;
     }
     else {
       pidValue-=base;
     }
     double maxVal = 1.0;
-    if(pidValue>maxVal) {
+    if(pidValue>maxVal) { // caps pidValue to maxVal
       pidValue = maxVal;
     }
     else if(pidValue<-maxVal) {
