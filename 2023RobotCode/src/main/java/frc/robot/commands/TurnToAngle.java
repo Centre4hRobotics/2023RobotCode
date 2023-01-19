@@ -19,7 +19,7 @@ import frc.robot.subsystems.DriveTrain;
 public class TurnToAngle extends CommandBase {
   /** Creates a new TurnToAngle. */
 
-  private ShuffleboardTab tab = Shuffleboard.getTab("Tune PID");
+  private ShuffleboardTab tab = Shuffleboard.getTab("Tune TurnToAngle PID");
   
   private GenericEntry P = tab.add("P", TurnToAngleConstants.kp)
     .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
@@ -62,7 +62,6 @@ public class TurnToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    setPID();
     if(Math.abs(_targetAngle-_driveTrain.getAngle())<IRange) {
       // changing the behavior of IRange to accumulate integral only while within IRange, instead of using it as a max for the accumulation.
       _PidController.setPID(kp, ki, kd);
