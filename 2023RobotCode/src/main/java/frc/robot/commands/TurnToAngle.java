@@ -105,11 +105,11 @@ public class TurnToAngle extends CommandBase {
     kd = D.getDouble(TurnToAngleConstants.kd);
     base = baseEntry.getDouble(TurnToAngleConstants.base);
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
-    nt.getTable("PID").getEntry("P").setValue(kp);
-    nt.getTable("PID").getEntry("I").setValue(ki);
-    nt.getTable("PID").getEntry("D").setValue(kd);
-    nt.getTable("PID").getEntry("IRange").setValue(IRange);
-    nt.getTable("PID").getEntry("base power").setValue(base);
+    nt.getTable("TurnToAngle PID").getEntry("P").setValue(kp);
+    nt.getTable("TurnToAngle PID").getEntry("I").setValue(ki);
+    nt.getTable("TurnToAngle PID").getEntry("D").setValue(kd);
+    nt.getTable("TurnToAngle PID").getEntry("IRange").setValue(IRange);
+    nt.getTable("TurnToAngle PID").getEntry("base power").setValue(base);
 
   }
 }

@@ -42,6 +42,7 @@ public class Balance extends CommandBase {
 
   public Balance(DriveTrain driveTrain) {
     // Use addRequirements() here to declare subsystem dependencies.
+    _PidController = new PIDController(kp, ki, kd);
     _driveTrain = driveTrain;
     addRequirements(_driveTrain);
   }
@@ -62,7 +63,7 @@ public class Balance extends CommandBase {
     else {
       _PidController.setPID(kp, 0, kd);
     }
-    double pidValue = -_PidController.calculate(_driveTrain.getRobotPitch(), 0);
+    double pidValue = _PidController.calculate(_driveTrain.getRobotPitch(), 0);
     if(pidValue>0) { //adds a base motor power to overcome friction
       pidValue+=base;
     }
@@ -76,7 +77,7 @@ public class Balance extends CommandBase {
     else if(pidValue<-maxVal) {
       pidValue=-maxVal;
     }
-    _driveTrain.arcadeDrive(0, pidValue);
+    _driveTrain.arcadeDrive(pidValue, 0);
   }
 
   // Called once the command ends or is interrupted.
