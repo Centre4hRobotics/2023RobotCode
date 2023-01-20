@@ -16,6 +16,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
   public static class TurnToAngleConstants {
     public static final double kp = .0065;
     public static final double ki = .01;
@@ -23,5 +24,13 @@ public final class Constants {
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
+  }
+
+  public static class BalanceConstants {
+    public static final double kp = .0065;
+    public static final double ki = .01;
+    public static final double kd = 0.0;
+    public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
+    public static final double base = .27;
   }
 }
