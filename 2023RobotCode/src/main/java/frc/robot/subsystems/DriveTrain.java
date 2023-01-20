@@ -109,4 +109,6 @@ public abstract class DriveTrain extends SubsystemBase {
 
   public abstract void resetEncoders();
 
+  public abstract double getRobotPitch();
+
 }

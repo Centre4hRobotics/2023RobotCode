@@ -106,4 +106,8 @@ public class FalconDrive extends DriveTrain {
         _rightLeadMotor.setSelectedSensorPosition(0);
     }
 
+    public double getRobotPitch() {
+        return getPitch();
+    }
+
 }

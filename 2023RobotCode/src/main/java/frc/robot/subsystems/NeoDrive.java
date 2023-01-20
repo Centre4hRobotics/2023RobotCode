@@ -25,9 +25,13 @@ public class NeoDrive extends DriveTrain {
 
     private final double DISTANCE_PER_REVOLUTION = 0.04470389546284635574229691876751;
 
-    public NeoDrive(){
+    private boolean _isComp;
+
+    public NeoDrive(boolean isComp){
         super();
 
+        _isComp = isComp;
+        
         //Set lead and follow motors
         _leftFollowMotor.follow(_leftLeadMotor);
         _rightFollowMotor.follow(_rightLeadMotor);
@@ -90,6 +94,11 @@ public class NeoDrive extends DriveTrain {
     public void resetEncoders() {
         _leftEncoder.setPosition(0);
         _rightEncoder.setPosition(0);
+    }
+
+    @Override
+    public double getRobotPitch() {
+        return getRoll();
     }
 
 }
