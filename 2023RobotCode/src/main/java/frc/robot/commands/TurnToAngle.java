@@ -13,24 +13,17 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.TurnToAngleConstants;
 import frc.robot.subsystems.DriveTrain;
 
 public class TurnToAngle extends CommandBase {
   /** Creates a new TurnToAngle. */
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Tune TurnToAngle PID");
-  
-  private GenericEntry P = tab.add("P", TurnToAngleConstants.kp)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  private GenericEntry I = tab.add("I", TurnToAngleConstants.ki)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  private GenericEntry IRangeTable = tab.add("IRange", TurnToAngleConstants.IRange)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();//Max might not be high enough
-  private GenericEntry D = tab.add("D", TurnToAngleConstants.kd)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  private GenericEntry baseEntry = tab.add("base", TurnToAngleConstants.base)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+  private GenericEntry P;
+  private GenericEntry I;
+  private GenericEntry IRangeTable;
+  private GenericEntry D;
+  private GenericEntry baseEntry;
 
 
   double kp, ki, kd, IRange, base;
@@ -38,15 +31,26 @@ public class TurnToAngle extends CommandBase {
   DriveTrain _driveTrain;
   double _targetAngle;
   double lastAngle = 0;
+  double lastVel = 0;
 
   public TurnToAngle(DriveTrain driveTrain, double targetAngle, double tolerance) {
     _driveTrain = driveTrain;
     _targetAngle = targetAngle;
 
+  P = tab.add("P", _driveTrain.getTurnToAnglekP())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+  I = tab.add("I", _driveTrain.getTurnToAnglekI())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+  IRangeTable = tab.add("IRange", _driveTrain.getTurnToAngleIRange())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();//Max might not be high enough
+  D = tab.add("D", _driveTrain.getTurnToAnglekD())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+  baseEntry = tab.add("base", _driveTrain.getTurnToAngleBase())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+
     _PidController = new PIDController(kp, ki, kd);
     _PidController.setTolerance(tolerance);
     _PidController.setIntegratorRange(-1, 1);
-    
     
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_driveTrain);
@@ -83,6 +87,16 @@ public class TurnToAngle extends CommandBase {
     else if(pidValue<-maxVal) {
       pidValue=-maxVal;
     }
+    double maxAccel = _driveTrain.getTurnToAngleMaxAcceleration();
+    if(pidValue>lastVel) {
+      if(pidValue-lastVel>maxAccel) {
+        pidValue = lastVel+maxAccel;
+      }
+    }
+    else if(pidValue-lastVel<-maxAccel) {
+      pidValue = lastVel-maxAccel;
+    }
+    lastVel = pidValue;
     _driveTrain.arcadeDrive(0, pidValue);
   }
 
@@ -95,15 +109,15 @@ public class TurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return _PidController.atSetpoint()&&Math.abs((lastAngle-_driveTrain.getAngle()))<TurnToAngleConstants.maxEndVelocity;
+    return _PidController.atSetpoint()&&Math.abs((lastAngle-_driveTrain.getAngle()))<_driveTrain.getTurnToAngleMaxEndVelocity();
   }
 
   private void setPID() {
-    kp = P.getDouble(TurnToAngleConstants.kp);
-    ki = I.getDouble(TurnToAngleConstants.ki);
-    IRange = this.IRangeTable.getDouble(TurnToAngleConstants.IRange);
-    kd = D.getDouble(TurnToAngleConstants.kd);
-    base = baseEntry.getDouble(TurnToAngleConstants.base);
+    kp = P.getDouble(_driveTrain.getTurnToAnglekP());
+    ki = I.getDouble(_driveTrain.getTurnToAnglekI());
+    IRange = this.IRangeTable.getDouble(_driveTrain.getTurnToAngleIRange());
+    kd = D.getDouble(_driveTrain.getTurnToAnglekD());
+    base = baseEntry.getDouble(_driveTrain.getTurnToAngleBase());
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("TurnToAngle PID").getEntry("P").setValue(kp);
     nt.getTable("TurnToAngle PID").getEntry("I").setValue(ki);

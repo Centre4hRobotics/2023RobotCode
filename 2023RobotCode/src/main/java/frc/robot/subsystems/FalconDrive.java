@@ -11,6 +11,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.Constants.FalconBalanceConstants;
+import frc.robot.Constants.FalconTurnToAngleConstants;
 
 /** Add your docs here. */
 public class FalconDrive extends DriveTrain {
@@ -109,5 +111,31 @@ public class FalconDrive extends DriveTrain {
     public double getRobotPitch() {
         return getPitch();
     }
+
+    @Override
+    public double getTurnToAnglekP() {return FalconTurnToAngleConstants.kp;}
+    @Override
+    public double getTurnToAnglekI() {return FalconTurnToAngleConstants.ki;}
+    @Override
+    public double getTurnToAngleIRange() {return FalconTurnToAngleConstants.IRange;}
+    @Override
+    public double getTurnToAnglekD() {return FalconTurnToAngleConstants.kd;}
+    @Override
+    public double getTurnToAngleBase() {return FalconTurnToAngleConstants.base;}
+    @Override
+    public double getTurnToAngleMaxEndVelocity() {return FalconTurnToAngleConstants.maxEndVelocity;}
+    @Override
+    public double getTurnToAngleMaxAcceleration() {return FalconTurnToAngleConstants.maxAccel;}
+  
+    @Override
+    public double getBalancekP() {return FalconBalanceConstants.kp;}
+    @Override
+    public double getBalancekI() {return FalconBalanceConstants.ki;}
+    @Override
+    public double getBalanceIRange() {return FalconBalanceConstants.IRange;}
+    @Override
+    public double getBalancekD() {return FalconBalanceConstants.kd;}
+    @Override
+    public double getBalanceBase() {return FalconBalanceConstants.base;}
 
 }

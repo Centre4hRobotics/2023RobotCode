@@ -10,6 +10,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.Constants.CompNeoBalanceConstants;
+import frc.robot.Constants.CompNeoTurnToAngleConstants;
+import frc.robot.Constants.PracticeNeoBalanceConstants;
+import frc.robot.Constants.PracticeNeoTurnToAngleConstants;
 
 /** Add your docs here. */
 public class NeoDrive extends DriveTrain {
@@ -100,5 +104,31 @@ public class NeoDrive extends DriveTrain {
     public double getRobotPitch() {
         return getRoll();
     }
+
+    @Override
+    public double getTurnToAnglekP() {if(_isComp){return CompNeoTurnToAngleConstants.kp;} return PracticeNeoTurnToAngleConstants.kp;}
+    @Override
+    public double getTurnToAnglekI() {if(_isComp){return CompNeoTurnToAngleConstants.ki;} return PracticeNeoTurnToAngleConstants.ki;}
+    @Override
+    public double getTurnToAngleIRange() {if(_isComp){return CompNeoTurnToAngleConstants.IRange;} return PracticeNeoTurnToAngleConstants.IRange;}
+    @Override
+    public double getTurnToAnglekD() {if(_isComp){return CompNeoTurnToAngleConstants.kd;} return PracticeNeoTurnToAngleConstants.kd;}
+    @Override
+    public double getTurnToAngleBase() {if(_isComp){return CompNeoTurnToAngleConstants.base;} return PracticeNeoTurnToAngleConstants.base;}
+    @Override
+    public double getTurnToAngleMaxEndVelocity() {if(_isComp){return CompNeoTurnToAngleConstants.maxEndVelocity;} return PracticeNeoTurnToAngleConstants.maxEndVelocity;}
+    @Override
+    public double getTurnToAngleMaxAcceleration() {if(_isComp){return CompNeoTurnToAngleConstants.maxAccel;} return PracticeNeoTurnToAngleConstants.maxAccel;}
+  
+    @Override
+    public double getBalancekP() {if(_isComp){return CompNeoBalanceConstants.kp;} return PracticeNeoBalanceConstants.kp;}
+    @Override
+    public double getBalancekI() {if(_isComp){return CompNeoBalanceConstants.ki;} return PracticeNeoBalanceConstants.ki;}
+    @Override
+    public double getBalanceIRange() {if(_isComp){return CompNeoBalanceConstants.IRange;} return PracticeNeoBalanceConstants.IRange;}
+    @Override
+    public double getBalancekD() {if(_isComp){return CompNeoBalanceConstants.kd;} return PracticeNeoBalanceConstants.kd;}
+    @Override
+    public double getBalanceBase() {if(_isComp){return CompNeoBalanceConstants.base;} return PracticeNeoBalanceConstants.base;}
 
 }

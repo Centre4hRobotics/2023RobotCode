@@ -111,4 +111,17 @@ public abstract class DriveTrain extends SubsystemBase {
 
   public abstract double getRobotPitch();
 
+  public abstract double getTurnToAnglekP();
+  public abstract double getTurnToAnglekI();
+  public abstract double getTurnToAngleIRange();
+  public abstract double getTurnToAnglekD();
+  public abstract double getTurnToAngleBase();
+  public abstract double getTurnToAngleMaxEndVelocity();
+  public abstract double getTurnToAngleMaxAcceleration();
+
+  public abstract double getBalancekP();
+  public abstract double getBalancekI();
+  public abstract double getBalanceIRange();
+  public abstract double getBalancekD();
+  public abstract double getBalanceBase();
 }

@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.BalanceConstants;
 import frc.robot.subsystems.DriveTrain;
 
 public class Balance extends CommandBase {
@@ -21,17 +20,11 @@ public class Balance extends CommandBase {
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Tune Balance PID");
   
-  private GenericEntry P = tab.add("P", BalanceConstants.kp)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  private GenericEntry I = tab.add("I", BalanceConstants.ki)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  private GenericEntry IRangeTable = tab.add("IRange", BalanceConstants.IRange)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();//Max might not be high enough
-  private GenericEntry D = tab.add("D", BalanceConstants.kd)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  private GenericEntry baseEntry = tab.add("base", BalanceConstants.base)
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-
+  private GenericEntry P;
+  private GenericEntry I;
+  private GenericEntry IRangeTable;
+  private GenericEntry D;
+  private GenericEntry baseEntry;
 
   DriveTrain _driveTrain;
 
@@ -44,6 +37,18 @@ public class Balance extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     _PidController = new PIDController(kp, ki, kd);
     _driveTrain = driveTrain;
+
+  P = tab.add("P", _driveTrain.getBalancekP())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+  I = tab.add("I", _driveTrain.getBalancekI())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+  IRangeTable = tab.add("IRange", _driveTrain.getBalanceIRange())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();//Max might not be high enough
+  D = tab.add("D", _driveTrain.getBalancekD())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+  baseEntry = tab.add("base", _driveTrain.getBalanceBase())
+    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+
     addRequirements(_driveTrain);
   }
 
@@ -93,11 +98,11 @@ public class Balance extends CommandBase {
   }
 
   private void setPID() {
-    kp = P.getDouble(BalanceConstants.kp);
-    ki = I.getDouble(BalanceConstants.ki);
-    IRange = this.IRangeTable.getDouble(BalanceConstants.IRange);
-    kd = D.getDouble(BalanceConstants.kd);
-    base = baseEntry.getDouble(BalanceConstants.base);
+    kp = P.getDouble(_driveTrain.getBalancekP());
+    ki = I.getDouble(_driveTrain.getBalancekI());
+    IRange = this.IRangeTable.getDouble(_driveTrain.getBalanceIRange());
+    kd = D.getDouble(_driveTrain.getBalancekD());
+    base = baseEntry.getDouble(_driveTrain.getBalanceBase());
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Balance PID").getEntry("P").setValue(kp);
     nt.getTable("Balance PID").getEntry("I").setValue(ki);
