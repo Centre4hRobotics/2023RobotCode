@@ -102,7 +102,7 @@ public class NeoDrive extends DriveTrain {
 
     @Override
     public double getRobotPitch() {
-        return getRoll();
+        return -getPitch(); // might be wrong, other bot is weird
     }
 
     @Override

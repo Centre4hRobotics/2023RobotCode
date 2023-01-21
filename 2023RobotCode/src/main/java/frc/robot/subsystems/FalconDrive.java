@@ -109,7 +109,7 @@ public class FalconDrive extends DriveTrain {
     }
 
     public double getRobotPitch() {
-        return getPitch();
+        return -getRoll();
     }
 
     @Override

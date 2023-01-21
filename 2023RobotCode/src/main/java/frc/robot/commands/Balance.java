@@ -69,20 +69,25 @@ public class Balance extends CommandBase {
       _PidController.setPID(kp, 0, kd);
     }
     double pidValue = _PidController.calculate(_driveTrain.getRobotPitch(), 0);
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Balance PID").getEntry("RobotPitch").setValue(_driveTrain.getRobotPitch());
     if(pidValue>0) { //adds a base motor power to overcome friction
       pidValue+=base;
     }
     else {
       pidValue-=base;
     }
-    double maxVal = .3;
+    double maxVal = .45;
     if(pidValue>maxVal) { // caps pidValue to maxVal
       pidValue = maxVal;
     }
     else if(pidValue<-maxVal) {
       pidValue=-maxVal;
     }
-    _driveTrain.arcadeDrive(pidValue, 0);
+    if(Math.abs(_driveTrain.getRobotPitch())>1) {
+      _driveTrain.arcadeDrive(pidValue, 0);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
