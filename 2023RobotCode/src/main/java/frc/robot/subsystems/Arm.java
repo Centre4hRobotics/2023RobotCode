@@ -16,6 +16,8 @@ public class Arm extends SubsystemBase {
   // type is PneumaticsModuleType.CTREPCM or PneumaticsModuleType.REVPH
   private final Solenoid _leftSolenoid = new Solenoid(null, 0);
   private final Solenoid _rightSolenoid = new Solenoid(null, 0);
+  
+  private boolean _isUp = false;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -25,11 +27,16 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    _leftSolenoid.set(_isUp);
+    _rightSolenoid.set(_isUp);
   }
 
-  public void lift(boolean isRun) {
-    _leftSolenoid.set(isRun);
-    _rightSolenoid.set(isRun);
+  public void setIsUp(boolean isUp) {
+    _isUp = isUp;
+  }
+
+  public boolean getIsUp() {
+    return _isUp;
   }
 
   public void extendVolts(double volts) {
