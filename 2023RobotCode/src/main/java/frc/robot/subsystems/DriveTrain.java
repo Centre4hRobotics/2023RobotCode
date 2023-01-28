@@ -88,7 +88,7 @@ public abstract class DriveTrain extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
-    _odometry.resetPosition(getRotation2d(), getLeftEncoder(), getAngle(), pose);
+    _odometry.resetPosition(getRotation2d(), getLeftEncoder(), getRightEncoder(), pose);
   }
 
   public void resetGyro() {
