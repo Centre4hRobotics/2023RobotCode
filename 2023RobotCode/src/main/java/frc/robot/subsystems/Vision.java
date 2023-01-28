@@ -95,21 +95,30 @@ public class Vision extends SubsystemBase {
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
 
     //Write values to network table
-    nt.getTable("Vison").getEntry("Number of Tags").setValue(numberOfTargets);
+    nt.getTable("Vision").getEntry("Number of Tags").setValue(numberOfTargets);
     if(numberOfTargets > 0){
       nt.getTable("Vision").getEntry("X").setValue(poseX);
       nt.getTable("Vision").getEntry("Y").setValue(poseY);
-      nt.getTable("Vision").getEntry("Rotation").setValue(rotation);
+      nt.getTable("Vision").getEntry("Rotation").setValue(rotation.toString());
     } else {
-      nt.getTable("Vision").getEntry("X").setValue(null);
-      nt.getTable("Vision").getEntry("Y").setValue(null);
-      nt.getTable("Vision").getEntry("Rotation").setValue(null);
+      nt.getTable("Vision").getEntry("X").unpublish();
+      nt.getTable("Vision").getEntry("Y").unpublish();
+      nt.getTable("Vision").getEntry("Rotation").unpublish();
     }
   }
 
-  //Update the robot's odometry based on feedback from the camera
-  public void updateOdomentry(DriveTrain driveTrain){
-    Pose2d pose = new Pose2d(poseX, poseY, rotation);
-    driveTrain.resetOdometry(pose);
+  /**
+   * Update the robot's position based on camera info
+   * @param driveTrain
+   * @return if it was successful
+   */
+  public boolean updateOdomentry(DriveTrain driveTrain){
+    if (numberOfTargets > 1) {
+      Pose2d pose = new Pose2d(poseX, poseY, rotation);
+      driveTrain.resetOdometry(pose);
+      return true;
+    } else {
+      return false;
+    }
   }
 }
