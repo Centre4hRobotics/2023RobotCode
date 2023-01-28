@@ -9,8 +9,10 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.GoToPosition;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.UpdateOdometry;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FalconDrive;
@@ -21,6 +23,7 @@ import java.util.function.ToLongBiFunction;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -84,6 +87,11 @@ public class RobotContainer {
     JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
     r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
 
+    JoystickButton r10 = new JoystickButton(_rightDriveJoystick, 10);
+    r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(0)), _vision));
+
+    JoystickButton r11 = new JoystickButton(_rightDriveJoystick, 11);
+    r11.onTrue(new UpdateOdometry(_vision, _driveTrain));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -91,7 +99,7 @@ public class RobotContainer {
   }
 
   public void autoChooserInit() {
-    String[] autoselector = {"1-ball(LOW) Fender", "2-ball(LOW) Left", "2-ball(LOW) Center", "2-ball(LOW) Right", "1-ball(HIGH) Fender", "2-ball(HIGH) Left", "2-ball(HIGH) Center", "2-ball(HIGH) Right", "3-ball(HIGH) Right"};
+    String[] autoselector = {"1-ball(LOW) Fender", "test"};
     SmartDashboard.putStringArray("Auto List", autoselector);
   }
 

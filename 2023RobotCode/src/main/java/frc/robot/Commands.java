@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.Autos;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.StopDrive;
 import frc.robot.subsystems.DriveTrain;
@@ -27,11 +28,13 @@ public class Commands {
 
     
     public Command selectCommand(String command) {
-        
         switch(command) {
         case("1-ball(LOW) Fender"):
             _driveTrain.resetOdometry(Trajectories.reverse.getInitialPose());
             return testCommand;
+        case("test"):
+            _driveTrain.resetOdometry(Trajectories.test.getInitialPose());
+            return Autos.test(_driveTrain);
         default:
             return new StopDrive(_driveTrain);
         }

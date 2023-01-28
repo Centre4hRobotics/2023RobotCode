@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.Trajectories;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,6 +22,10 @@ public final class Autos {
     return new SequentialCommandGroup(
       new FollowTrajectory(_driveTrain, Trajectories.reverse)
     );
+  }
+
+  public static CommandBase test(DriveTrain driveTrain) {
+    return new FollowTrajectory(driveTrain, Trajectories.test);
   }
 
   private Autos() {

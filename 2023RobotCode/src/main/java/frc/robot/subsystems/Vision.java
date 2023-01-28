@@ -113,11 +113,18 @@ public class Vision extends SubsystemBase {
    * @return if it was successful
    */
   public boolean updateOdomentry(DriveTrain driveTrain){
-    if (numberOfTargets > 1) {
+    if (numberOfTargets >= 1) {
       Pose2d pose = new Pose2d(poseX, poseY, rotation);
       driveTrain.resetOdometry(pose);
+
+      NetworkTableInstance nt = NetworkTableInstance.getDefault();
+      nt.getTable("Vision").getEntry("reset").setValue(true);
+
       return true;
     } else {
+      NetworkTableInstance nt = NetworkTableInstance.getDefault();
+      nt.getTable("Vision").getEntry("reset").setValue(false);
+
       return false;
     }
   }

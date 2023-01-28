@@ -66,10 +66,19 @@ public class Trajectories {
     }
 
     
-    public Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition) {
+    public static Trajectory test = TrajectoryGenerator.generateTrajectory(
+      List.of(
+        new Pose2d(13, 4.6, new Rotation2d(1, -.3)),
+        new Pose2d(14.5, 3.88, new Rotation2d(1, 0))
+      ),
+      getNewConfig(.1, .1)
+    );
+
+    
+    public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition) {
       return TrajectoryGenerator.generateTrajectory(
         List.of(startPosition, endPosition),
-        getNewConfig(.4, .4)
+        getNewConfig(.1, .1)
       );
     }
 
@@ -88,7 +97,7 @@ public class Trajectories {
                 Constants.kvVoltsSecondsPerMeter,
                 Constants.kaVoltsSecondsSquaredPerMeter),
             Constants.kDriveKinematics,
-            10);
+            4); // 10
 
         //Create trajectoryConfig object
         TrajectoryConfig config =
