@@ -33,6 +33,7 @@ public class TurnToAngle extends CommandBase {
   PIDController _PidController;
   DriveTrain _driveTrain;
   double _targetAngle;
+  double currentAngle = 0;
   double lastAngle = 0;
   double lastVel = 0;
 
@@ -87,12 +88,17 @@ public class TurnToAngle extends CommandBase {
       nt.getTable("TurnToAngle PID").getEntry("Target Angle").setValue(_targetAngle);
     }
 
+    
+
     setPID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    lastAngle = currentAngle;
+    currentAngle = _driveTrain.getAngle();
+
     if(Math.abs(_targetAngle-_driveTrain.getAngle())<IRange) {
       // changing the behavior of IRange to accumulate integral only while within IRange, instead of using it as a max for the accumulation.
       _PidController.setPID(kp, ki, kd);
@@ -100,14 +106,14 @@ public class TurnToAngle extends CommandBase {
     else {
       _PidController.setPID(kp, 0, kd);
     }
-    double pidValue = -_PidController.calculate(_driveTrain.getAngle(), _targetAngle);
+    double pidValue = _PidController.calculate(_driveTrain.getAngle(), _targetAngle);
     if(pidValue>0) { //adds a base motor power to overcome friction
       pidValue+=base;
     }
     else {
       pidValue-=base;
     }
-    double maxVal = 1.0;
+    double maxVal = 1;
     if(pidValue>maxVal) { // caps pidValue to maxVal
       pidValue = maxVal;
     }
@@ -136,7 +142,10 @@ public class TurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return _PidController.atSetpoint()&&Math.abs((lastAngle-_driveTrain.getAngle()))<_driveTrain.getTurnToAngleMaxEndVelocity();
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("TurnToAngle PID").getEntry("dAngle").setValue(Math.abs((lastAngle-_driveTrain.getAngle())));
+    nt.getTable("TurnToAngle PID").getEntry("atSetpoint").setValue(_PidController.atSetpoint());
+    return _PidController.atSetpoint() && Math.abs((lastAngle-_driveTrain.getAngle()))<_driveTrain.getTurnToAngleMaxEndVelocity();
   }
 
   private void setPID() {
