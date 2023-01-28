@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -103,5 +107,36 @@ public final class Constants {
     public static final double kd = .0005;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
+  }
+
+  public static class AprilTagPoses{
+    private static final Pose3d[] Poses = {
+      new Pose3d(15.52575, 1.0668, 0.46355, new Rotation3d(0, 0, Math.PI)), //tag 1
+      new Pose3d(15.52575, 2.7432, 0.46355, new Rotation3d(0, 0, Math.PI)),
+      new Pose3d(15.52575, 4.4196, 0.46355, new Rotation3d(0, 0, Math.PI)),
+      new Pose3d(16.18615, 6.76275, 0.695325, new Rotation3d(0, 0, Math.PI)), //I'm not confident on this y value
+      new Pose3d(0.3556, 6.76275, 0.695325, new Rotation3d(0, 0, 0)), //I'm not confident on this y value
+      new Pose3d(1.016, 4.4196, 0.46355, new Rotation3d(0, 0, 0)),
+      new Pose3d(1.016, 2.7432, 0.46355, new Rotation3d(0, 0, 0)),
+      new Pose3d(1.016, 1.0668, 0.46355, new Rotation3d(0, 0, 0)), //tag 8
+    };
+
+    public static final Pose3d getPose(int tagID){
+      //Return null if tag does not exist
+      if (tagID < 1 || tagID > 8){
+        return null;
+      }
+
+      return Poses[tagID-1];
+    }
+  }
+
+  public static class CameraPoses{
+    private static final Translation3d practiceBotTranslation = new Translation3d(0, 0, 0);
+    private static final Rotation3d practiceBotRotation = new Rotation3d(0, 0, 0);
+
+    public static final Transform3d getCameraPose() {
+      return new Transform3d(practiceBotTranslation, practiceBotRotation);
+    }
   }
 }
