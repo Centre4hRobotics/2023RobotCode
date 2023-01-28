@@ -56,6 +56,7 @@ public class RobotContainer {
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
     // Configure the trigger bindings
     configureBindings();
+    autoChooserInit();
   }
 
   /**
@@ -87,6 +88,11 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+  }
+
+  public void autoChooserInit() {
+    String[] autoselector = {"1-ball(LOW) Fender", "2-ball(LOW) Left", "2-ball(LOW) Center", "2-ball(LOW) Right", "1-ball(HIGH) Fender", "2-ball(HIGH) Left", "2-ball(HIGH) Center", "2-ball(HIGH) Right", "3-ball(HIGH) Right"};
+    SmartDashboard.putStringArray("Auto List", autoselector);
   }
 
   /**
