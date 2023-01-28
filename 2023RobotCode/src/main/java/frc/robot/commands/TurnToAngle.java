@@ -56,7 +56,7 @@ public class TurnToAngle extends CommandBase {
     addRequirements(_driveTrain);
   }
  
-  private void initializePID( double tolerance) {
+  private void initializePID(double tolerance) {
     if (tab.getComponents().isEmpty()) {
       P = tab.add("P", _driveTrain.getTurnToAnglekP())
         .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
@@ -80,10 +80,11 @@ public class TurnToAngle extends CommandBase {
   public void initialize() {
     //Grab PID info from shuffleboard and apply it
     if (_target != null) {
-      _targetAngle = _target.relativeTo(_driveTrain.getPose()).getRotation().getDegrees() + _driveTrain.getAngle();
+      Pose2d currentPose = _driveTrain.getPose();
+      _targetAngle = Math.atan2(_target.getY() - currentPose.getY(), _target.getX() - currentPose.getX()) * 180 / Math.PI;
 
       NetworkTableInstance nt = NetworkTableInstance.getDefault();
-      nt.getTable("TurnToAngle PID").getEntry("Target Angle").setValue(_targetAngle);  
+      nt.getTable("TurnToAngle PID").getEntry("Target Angle").setValue(_targetAngle);
     }
 
     setPID();
