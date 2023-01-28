@@ -66,7 +66,15 @@ public class Trajectories {
     }
 
     
-    private static TrajectoryConfig getNewConfig(double velocityCoefficient, double accelerationCoefficient) {
+    public Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition) {
+      return TrajectoryGenerator.generateTrajectory(
+        List.of(startPosition, endPosition),
+        getNewConfig(.4, .4)
+      );
+    }
+
+    
+    public static TrajectoryConfig getNewConfig(double velocityCoefficient, double accelerationCoefficient) {
         
         //caps the velocity and acceleration coefficients at 1
         velocityCoefficient=Math.min(velocityCoefficient, 1);

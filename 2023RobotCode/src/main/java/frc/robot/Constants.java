@@ -24,12 +24,12 @@ public final class Constants {
   }
   //robot characterization values
     
-    // public static final double ksVolts = 0.1418;
-    // public static final double kvVoltsSecondsPerMeter = 2.8433; //practice
-    // public static final double kaVoltsSecondsSquaredPerMeter = 0.27701;
-    public static final double ksVolts = 0.62303;
-    public static final double kvVoltsSecondsPerMeter = 2.364; //competition
-    public static final double kaVoltsSecondsSquaredPerMeter = 0.3286;
+    public static final double ksVolts = 0.1418;
+    public static final double kvVoltsSecondsPerMeter = 2.8433; //practice
+    public static final double kaVoltsSecondsSquaredPerMeter = 0.27701;
+    // public static final double ksVolts = 0.62303;
+    // public static final double kvVoltsSecondsPerMeter = 2.364; //competition
+    // public static final double kaVoltsSecondsSquaredPerMeter = 0.3286;
 
     //Porportional control in PID loop (need to tune this)
     public static final double kpDriveVel = 0.5;  //Characterization tool suggests 2.1325
@@ -57,7 +57,7 @@ public final class Constants {
   public static class PracticeNeoTurnToAngleConstants {
     public static final double kp = .0065;
     public static final double ki = .01;
-    public static final double kd = 0.0;
+    public static final double kd = 0.00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
@@ -68,7 +68,7 @@ public final class Constants {
   public static class PracticeNeoBalanceConstants {
     public static final double kp = .0045;
     public static final double ki = .01;
-    public static final double kd = .0005;
+    public static final double kd = .00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }
@@ -76,7 +76,7 @@ public final class Constants {
   public static class CompNeoTurnToAngleConstants {
     public static final double kp = .0065;
     public static final double ki = .01;
-    public static final double kd = 0.0;
+    public static final double kd = 0.00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
@@ -86,7 +86,7 @@ public final class Constants {
   public static class CompNeoBalanceConstants {
     public static final double kp = .0045;
     public static final double ki = .01;
-    public static final double kd = .0005;
+    public static final double kd = .00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }
@@ -94,7 +94,7 @@ public final class Constants {
   public static class FalconTurnToAngleConstants {
     public static final double kp = .0065;
     public static final double ki = .01;
-    public static final double kd = 0.0;
+    public static final double kd = 0.00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
@@ -104,7 +104,7 @@ public final class Constants {
   public static class FalconBalanceConstants {
     public static final double kp = .0045;
     public static final double ki = .00;
-    public static final double kd = .0005;
+    public static final double kd = .00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }
