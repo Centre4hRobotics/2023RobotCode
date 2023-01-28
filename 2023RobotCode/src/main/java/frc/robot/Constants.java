@@ -132,7 +132,7 @@ public final class Constants {
   }
 
   public static class CameraPoses{
-    private static final Translation3d practiceBotTranslation = new Translation3d(0, 0, 0);
+    private static final Translation3d practiceBotTranslation = new Translation3d(-.2, -.025, .47);
     private static final Rotation3d practiceBotRotation = new Rotation3d(0, 0, 0);
 
     public static final Transform3d getCameraPose() {

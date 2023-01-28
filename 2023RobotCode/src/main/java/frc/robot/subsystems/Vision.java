@@ -24,7 +24,7 @@ import frc.robot.Constants.CameraPoses;
 public class Vision extends SubsystemBase {
 
   //Variables for all the cameras
-  private PhotonCamera piCam = new PhotonCamera("Camera name");
+  private PhotonCamera piCam = new PhotonCamera("piCam");
 
   //Variables to keep track of stuff
   private double poseX = 0;
