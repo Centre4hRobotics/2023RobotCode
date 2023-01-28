@@ -53,7 +53,7 @@ public final class Constants {
   public static class PracticeNeoTurnToAngleConstants {
     public static final double kp = .0065;
     public static final double ki = .01;
-    public static final double kd = 0.0;
+    public static final double kd = 0.00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
@@ -64,7 +64,7 @@ public final class Constants {
   public static class PracticeNeoBalanceConstants {
     public static final double kp = .0045;
     public static final double ki = .01;
-    public static final double kd = .0005;
+    public static final double kd = .00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }
@@ -72,7 +72,7 @@ public final class Constants {
   public static class CompNeoTurnToAngleConstants {
     public static final double kp = .0065;
     public static final double ki = .01;
-    public static final double kd = 0.0;
+    public static final double kd = 0.00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
@@ -82,7 +82,7 @@ public final class Constants {
   public static class CompNeoBalanceConstants {
     public static final double kp = .0045;
     public static final double ki = .01;
-    public static final double kd = .0005;
+    public static final double kd = .00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }
@@ -90,7 +90,7 @@ public final class Constants {
   public static class FalconTurnToAngleConstants {
     public static final double kp = .0065;
     public static final double ki = .01;
-    public static final double kd = 0.0;
+    public static final double kd = 0.00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
@@ -100,7 +100,7 @@ public final class Constants {
   public static class FalconBalanceConstants {
     public static final double kp = .0045;
     public static final double ki = .00;
-    public static final double kd = .0005;
+    public static final double kd = .00025;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }

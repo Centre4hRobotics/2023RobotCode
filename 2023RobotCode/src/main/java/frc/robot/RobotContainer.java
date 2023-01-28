@@ -73,13 +73,13 @@ public class RobotContainer {
 
     JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
     // r8.whileHeld(new TurnToAngle(_driveTrain, 0, 0));
-    r8.onTrue(new TurnToAngle(_driveTrain, 0, 5));
+    r8.onTrue(new TurnToAngle(_driveTrain, 0, 1));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
     JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
-    r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 5));
+    r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,

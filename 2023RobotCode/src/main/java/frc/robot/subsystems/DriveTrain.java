@@ -70,7 +70,7 @@ public abstract class DriveTrain extends SubsystemBase {
    * @return rotation around z-axis [-180, 180] in degrees
    */
   public double getYaw () {
-    return gyro.getYaw();
+    return -gyro.getYaw();
   }
   public double getRoll () {
     return gyro.getRoll();
@@ -83,7 +83,7 @@ public abstract class DriveTrain extends SubsystemBase {
    * @return return the yaw value (but continuous) in degrees
    */
   public double getAngle () {
-    return gyro.getAngle();
+    return -gyro.getAngle();  // negative to make counter-clockwise
   }
 
   public void resetOdometry(Pose2d pose) {
