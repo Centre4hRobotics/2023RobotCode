@@ -15,6 +15,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FalconDrive;
 import frc.robot.subsystems.NeoDrive;
+import frc.robot.subsystems.Vision;
 
 import java.util.function.ToLongBiFunction;
 
@@ -37,6 +38,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain _driveTrain = new FalconDrive(); // change to neoDrive for a neo bot
+  private final Vision _vision = new Vision();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
 
