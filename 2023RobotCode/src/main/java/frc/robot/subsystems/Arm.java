@@ -5,8 +5,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -17,11 +20,18 @@ public class Arm extends SubsystemBase {
   private final Solenoid _leftSolenoid = new Solenoid(null, 0);
   private final Solenoid _rightSolenoid = new Solenoid(null, 0);
   
+
   private boolean _isUp = false;
 
   /** Creates a new Arm. */
   public Arm() {
     super();
+    _leadMotor.getPIDController().setP(0); // change only this one
+    _leadMotor.getPIDController().setI(0);
+    _leadMotor.getPIDController().setD(0);
+    _leadMotor.getPIDController().setIZone(0);
+    _leadMotor.getPIDController().setFF(0);
+    _leadMotor.getPIDController().setOutputRange(-1, 1);
   }
 
   @Override
@@ -29,6 +39,9 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
     _leftSolenoid.set(_isUp);
     _rightSolenoid.set(_isUp);
+    
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Arm").getEntry("encoderValue").setValue(_leadMotor.getEncoder().getPosition());
   }
 
   public void setIsUp(boolean isUp) {
@@ -43,5 +56,16 @@ public class Arm extends SubsystemBase {
     _leadMotor.setVoltage(volts);
   }
 
-  
+  public void setHeightTop() {
+    _leadMotor.getPIDController().setReference(0, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void setHeightMiddle() {
+    _leadMotor.getPIDController().setReference(0, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void setHeightBottom() {
+    _leadMotor.getPIDController().setReference(0, CANSparkMax.ControlType.kPosition);
+  }
+
 }
