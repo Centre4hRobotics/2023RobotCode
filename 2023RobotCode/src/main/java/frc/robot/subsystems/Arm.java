@@ -27,9 +27,9 @@ public class Arm extends SubsystemBase {
   public Arm() {
     super();
     _leadMotor.getPIDController().setP(.02); // change only this one
-    _leadMotor.getPIDController().setI(0);
+    _leadMotor.getPIDController().setI(.002);
     _leadMotor.getPIDController().setD(0);
-    _leadMotor.getPIDController().setIZone(5);
+    _leadMotor.getPIDController().setIZone(10);
     _leadMotor.getPIDController().setFF(0);
     _leadMotor.getPIDController().setOutputRange(-1, 1);
   }
