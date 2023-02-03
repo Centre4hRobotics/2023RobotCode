@@ -5,6 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -16,7 +22,13 @@ public class FollowTrajectoryToPose extends CommandBase {
 
   DriveTrain _driveTrain;
   Pose2d _position;
-  RamseteCommand _command;
+  double _offsetX, _offsetY;
+  private RamseteCommand _command;
+  
+  private DoubleLogEntry odometryX;
+  private DoubleLogEntry odometryY;
+  private DoubleLogEntry visionX;
+  private DoubleLogEntry visionY;
 
   public FollowTrajectoryToPose(DriveTrain driveTrain, Pose2d position) {
     _driveTrain = driveTrain;
@@ -26,9 +38,32 @@ public class FollowTrajectoryToPose extends CommandBase {
     addRequirements(driveTrain);
   }
 
+  public FollowTrajectoryToPose(DriveTrain driveTrain, double offsetX, double offsetY) {
+    _driveTrain = driveTrain;
+    _offsetX = offsetX;
+    _offsetY = offsetY;
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(driveTrain);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    DataLogManager.start();
+    
+    DataLog log = DataLogManager.getLog();
+    visionX = new DoubleLogEntry(log, "/vision/x");
+    visionY = new DoubleLogEntry(log, "/vision/y");
+    odometryX = new DoubleLogEntry(log, "/odometry/x");
+    odometryY = new DoubleLogEntry(log, "/odometry/y");
+
+    if (_position == null) {
+      // untested
+      _position = _driveTrain.getPose().transformBy(
+        new Transform2d(new Translation2d(_offsetX, _offsetY), new Rotation2d(_driveTrain.getAngle()))
+      );
+    }
     _command = new FollowTrajectory(_driveTrain, Trajectories.generateToPose(_driveTrain.getPose(), _position));
     _command.schedule();
   }
@@ -36,9 +71,11 @@ public class FollowTrajectoryToPose extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Current pose: " + _driveTrain.getPose());
-    System.out.println("Target pose: " + _position);
     // _command.execute();
+    visionX.append(_driveTrain.getPose().getX());
+    visionY.append(_driveTrain.getPose().getY());
+    odometryX.append(_driveTrain.getPose().getX());
+    odometryY.append(_driveTrain.getPose().getY());
   }
 
   // Called once the command ends or is interrupted.

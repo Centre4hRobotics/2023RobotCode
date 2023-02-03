@@ -19,7 +19,6 @@ import frc.robot.commands.TurnToAngle;
 import frc.robot.commands.UpdateOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FalconDrive;
 import frc.robot.subsystems.NeoDrive;
 import frc.robot.subsystems.Vision;
@@ -44,8 +43,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final DriveTrain _driveTrain = new NeoDrive(false); // change to neoDrive for a neo bot
+  private final DriveTrain _driveTrain = new FalconDrive(); // change to neoDrive for a neo bot
   private final Arm _arm = new Arm();
   private final Vision _vision = new Vision();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
@@ -102,6 +100,10 @@ public class RobotContainer {
     JoystickButton r11 = new JoystickButton(_rightDriveJoystick, 11);
     r11.onTrue(new UpdateOdometry(_vision, _driveTrain));
 
+    JoystickButton r12 = new JoystickButton(_rightDriveJoystick, 12);
+    // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
+    r12.onTrue(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))));
+
     JoystickButton l7 = new JoystickButton(_leftDriveJoystick, 7);
     l7.onTrue(new SetArmHeight(_arm, 1));
 
@@ -110,10 +112,6 @@ public class RobotContainer {
 
     JoystickButton l9 = new JoystickButton(_leftDriveJoystick, 9);
     l9.onTrue(new SetArmHeight(_arm, 3));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   public void autoChooserInit() {

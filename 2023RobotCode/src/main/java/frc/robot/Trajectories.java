@@ -79,7 +79,7 @@ public class Trajectories {
     public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition) {
       return TrajectoryGenerator.generateTrajectory(
         List.of(startPosition, endPosition),
-        getNewConfig(.1, .1)
+        getNewConfig(.2, .2)
       );
     }
 
