@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -17,8 +18,8 @@ public class Arm extends SubsystemBase {
 
   private final CANSparkMax _leadMotor = new CANSparkMax(5, MotorType.kBrushless);
   // type is PneumaticsModuleType.CTREPCM or PneumaticsModuleType.REVPH
-  private final Solenoid _leftSolenoid = new Solenoid(null, 0);
-  private final Solenoid _rightSolenoid = new Solenoid(null, 0);
+  private final Solenoid _leftSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+  private final Solenoid _rightSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 1);
   
 
   private boolean _isUp = false;

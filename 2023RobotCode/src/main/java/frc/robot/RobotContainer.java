@@ -94,7 +94,7 @@ public class RobotContainer {
     JoystickButton r10 = new JoystickButton(_rightDriveJoystick, 10);
     // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
     r10.onTrue(new UpdateOdometry(_vision, _driveTrain)
-      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0))))
+      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))))
       // .andThen(new ExampleCommand(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0))))
     );
 

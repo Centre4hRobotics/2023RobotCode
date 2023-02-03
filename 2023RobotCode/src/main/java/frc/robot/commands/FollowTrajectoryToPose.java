@@ -36,6 +36,8 @@ public class FollowTrajectoryToPose extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Current pose: " + _driveTrain.getPose());
+    System.out.println("Target pose: " + _position);
     // _command.execute();
   }
 
