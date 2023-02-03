@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator.ControlVectorList;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import frc.robot.subsystems.DriveTrain;
 
 /** Add your docs here. */
 public class Trajectories {
@@ -78,6 +79,13 @@ public class Trajectories {
     public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition) {
       return TrajectoryGenerator.generateTrajectory(
         List.of(startPosition, endPosition),
+        getNewConfig(.2, .2)
+      );
+    }
+
+    public static Trajectory generateToPoseFromDrive(DriveTrain drive, Pose2d endPosition) {
+      return TrajectoryGenerator.generateTrajectory(
+        List.of(drive.getPose(), endPosition),
         getNewConfig(.1, .1)
       );
     }

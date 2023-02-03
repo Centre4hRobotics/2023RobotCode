@@ -41,6 +41,8 @@ public abstract class DriveTrain extends SubsystemBase {
     nt.getTable("Drive").getEntry("LeftEncoderDistance").setValue(getLeftEncoder());
     nt.getTable("Drive").getEntry("RightEncoderDistance").setValue(getRightEncoder());
     nt.getTable("Drive").getEntry("Odometry").setValue(getPose().toString());
+    nt.getTable("Drive").getEntry("X").setValue(getPose().getX());
+    nt.getTable("Drive").getEntry("Y").setValue(getPose().getY());
 
     nt.getTable("Gyro").getEntry("Yaw").setValue(getYaw());
     nt.getTable("Gyro").getEntry("Angle").setValue(getAngle());

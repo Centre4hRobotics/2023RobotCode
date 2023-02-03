@@ -6,10 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Trajectories;
+import frc.robot.Constants.Colors;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Vision;
 
@@ -18,17 +17,14 @@ public class GoToPosition extends SequentialCommandGroup {
   public GoToPosition(DriveTrain drive, Pose2d position, Vision vision) {
     super(
       new UpdateOdometry(vision, drive),
-      new FollowTrajectory(drive, Trajectories.generateToPose(drive.getPose(), position))
+      new ExampleCommand(drive, position)
+      // new FollowTrajectory(drive, Trajectories.generateToPose(drive.getPose(), position))
     );
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive);
   }
 
   public GoToPosition(DriveTrain drive, Pose2d position) {
     super(
       new FollowTrajectory(drive, Trajectories.generateToPose(drive.getPose(), position))
     );
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive);
   }
 }
