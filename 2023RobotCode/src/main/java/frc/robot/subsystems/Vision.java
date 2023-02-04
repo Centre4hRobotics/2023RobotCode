@@ -66,12 +66,17 @@ public class Vision extends SubsystemBase {
         //Calculate robot's pose on field
         Pose3d tagPose = AprilTagPoses.getPose(id_number);  //Get tag's position on field
         if(tagPose == null){
-          continue; //Bad tag, so go to next loop
+          continue; //Tag isn't on the field. Go to next one
         } else{
           //Get robot's position
           Transform3d robotToCameraPose = CameraPoses.getCameraPose(); //Get Camera's position relative to tag
           Pose3d robotPose3d = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTargetPose, tagPose, robotToCameraPose); //Get robot's position on field
           Pose2d robotPose2d = robotPose3d.toPose2d();
+
+          //Check for major differences between last accepted position
+          if(Math.abs(robotPose2d.getY()-poseY) > 2){
+            continue; //Y pose is too different. Ignore
+          }
 
           //Update running average
           RAPoseX.add(robotPose2d.getX());
@@ -134,6 +139,7 @@ public class Vision extends SubsystemBase {
    */
   public boolean updateOdomentry(DriveTrain driveTrain){
     if (numberOfTargets >= 1) {
+
       Pose2d pose = new Pose2d(poseX, poseY, poseRotation);
       driveTrain.resetOdometry(pose);
 
