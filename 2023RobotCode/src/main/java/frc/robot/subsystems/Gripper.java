@@ -9,8 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gripper extends SubsystemBase {
 
-  private final Solenoid _leftSolenoid = new Solenoid(null, 0);
-  private final Solenoid _rightSolenoid = new Solenoid(null, 0);
+  private final Solenoid _Solenoid = new Solenoid(null, 2);
 
   /** Creates a new Gripper. */
   public Gripper() {}
@@ -20,8 +19,11 @@ public class Gripper extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void open(boolean isRun) {
-    _leftSolenoid.set(isRun);
-    _rightSolenoid.set(isRun);
+  public void open() {
+    _Solenoid.set(true);
+  }
+
+  public void close() {
+    _Solenoid.set(false);
   }
 }

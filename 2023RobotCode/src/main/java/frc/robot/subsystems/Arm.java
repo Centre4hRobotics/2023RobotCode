@@ -10,19 +10,20 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
 
   private final CANSparkMax _leadMotor = new CANSparkMax(10, MotorType.kBrushless);
   // type is PneumaticsModuleType.CTREPCM or PneumaticsModuleType.REVPH
-  // private final Solenoid _leftSolenoid = new Solenoid(null, 0);
-  // private final Solenoid _rightSolenoid = new Solenoid(null, 0);
+  private final DoubleSolenoid _doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+  
   
 
-  private boolean _isUp = false;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -38,25 +39,22 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // _leftSolenoid.set(_isUp);
-    // _rightSolenoid.set(_isUp);
     
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Arm").getEntry("encoderValue").setValue(_leadMotor.getEncoder().getPosition());
   }
 
-  public void setIsUp(boolean isUp) {
-    _isUp = isUp;
+  public void raise() {
+    _doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+  }
+  public void lower() {
+    _doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
   //4.167 @ 0"
   //-6.357 @ 2.375"
   //-50.857 @ 13.375"
   //-152.591 @ 36.125"
   //-193.372 @ 45.6875"
-
-  public boolean getIsUp() {
-    return _isUp;
-  }
 
   public void extendVolts(double volts) {
     _leadMotor.setVoltage(volts);
