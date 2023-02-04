@@ -37,9 +37,9 @@ public final class Constants {
   
   //robot characterization values
     
-    public static final double ksVolts = 0.1418;
-    public static final double kvVoltsSecondsPerMeter = 2.8433; //practice
-    public static final double kaVoltsSecondsSquaredPerMeter = 0.27701;
+    public static final double ksVolts = .070329;
+    public static final double kvVoltsSecondsPerMeter = 1.1529; //Falcon practice
+    public static final double kaVoltsSecondsSquaredPerMeter = .1136;
     // public static final double ksVolts = 0.62303;
     // public static final double kvVoltsSecondsPerMeter = 2.364; //competition
     // public static final double kaVoltsSecondsSquaredPerMeter = 0.3286;
