@@ -50,13 +50,7 @@ public class FollowTrajectoryToPose extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    DataLogManager.start();
-    
-    DataLog log = DataLogManager.getLog();
-    visionX = new DoubleLogEntry(log, "/vision/x");
-    visionY = new DoubleLogEntry(log, "/vision/y");
-    odometryX = new DoubleLogEntry(log, "/odometry/x");
-    odometryY = new DoubleLogEntry(log, "/odometry/y");
+  
 
     if (_position == null) {
       // untested
