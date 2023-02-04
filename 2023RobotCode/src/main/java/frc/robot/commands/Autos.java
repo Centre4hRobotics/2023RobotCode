@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.Trajectories;
+import frc.robot.Constants.FieldSide;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,6 +22,12 @@ public final class Autos {
 
   public static CommandBase test(DriveTrain driveTrain) {
     return new FollowTrajectory(driveTrain, Trajectories.test);
+  }
+
+  public static CommandBase scoreToCharge(DriveTrain driveTrain, FieldSide side, int grid, int node, double angle) throws Exception {
+    return new SequentialCommandGroup(
+      new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, grid, node, angle, true))
+    );
   }
 
   private Autos() {

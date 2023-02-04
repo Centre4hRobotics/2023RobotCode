@@ -115,7 +115,9 @@ public class RobotContainer {
   }
 
   public void autoChooserInit() {
-    String[] autoselector = {"1-ball(LOW) Fender", "test"};
+    String[] autoselector = {
+      "1-ball(LOW) Fender", "test", "Blue Grid 0, Node 0", "Blue Grid 1, Node 0", "Blue Grid 2, Node 0"
+    };
     SmartDashboard.putStringArray("Auto List", autoselector);
   }
 

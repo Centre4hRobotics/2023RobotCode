@@ -24,7 +24,7 @@ public class GoToPosition extends SequentialCommandGroup {
 
   public GoToPosition(DriveTrain drive, Pose2d position) {
     super(
-      new FollowTrajectory(drive, Trajectories.generateToPose(drive.getPose(), position))
+      new FollowTrajectory(drive, Trajectories.generateToPose(drive.getPose(), position, false))
     );
   }
 }

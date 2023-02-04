@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -122,6 +124,11 @@ public final class Constants {
     public static final double base = .27;
   }
 
+  public static class FalconSize {
+    public static final double length = 1;
+    public static final double width = .85;
+  }
+
   public static class AprilTagPoses{
     private static final Pose3d[] Poses = {
       new Pose3d(15.52575, 1.0668, 0.46355, new Rotation3d(0, 0, Math.PI)), //tag 1
@@ -150,6 +157,69 @@ public final class Constants {
 
     public static final Transform3d getCameraPose() {
       return new Transform3d(practiceBotTranslation, practiceBotRotation);
+    }
+  }
+
+  public static enum FieldSide {
+    LEFT, RIGHT
+  }
+
+  public static class FieldPoses {
+    private static final double leftScoringX = 1.377952756, rightScoringX = 15.16383033;
+    private static final double[] yScoringPositions = {
+      // y calculated from +- (inner node width + divider width)
+      0.5079988824, 1.0668, 1.625601118, 
+      2.184398882, 2.7432, 3.302001118, 
+      3.860798882, 4.4196, 4.978401118
+    };
+
+    /**
+     * Get pose of a scoring position
+     * @param side Which side of the field, either LEFT (Blue) or RIGHT (Red)
+     * @param grid Which grid of nodes 0-2, 0 being the one closest to the side of the field
+     * @param node Which node in the grid 0-2, 0 being the left most when looking from the charging station
+     * @throws Exception
+     */
+    public static final Pose2d getScoringPose(FieldSide side, int grid, int node) throws Exception {
+      double offset = 0;
+
+      double x;
+      Rotation2d rotation;
+      switch (side) {
+        case LEFT: 
+          x = leftScoringX + FalconSize.length / 2 + offset;
+          rotation = new Rotation2d(Math.PI);
+          break;
+        case RIGHT: 
+          x = rightScoringX - FalconSize.length / 2 - offset;
+          rotation = new Rotation2d(0);
+          break;
+        default: 
+          throw new Exception("side isn't left or right?");
+      }
+
+      if (grid < 0 || grid > 2) {
+        throw new Exception("grid should be between 0 and 2");
+      }
+      if (node < 0 || node > 2) {
+        throw new Exception("node should be between 0 and 2");
+      }
+      
+      double y = yScoringPositions[grid * 3 + node];
+
+      return new Pose2d(x, y, rotation);
+    }
+
+    public static final Pose2d getOnChargingStationPose(FieldSide side, double angle) {
+      // not calculated, used pathweaver
+      switch (side) {
+        case LEFT: 
+          return new Pose2d(3.233, 2.727, new Rotation2d(angle));
+        case RIGHT: 
+          return new Pose2d(13.401, 2.727, new Rotation2d(angle));
+        default: 
+          return new Pose2d(3.233, 2.727, new Rotation2d(angle));
+      }
     }
   }
 }

@@ -15,9 +15,11 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator.ControlVectorList;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import frc.robot.Constants.FieldPoses;
+import frc.robot.Constants.FieldSide;
 import frc.robot.subsystems.DriveTrain;
 
-/** Add your docs here. */
+/** Stores Trajectories. */
 public class Trajectories {
 
     //to create a new trajectory, add the trajectory here,
@@ -76,10 +78,10 @@ public class Trajectories {
     );
 
     
-    public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition) {
+    public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition, boolean reversed) {
       return TrajectoryGenerator.generateTrajectory(
         List.of(startPosition, endPosition),
-        getNewConfig(.35, .9)
+        getNewConfig(.35, .9).setReversed(reversed)
       );
     }
 
@@ -87,6 +89,15 @@ public class Trajectories {
       return TrajectoryGenerator.generateTrajectory(
         List.of(drive.getPose(), endPosition),
         getNewConfig(.1, .1)
+      );
+    }
+
+    
+    public static Trajectory generateScoreToCharge(FieldSide side, int grid, int node, double angle, boolean reversed) throws Exception {
+      return generateToPose(
+        FieldPoses.getScoringPose(side, grid, node), 
+        FieldPoses.getOnChargingStationPose(side, angle),
+        reversed
       );
     }
 

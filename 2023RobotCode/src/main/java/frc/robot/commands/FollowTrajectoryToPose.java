@@ -58,7 +58,7 @@ public class FollowTrajectoryToPose extends CommandBase {
         new Transform2d(new Translation2d(_offsetX, _offsetY), new Rotation2d(_driveTrain.getAngle()))
       );
     }
-    _command = new FollowTrajectory(_driveTrain, Trajectories.generateToPose(_driveTrain.getPose(), _position));
+    _command = new FollowTrajectory(_driveTrain, Trajectories.generateToPose(_driveTrain.getPose(), _position, false));
     _command.schedule();
   }
 
