@@ -7,12 +7,16 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
+import frc.robot.commands.CloseGroundControl;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.FollowTrajectoryToPose;
 import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.GoToPosition;
+import frc.robot.commands.LowerGroundControl;
+import frc.robot.commands.OpenGroundControl;
+import frc.robot.commands.RaiseGroundControl;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnToAngle;
@@ -20,6 +24,7 @@ import frc.robot.commands.UpdateOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.FalconDrive;
+import frc.robot.subsystems.GroundControl;
 import frc.robot.subsystems.NeoDrive;
 import frc.robot.subsystems.Vision;
 
@@ -46,6 +51,7 @@ public class RobotContainer {
   private final DriveTrain _driveTrain = new FalconDrive(); // change to neoDrive for a neo bot
   private final Arm _arm = new Arm();
   private final Vision _vision = new Vision();
+  private final GroundControl _groundControl = new GroundControl();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
 
@@ -78,6 +84,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    JoystickButton one = new JoystickButton(_functionJoystick, 1);
+    JoystickButton two = new JoystickButton(_functionJoystick, 2);
+    
+    one.onTrue(new OpenGroundControl(_groundControl));
+    one.onFalse(new CloseGroundControl(_groundControl));
+
+    two.onTrue(new LowerGroundControl(_groundControl));
+    two.onFalse(new RaiseGroundControl(_groundControl));
 
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));

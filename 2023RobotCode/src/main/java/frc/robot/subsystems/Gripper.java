@@ -4,12 +4,13 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gripper extends SubsystemBase {
 
-  private final Solenoid _Solenoid = new Solenoid(null, 2);
+  private final Solenoid _Solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 2);
 
   /** Creates a new Gripper. */
   public Gripper() {}
