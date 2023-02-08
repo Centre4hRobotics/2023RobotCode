@@ -5,22 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.GroundControl;
+import frc.robot.subsystems.Gripper;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class CloseGroundControl extends InstantCommand {
-  private GroundControl _groundControl;
-  public CloseGroundControl(GroundControl groundControl) {
-    _groundControl = groundControl;
+public class CloseGripper extends InstantCommand {
+  private Gripper _gripper;
+  public CloseGripper(Gripper gripper) {
+    _gripper = gripper;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(_groundControl);
+    addRequirements(_gripper);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    _groundControl.close();
+    _gripper.close();
   }
 }

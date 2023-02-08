@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -16,13 +18,13 @@ public class GroundControl extends SubsystemBase {
   private final Solenoid _UpDownSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
   private final Solenoid _OpenCloseSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
 
-  // private final CANSparkMax _leadMotor = new CANSparkMax(0, null);
-  // private final CANSparkMax _followMotor = new CANSparkMax(0, null);
+  private final TalonSRX _leadMotor = new TalonSRX(0);
+  private final TalonSRX _followMotor = new TalonSRX(0);
 
   boolean _isUp, _isOpen;
 
   public GroundControl() {
-    // _followMotor.follow(_leadMotor, true);
+    _followMotor.follow(_leadMotor);
   }
 
   @Override
@@ -30,8 +32,8 @@ public class GroundControl extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void setVoltage(double volts) {
-    // _leadMotor.setVoltage(volts);
+  public void setSpeed(double speed) {
+    _leadMotor.set(TalonSRXControlMode.PercentOutput, speed);
   }
 
   public void open() {
