@@ -20,7 +20,7 @@ public class Arm extends SubsystemBase {
 
   private final CANSparkMax _leadMotor = new CANSparkMax(10, MotorType.kBrushless);
   // type is PneumaticsModuleType.CTREPCM or PneumaticsModuleType.REVPH
-  private final DoubleSolenoid _doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+  private final DoubleSolenoid _doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4);
   
   
 
