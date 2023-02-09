@@ -24,10 +24,13 @@ public final class Autos {
     return new FollowTrajectory(driveTrain, Trajectories.test);
   }
 
-  public static CommandBase scoreToCharge(DriveTrain driveTrain, FieldSide side, int grid, int node, double angle) throws Exception {
-    return new SequentialCommandGroup(
-      new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, grid, node, angle, true))
-    );
+  public static SequentialCommandGroup scoreToCharge(DriveTrain driveTrain, FieldSide side, int grid, int node) throws Exception {
+    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, grid, node, true))
+      .andThen(new GetOnChargingStation(driveTrain, .3, -1));
+  }
+
+  public static CommandBase balance(DriveTrain driveTrain) {
+    return new Balance(driveTrain);
   }
 
   private Autos() {

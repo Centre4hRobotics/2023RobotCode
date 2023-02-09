@@ -93,10 +93,10 @@ public class Trajectories {
     }
 
     
-    public static Trajectory generateScoreToCharge(FieldSide side, int grid, int node, double angle, boolean reversed) throws Exception {
+    public static Trajectory generateScoreToCharge(FieldSide side, int grid, int node, boolean reversed) throws Exception {
       return generateToPose(
         FieldPoses.getScoringPose(side, grid, node), 
-        FieldPoses.getOnChargingStationPose(side, angle),
+        FieldPoses.getOnChargingStationPose(side),
         reversed
       );
     }

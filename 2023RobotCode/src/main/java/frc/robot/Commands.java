@@ -41,13 +41,15 @@ public class Commands {
                 return Autos.test(_driveTrain);
             case("Blue Grid 0, Node 0"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
-                return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 0, 0, 0);
+                return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 0, 0);
             case("Blue Grid 1, Node 0"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 1, 0));
-                return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 1, 0, 0);
+                return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 1, 0);
             case("Blue Grid 2, Node 0"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 0));
-                return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 2, 0, 0);
+                return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 2, 0);
+            case("balance"):
+                return Autos.balance(_driveTrain);
             default:    
                 return new StopDrive(_driveTrain);
             }

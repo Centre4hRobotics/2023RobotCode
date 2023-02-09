@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants;
 import frc.robot.Trajectories;
@@ -27,5 +28,9 @@ public class FollowTrajectory extends RamseteCommand {
     new PIDController(Constants.kpDriveVel, 0, 0),
     drive::tankDriveVolts,  
     drive);
+    
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Follow Trajectory").getEntry("Initial Pose").setValue(trajectory.getInitialPose().toString());
+    nt.getTable("Follow Trajectory").getEntry("Final Pose").setValue(trajectory.toString());
   }
 }

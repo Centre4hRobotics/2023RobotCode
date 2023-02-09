@@ -176,7 +176,7 @@ public final class Constants {
     /**
      * Get pose of a scoring position
      * @param side Which side of the field, either LEFT (Blue) or RIGHT (Red)
-     * @param grid Which grid of nodes 0-2, 0 being the one closest to the side of the field
+     * @param grid Which grid of nodes 0-2, 0 being the left most when looking from the charging station
      * @param node Which node in the grid 0-2, 0 being the left most when looking from the charging station
      * @throws Exception
      */
@@ -210,15 +210,15 @@ public final class Constants {
       return new Pose2d(x, y, rotation);
     }
 
-    public static final Pose2d getOnChargingStationPose(FieldSide side, double angle) {
+    public static final Pose2d getOnChargingStationPose(FieldSide side) throws Exception {
       // not calculated, used pathweaver
       switch (side) {
         case LEFT: 
-          return new Pose2d(3.233, 2.727, new Rotation2d(angle));
+          return new Pose2d(3.7, 2.727, new Rotation2d(Math.PI));
         case RIGHT: 
-          return new Pose2d(13.401, 2.727, new Rotation2d(angle));
+          return new Pose2d(13.401, 2.727, new Rotation2d(0));
         default: 
-          return new Pose2d(3.233, 2.727, new Rotation2d(angle));
+          throw new Exception("side isn't left or right?");
       }
     }
   }
