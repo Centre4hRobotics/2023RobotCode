@@ -39,6 +39,8 @@ public class Vision extends SubsystemBase {
   private double poseX = 0;
   private double poseY = 0;
   private Rotation2d poseRotation = new Rotation2d();
+  private final double yTolerance = .8;
+  private final double xTolerance = .6;
 
 
   /** Creates a new Vision. */
@@ -74,8 +76,26 @@ public class Vision extends SubsystemBase {
           Pose2d robotPose2d = robotPose3d.toPose2d();
 
           //Check for major differences between last accepted position
-          if(Math.abs(robotPose2d.getY()-poseY) > 2){
-            continue; //Y pose is too different. Ignore
+          if(Math.abs(robotPose2d.getY()-poseY) > yTolerance || Math.abs(robotPose2d.getX()-poseX) > xTolerance){
+            //See if alternate position works
+            Transform3d AltCameraToTargetPose = t.getAlternateCameraToTarget();
+            Transform3d AltRobotToCameraPose = CameraPoses.getCameraPose();
+            Pose3d AltRobotPose3d = PhotonUtils.estimateFieldToRobotAprilTag(AltCameraToTargetPose, tagPose, AltRobotToCameraPose); //Get robot's position on field
+            Pose2d AltRobotPose2d = AltRobotPose3d.toPose2d();
+
+            //See if this recreation is better
+            if (Math.abs(AltRobotPose2d.getY()-poseY) < yTolerance && Math.abs(AltRobotPose2d.getX()-poseX) < xTolerance){
+              robotPose2d = AltRobotPose2d;
+
+              NetworkTableInstance nt = NetworkTableInstance.getDefault();
+              nt.getTable("Vision").getEntry("Alternate Pos Used").setValue(robotPose2d.toString());
+            } else{
+              NetworkTableInstance nt = NetworkTableInstance.getDefault();
+              nt.getTable("Vision").getEntry("Alternate Pos Unused").setValue(AltRobotPose2d.toString());
+
+              continue; //Pose is too different. Ignore
+            }
+            
           }
 
           //Update running average
@@ -135,10 +155,23 @@ public class Vision extends SubsystemBase {
   /**
    * Update the robot's position based on camera info
    * @param driveTrain
+   * @param useReasonable Should we check to make sure vision and drive odometry are similar?
    * @return if it was successful
    */
-  public boolean updateOdomentry(DriveTrain driveTrain){
+  public boolean updateOdomentry(DriveTrain driveTrain, boolean useReasonable){
+    double xAcceptable = 1;
+    double yAcceptable = 1.5;
     if (numberOfTargets >= 1) {
+
+      if(useReasonable){
+        if (Math.abs(poseX - driveTrain.getPose().getX()) > xAcceptable || Math.abs(poseY - driveTrain.getPose().getY()) > yAcceptable){
+          //Vision and drive train do not match, so do not use
+          NetworkTableInstance nt = NetworkTableInstance.getDefault();
+          nt.getTable("Vision").getEntry("reset").setValue(false);
+
+          return false;
+        }
+      }
 
       Pose2d pose = new Pose2d(poseX, poseY, poseRotation);
       driveTrain.resetOdometry(pose);
@@ -153,6 +186,15 @@ public class Vision extends SubsystemBase {
 
       return false;
     }
+  }
+
+  /**
+   * Update robot's position based on camera info as long as it sees an Apriltag
+   * @param driveTrain
+   * @return if it was successful
+   */
+  public boolean updateOdomentry(DriveTrain driveTrain){
+    return updateOdomentry(driveTrain, false);
   }
 
   /**
