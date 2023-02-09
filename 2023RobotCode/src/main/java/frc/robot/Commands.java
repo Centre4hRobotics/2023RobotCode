@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -31,6 +32,8 @@ public class Commands {
 
     
     public Command selectCommand(String command) {
+        // System.out.print("selecting command");
+        // return Autos.balance(_driveTrain);
         try {
             switch(command) {
             case("1-ball(LOW) Fender"):
@@ -54,6 +57,8 @@ public class Commands {
                 return new StopDrive(_driveTrain);
             }
         } catch (Exception e) {
+            NetworkTableInstance nt = NetworkTableInstance.getDefault();
+            nt.getTable("_Errors").getEntry("Commands").setValue(e);
             return new StopDrive(_driveTrain);
         }
     }

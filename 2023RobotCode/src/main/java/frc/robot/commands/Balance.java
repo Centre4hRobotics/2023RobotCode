@@ -38,16 +38,18 @@ public class Balance extends CommandBase {
     _PidController = new PIDController(kp, ki, kd);
     _driveTrain = driveTrain;
 
-  P = tab.add("P", _driveTrain.getBalancekP())
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  I = tab.add("I", _driveTrain.getBalancekI())
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  IRangeTable = tab.add("IRange", _driveTrain.getBalanceIRange())
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();//Max might not be high enough
-  D = tab.add("D", _driveTrain.getBalancekD())
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-  baseEntry = tab.add("base", _driveTrain.getBalanceBase())
-    .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+    if (tab.getComponents().isEmpty()) {
+      P = tab.add("P", _driveTrain.getBalancekP())
+        .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+      I = tab.add("I", _driveTrain.getBalancekI())
+        .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+      IRangeTable = tab.add("IRange", _driveTrain.getBalanceIRange())
+        .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();//Max might not be high enough
+      D = tab.add("D", _driveTrain.getBalancekD())
+        .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+      baseEntry = tab.add("base", _driveTrain.getBalanceBase())
+        .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
+    } 
 
     addRequirements(_driveTrain);
   }
@@ -56,6 +58,9 @@ public class Balance extends CommandBase {
   @Override
   public void initialize() {
     setPID();
+
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Balance PID").getEntry("running").setValue(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -94,6 +99,9 @@ public class Balance extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     _driveTrain.tankDriveVolts(0, 0);
+
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Balance PID").getEntry("running").setValue(false);
   }
 
   // Returns true when the command should end.
@@ -103,18 +111,25 @@ public class Balance extends CommandBase {
   }
 
   private void setPID() {
-    kp = P.getDouble(_driveTrain.getBalancekP());
-    ki = I.getDouble(_driveTrain.getBalancekI());
-    IRange = this.IRangeTable.getDouble(_driveTrain.getBalanceIRange());
-    kd = D.getDouble(_driveTrain.getBalancekD());
-    base = baseEntry.getDouble(_driveTrain.getBalanceBase());
-    NetworkTableInstance nt = NetworkTableInstance.getDefault();
-    nt.getTable("Balance PID").getEntry("P").setValue(kp);
-    nt.getTable("Balance PID").getEntry("I").setValue(ki);
-    nt.getTable("Balance PID").getEntry("D").setValue(kd);
-    nt.getTable("Balance PID").getEntry("IRange").setValue(IRange);
-    nt.getTable("Balance PID").getEntry("base power").setValue(base);
-
+    if (P == null) {
+      kp = _driveTrain.getBalancekP();
+      ki = _driveTrain.getBalancekI();
+      IRange = _driveTrain.getBalanceIRange();
+      kd = _driveTrain.getBalancekD();
+      base = _driveTrain.getBalanceBase();
+    } else {
+      kp = P.getDouble(_driveTrain.getBalancekP());
+      ki = I.getDouble(_driveTrain.getBalancekI());
+      IRange = this.IRangeTable.getDouble(_driveTrain.getBalanceIRange());
+      kd = D.getDouble(_driveTrain.getBalancekD());
+      base = baseEntry.getDouble(_driveTrain.getBalanceBase());
+      NetworkTableInstance nt = NetworkTableInstance.getDefault();
+      nt.getTable("Balance PID").getEntry("P").setValue(kp);
+      nt.getTable("Balance PID").getEntry("I").setValue(ki);
+      nt.getTable("Balance PID").getEntry("D").setValue(kd);
+      nt.getTable("Balance PID").getEntry("IRange").setValue(IRange);
+      nt.getTable("Balance PID").getEntry("base power").setValue(base);
+    }
   }
 
 }
