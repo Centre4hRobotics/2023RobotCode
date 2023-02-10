@@ -81,9 +81,9 @@ public final class Constants {
   }
 
   public static class PracticeNeoBalanceConstants {
-    public static final double kp = .0045;
+    public static final double kp = .006;
     public static final double ki = .01;
-    public static final double kd = .00025;
+    public static final double kd = .0008;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }
@@ -99,9 +99,9 @@ public final class Constants {
   }
 
   public static class CompNeoBalanceConstants {
-    public static final double kp = .0045;
+    public static final double kp = .006;
     public static final double ki = .01;
-    public static final double kd = .00025;
+    public static final double kd = .0008;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }
@@ -117,9 +117,9 @@ public final class Constants {
   }
 
   public static class FalconBalanceConstants {
-    public static final double kp = .0045;
+    public static final double kp = .006;
     public static final double ki = .00;
-    public static final double kd = .00025;
+    public static final double kd = .0008;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
   }
@@ -214,7 +214,7 @@ public final class Constants {
       // not calculated, used pathweaver
       switch (side) {
         case LEFT: 
-          return new Pose2d(3.7, 2.727, new Rotation2d(Math.PI));
+          return new Pose2d(3.4, 2.727, new Rotation2d(Math.PI));
         case RIGHT: 
           return new Pose2d(13.401, 2.727, new Rotation2d(0));
         default: 

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -51,7 +52,10 @@ public class FalconDrive extends DriveTrain {
         _leftFollowMotor.setInverted(InvertType.FollowMaster);
         _rightFollowMotor.setInverted(InvertType.FollowMaster);
 
-
+        _leftLeadMotor.setNeutralMode(NeutralMode.Brake);
+        _rightLeadMotor.setNeutralMode(NeutralMode.Brake);
+        _leftFollowMotor.setNeutralMode(NeutralMode.Brake);
+        _rightFollowMotor.setNeutralMode(NeutralMode.Brake);
 
         _leftLeadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);
         _rightLeadMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 10);

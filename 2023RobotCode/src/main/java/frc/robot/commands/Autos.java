@@ -26,7 +26,9 @@ public final class Autos {
 
   public static SequentialCommandGroup scoreToCharge(DriveTrain driveTrain, FieldSide side, int grid, int node) throws Exception {
     return new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, grid, node, true))
-      .andThen(new GetOnChargingStation(driveTrain, .3, -1));
+      .andThen(new GetOnChargingStation(driveTrain, .5, -1))
+      .andThen(new DriveWithSpeed(driveTrain, -.5).withTimeout(.34))
+      .andThen(new Balance(driveTrain));
   }
 
   public static CommandBase balance(DriveTrain driveTrain) {

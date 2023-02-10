@@ -29,8 +29,8 @@ public class FollowTrajectory extends RamseteCommand {
     drive::tankDriveVolts,  
     drive);
     
-    NetworkTableInstance nt = NetworkTableInstance.getDefault();
-    nt.getTable("Follow Trajectory").getEntry("Initial Pose").setValue(trajectory.getInitialPose().toString());
-    nt.getTable("Follow Trajectory").getEntry("Final Pose").setValue(trajectory.toString());
+    // NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    // nt.getTable("Follow Trajectory").getEntry("Initial Pose").setValue(trajectory.getInitialPose().toString());
+    // nt.getTable("Follow Trajectory").getEntry("All Poses").setValue(trajectory.toString());
   }
 }

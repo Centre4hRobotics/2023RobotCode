@@ -82,7 +82,7 @@ public class Balance extends CommandBase {
     else {
       pidValue-=base;
     }
-    double maxVal = .45;
+    double maxVal = .65;
     if(pidValue>maxVal) { // caps pidValue to maxVal
       pidValue = maxVal;
     }
@@ -91,6 +91,8 @@ public class Balance extends CommandBase {
     }
     if(Math.abs(_driveTrain.getRobotPitch())>1) {
       _driveTrain.arcadeDrive(pidValue, 0);
+    } else {
+      _driveTrain.arcadeDrive(0, 0);
     }
     
   }

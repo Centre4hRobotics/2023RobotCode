@@ -14,8 +14,10 @@ public class GetOnChargingStation extends CommandBase {
 
   private DriveTrain _driveTrain;
   private double _speed, _direction;
-  private final double targetAngle = 13;
+  private final double targetAngle = 16;
+  private final double targetLow = 14.5;
   private ArrayList<Double> angles;
+  private boolean passedBump = false;
 
   private NetworkTableInstance nt = NetworkTableInstance.getDefault();
 
@@ -52,8 +54,16 @@ public class GetOnChargingStation extends CommandBase {
     _driveTrain.arcadeDrive(_speed * _direction, 0);
 
     if (angles.size() > 1) {
-      nt.getTable("Get On Charging Station").getEntry("dAngle").setValue(
+      nt.getTable("Get On Charging Station").getEntry("angles").setValue(
         angles.toString());
+      nt.getTable("Get On Charging Station").getEntry("dAngle").setValue(
+        (angles.get(angles.size() - 1) - angles.get(angles.size() - 2)));
+      nt.getTable("Get On Charging Station").getEntry("current angle").setValue(
+        (angles.get(angles.size() - 1)));
+    }
+
+    if (!passedBump && Math.abs(_driveTrain.getRobotPitch()) > targetAngle) {
+      passedBump = true;
     }
 
   }
@@ -67,6 +77,6 @@ public class GetOnChargingStation extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(_driveTrain.getRobotPitch()) > targetAngle;
+    return passedBump && Math.abs(_driveTrain.getRobotPitch()) < targetLow;
   }
 }
