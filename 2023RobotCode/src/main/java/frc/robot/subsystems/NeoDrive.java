@@ -38,10 +38,10 @@ public class NeoDrive extends DriveTrain {
 
         //Assign robot-specific values
         if(_isComp){//Competition bot
-            _leftLeadMotor = new CANSparkMax(1, MotorType.kBrushless);
-            _leftFollowMotor = new CANSparkMax(2, MotorType.kBrushless);
-            _rightLeadMotor = new CANSparkMax(3, MotorType.kBrushless);
-            _rightFollowMotor = new CANSparkMax(4, MotorType.kBrushless);
+            _leftLeadMotor = new CANSparkMax(3, MotorType.kBrushless);
+            _leftFollowMotor = new CANSparkMax(4, MotorType.kBrushless);
+            _rightLeadMotor = new CANSparkMax(1, MotorType.kBrushless);
+            _rightFollowMotor = new CANSparkMax(2, MotorType.kBrushless);
             DISTANCE_PER_REVOLUTION = 0.04497067677447947292659295854798;
         } else {//Practice bot
             _leftLeadMotor = new CANSparkMax(5, MotorType.kBrushless);
@@ -61,9 +61,16 @@ public class NeoDrive extends DriveTrain {
         _leftFollowMotor.follow(_leftLeadMotor);
         _rightFollowMotor.follow(_rightLeadMotor);
 
-        //Right side needs inverted
-        _leftLeadMotor.setInverted(false);
-        _rightLeadMotor.setInverted(true);
+        //Set inversion
+        if(_isComp){
+            //Left side needs inverted
+            _leftLeadMotor.setInverted(true);
+            _rightLeadMotor.setInverted(false);
+        } else{
+            //Right side needs inverted
+            _leftLeadMotor.setInverted(false);
+            _rightLeadMotor.setInverted(true);
+        }
 
         //Set distance per revolution for the encoders
         _leftEncoder.setPositionConversionFactor(DISTANCE_PER_REVOLUTION);
