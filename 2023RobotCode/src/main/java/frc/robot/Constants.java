@@ -131,14 +131,14 @@ public final class Constants {
 
   public static class AprilTagPoses{
     private static final Pose3d[] Poses = {
-      new Pose3d(15.52575, 1.0668, 0.46355, new Rotation3d(0, 0, Math.PI)), //tag 1
-      new Pose3d(15.52575, 2.7432, 0.46355, new Rotation3d(0, 0, Math.PI)),
-      new Pose3d(15.52575, 4.4196, 0.46355, new Rotation3d(0, 0, Math.PI)),
-      new Pose3d(16.18615, 6.76275, 0.695325, new Rotation3d(0, 0, Math.PI)), //I'm not confident on this y value
-      new Pose3d(0.3556, 6.76275, 0.695325, new Rotation3d(0, 0, 0)), //I'm not confident on this y value
-      new Pose3d(1.016, 4.4196, 0.46355, new Rotation3d(0, 0, 0)),
-      new Pose3d(1.016, 2.7432, 0.46355, new Rotation3d(0, 0, 0)),
-      new Pose3d(1.016, 1.0668, 0.46355, new Rotation3d(0, 0, 0)), //tag 8
+      new Pose3d(15.51356, 1.071626, 0.462788, new Rotation3d(0, 0, Math.PI)), //tag 1
+      new Pose3d(15.51356, 2.748026, 0.462788, new Rotation3d(0, 0, Math.PI)),
+      new Pose3d(15.51356, 4.424426, 0.462788, new Rotation3d(0, 0, Math.PI)),
+      new Pose3d(16.17878, 6.749796, 0.695452, new Rotation3d(0, 0, Math.PI)), //I'm not confident on this y value
+      new Pose3d(0.36195, 6.749796, 0.695452, new Rotation3d(0, 0, 0)), //I'm not confident on this y value
+      new Pose3d(1.02743, 4.424426, 0.462788, new Rotation3d(0, 0, 0)),
+      new Pose3d(1.02743, 2.748026, 0.462788, new Rotation3d(0, 0, 0)),
+      new Pose3d(1.02743, 1.071626, 0.462788, new Rotation3d(0, 0, 0)), //tag 8
     };
 
     public static final Pose3d getPose(int tagID){
@@ -152,7 +152,7 @@ public final class Constants {
   }
 
   public static class CameraPoses{
-    private static final Translation3d practiceBotTranslation = new Translation3d(-.2, -.025, .47);
+    private static final Translation3d practiceBotTranslation = new Translation3d(.2, .025, -.47);//Center of robot in relation to camera
     private static final Rotation3d practiceBotRotation = new Rotation3d(0, 0, 0);
 
     public static final Transform3d getCameraPose() {
