@@ -18,16 +18,16 @@ import frc.robot.Constants.PracticeNeoTurnToAngleConstants;
 /** Add your docs here. */
 public class NeoDrive extends DriveTrain {
     //Speed Controllers
-    private final CANSparkMax _leftLeadMotor = new CANSparkMax(5, MotorType.kBrushless);
-    private final CANSparkMax _leftFollowMotor = new CANSparkMax(8, MotorType.kBrushless);
-    private final CANSparkMax _rightLeadMotor = new CANSparkMax(7, MotorType.kBrushless);
-    private final CANSparkMax _rightFollowMotor = new CANSparkMax(6, MotorType.kBrushless);
-    private final DifferentialDrive _drive = new DifferentialDrive(_leftLeadMotor, _rightLeadMotor);
+    private final CANSparkMax _leftLeadMotor;
+    private final CANSparkMax _leftFollowMotor;
+    private final CANSparkMax _rightLeadMotor;
+    private final CANSparkMax _rightFollowMotor;
+    private final DifferentialDrive _drive;
 
-    private final RelativeEncoder _leftEncoder = _leftLeadMotor.getEncoder();
-    private final RelativeEncoder _rightEncoder = _rightLeadMotor.getEncoder();
+    private final RelativeEncoder _leftEncoder;
+    private final RelativeEncoder _rightEncoder;
 
-    private final double DISTANCE_PER_REVOLUTION = 0.04470389546284635574229691876751;
+    private final double DISTANCE_PER_REVOLUTION;
 
     private boolean _isComp;
 
@@ -35,6 +35,27 @@ public class NeoDrive extends DriveTrain {
         super();
 
         _isComp = isComp;
+
+        //Assign robot-specific values
+        if(_isComp){//Competition bot
+            _leftLeadMotor = new CANSparkMax(1, MotorType.kBrushless);
+            _leftFollowMotor = new CANSparkMax(2, MotorType.kBrushless);
+            _rightLeadMotor = new CANSparkMax(3, MotorType.kBrushless);
+            _rightFollowMotor = new CANSparkMax(4, MotorType.kBrushless);
+            DISTANCE_PER_REVOLUTION = 0.04497067677447947292659295854798;
+        } else {//Practice bot
+            _leftLeadMotor = new CANSparkMax(5, MotorType.kBrushless);
+            _leftFollowMotor = new CANSparkMax(8, MotorType.kBrushless);
+            _rightLeadMotor = new CANSparkMax(7, MotorType.kBrushless);
+            _rightFollowMotor = new CANSparkMax(6, MotorType.kBrushless);
+            DISTANCE_PER_REVOLUTION = 0.04470389546284635574229691876751;
+        }
+
+        //Finish setting up differential drive and encoders
+        _drive = new DifferentialDrive(_leftLeadMotor, _rightLeadMotor);
+        _leftEncoder = _leftLeadMotor.getEncoder();
+        _rightEncoder = _rightLeadMotor.getEncoder();
+
         
         //Set lead and follow motors
         _leftFollowMotor.follow(_leftLeadMotor);
