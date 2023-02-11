@@ -84,9 +84,9 @@ public class NeoDrive extends DriveTrain {
 
     @Override
     public void tankDriveVolts (double leftVolts, double rightVolts) {
-        double maxVal = ArmConstants.maxExtention;
-        leftVolts = Math.min(leftVolts, 6+9*((maxVal-_arm.getEncoder())/maxVal));
-        rightVolts = Math.min(rightVolts, 6+9*((maxVal-_arm.getEncoder())/maxVal));
+        // double maxVal = ArmConstants.maxExtention;
+        // leftVolts = Math.min(leftVolts, 6+9*((maxVal-_arm.getEncoder())/maxVal));
+        // rightVolts = Math.min(rightVolts, 6+9*((maxVal-_arm.getEncoder())/maxVal));
         _leftLeadMotor.setVoltage(leftVolts);
         _rightLeadMotor.setVoltage(rightVolts);
     
@@ -100,9 +100,9 @@ public class NeoDrive extends DriveTrain {
      */
     @Override
     public void arcadeDrive(double speed, double steer) {
-        double maxVal = ArmConstants.maxExtention;
-        speed = Math.min(speed, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
-        steer = Math.min(steer, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
+        // double maxVal = ArmConstants.maxExtention;
+        // speed = Math.min(speed, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
+        // steer = Math.min(steer, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
         _drive.arcadeDrive(speed, steer);
         _drive.feed();//makes sure differencial drive knows something bad hasn't happened
     }

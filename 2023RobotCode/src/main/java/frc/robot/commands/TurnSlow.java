@@ -58,6 +58,7 @@ public class TurnSlow extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return _frame>=5;
+    return true;
+    // return _frame>=5;
   }
 }

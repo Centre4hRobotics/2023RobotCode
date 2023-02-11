@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
 
-  private final CANSparkMax _leadMotor = new CANSparkMax(10, MotorType.kBrushless);
+  private final CANSparkMax _leadMotor = new CANSparkMax(8, MotorType.kBrushless);
   // type is PneumaticsModuleType.CTREPCM or PneumaticsModuleType.REVPH
   private final DoubleSolenoid _doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4);
   

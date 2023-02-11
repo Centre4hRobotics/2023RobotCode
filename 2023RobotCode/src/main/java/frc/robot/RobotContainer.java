@@ -5,16 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.CloseGroundControl;
 import frc.robot.commands.ControlLights;
 import frc.robot.commands.DriveWithJoysticks;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.FollowTrajectoryToPose;
 import frc.robot.commands.ExtendArmWithJoystick;
-import frc.robot.commands.GoToPosition;
 import frc.robot.commands.Intake;
 import frc.robot.commands.IntakeWithSwitch;
 import frc.robot.commands.LowerArm;
@@ -26,7 +22,6 @@ import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnSlow;
-import frc.robot.commands.TurnToAngle;
 import frc.robot.commands.UpdateOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
@@ -35,13 +30,8 @@ import frc.robot.subsystems.GroundControl;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.NeoDrive;
 import frc.robot.subsystems.Vision;
-
-import java.util.function.ToLongBiFunction;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -58,7 +48,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Arm _arm = new Arm();
-  private final DriveTrain _driveTrain = new FalconDrive(_arm); // change to neoDrive for a neo bot
+  private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
   private final GroundControl _groundControl = new GroundControl();
   private final Lights _lights = new Lights();
   private final Vision _vision = new Vision();
@@ -117,7 +107,7 @@ public class RobotContainer {
     two.onFalse(new OpenGroundControl(_groundControl));
 
     // three.onTrue(new Intake(_groundControl, .4));
-    four.onTrue(new Intake(_groundControl, -.4));
+    four.whileTrue(new Intake(_groundControl, -.4));
 
     seven.onTrue(new RaiseArm(_arm));
     seven.onFalse(new LowerArm(_arm));
@@ -128,11 +118,11 @@ public class RobotContainer {
     eleven.onTrue(new SetArmHeight(_arm, 4)); // pickup
     twelve.onTrue(new SetArmHeight(_arm, 5)); // retract
     
-    JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
-    r4.onTrue(new TurnSlow(_driveTrain, true));
+    // JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
+    // r4.onTrue(new TurnSlow(_driveTrain, true));
     
-    JoystickButton r3 = new JoystickButton(_rightDriveJoystick, 3);
-    r3.onTrue(new TurnSlow(_driveTrain, false));
+    // JoystickButton r3 = new JoystickButton(_rightDriveJoystick, 3);
+    // r3.onTrue(new TurnSlow(_driveTrain, false));
 
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
