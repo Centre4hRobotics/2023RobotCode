@@ -65,7 +65,7 @@ public class FollowTrajectoryToPose extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // _command.execute();
+    _command.execute();
     visionX.append(_driveTrain.getPose().getX());
     visionY.append(_driveTrain.getPose().getY());
     odometryX.append(_driveTrain.getPose().getX());
