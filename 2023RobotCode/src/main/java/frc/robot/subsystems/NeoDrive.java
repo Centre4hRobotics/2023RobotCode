@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CompNeoBalanceConstants;
 import frc.robot.Constants.CompNeoTurnToAngleConstants;
 import frc.robot.Constants.PracticeNeoBalanceConstants;
@@ -30,10 +31,11 @@ public class NeoDrive extends DriveTrain {
     private final double DISTANCE_PER_REVOLUTION;
 
     private boolean _isComp;
+    private final Arm _arm;
 
-    public NeoDrive(boolean isComp){
+    public NeoDrive(Arm arm, boolean isComp){
         super();
-
+        _arm = arm;
         _isComp = isComp;
 
         //Assign robot-specific values
@@ -82,6 +84,9 @@ public class NeoDrive extends DriveTrain {
 
     @Override
     public void tankDriveVolts (double leftVolts, double rightVolts) {
+        double maxVal = ArmConstants.maxExtention;
+        leftVolts = Math.min(leftVolts, 6+9*((maxVal-_arm.getEncoder())/maxVal));
+        rightVolts = Math.min(rightVolts, 6+9*((maxVal-_arm.getEncoder())/maxVal));
         _leftLeadMotor.setVoltage(leftVolts);
         _rightLeadMotor.setVoltage(rightVolts);
     
@@ -95,6 +100,9 @@ public class NeoDrive extends DriveTrain {
      */
     @Override
     public void arcadeDrive(double speed, double steer) {
+        double maxVal = ArmConstants.maxExtention;
+        speed = Math.min(speed, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
+        steer = Math.min(steer, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
         _drive.arcadeDrive(speed, steer);
         _drive.feed();//makes sure differencial drive knows something bad hasn't happened
     }

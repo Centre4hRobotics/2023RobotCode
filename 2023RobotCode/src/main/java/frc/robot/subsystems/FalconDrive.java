@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FalconBalanceConstants;
 import frc.robot.Constants.FalconTurnToAngleConstants;
 
@@ -26,9 +27,11 @@ public class FalconDrive extends DriveTrain {
 
     private final double DISTANCE_PER_REVOLUTION = 0.000021828073956;
 
-    public FalconDrive() {
-        super();
+    private final Arm _arm;
 
+    public FalconDrive(Arm arm) {
+        super();
+        _arm = arm;
         
         // _leftLeadMotor.configFactoryDefault();
         // _leftFollowMotor.configFactoryDefault();
@@ -66,6 +69,9 @@ public class FalconDrive extends DriveTrain {
 
     @Override
     public void tankDriveVolts (double leftVolts, double rightVolts) {
+        double maxVal = ArmConstants.maxExtention;
+        leftVolts = Math.min(leftVolts, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
+        rightVolts = Math.min(rightVolts, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
         _leftLeadMotor.setVoltage(leftVolts);
         _rightLeadMotor.setVoltage(rightVolts);
     
@@ -79,6 +85,9 @@ public class FalconDrive extends DriveTrain {
      */
     @Override
     public void arcadeDrive(double speed, double steer) {
+        double maxVal = ArmConstants.maxExtention;
+        speed = Math.min(speed, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
+        steer = Math.min(steer, .5+.75*((maxVal-_arm.getEncoder())/maxVal));
         _drive.arcadeDrive(speed, steer);
         _drive.feed();//makes sure differencial drive knows something bad hasn't happened
     }

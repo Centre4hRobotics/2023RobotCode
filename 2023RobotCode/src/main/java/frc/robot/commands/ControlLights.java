@@ -4,18 +4,19 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Lights;
 
-public class SetArmHeight extends CommandBase {
-  /** Creates a new SetArmHeight. */
-  private final Arm _arm;
-  private final int _height;
-  public SetArmHeight(Arm arm, int height) {
-    _arm = arm;
-    _height = height;
+public class ControlLights extends CommandBase {
+  /** Creates a new ControlLights. */
+  private Lights _lights;
+  private Joystick _functionJoystick;
+  public ControlLights(Lights lights, Joystick functionJoystick) {
+    _lights = lights;
+    _functionJoystick = functionJoystick;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(_lights);
   }
 
   // Called when the command is initially scheduled.
@@ -25,23 +26,7 @@ public class SetArmHeight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch(_height) {
-      case 1:
-        _arm.setHeight(ArmConstants.lowPosition);
-        break;
-      case 2:
-        _arm.setHeight(ArmConstants.middlePosition);
-        break;
-      case 3:
-        _arm.setHeight(ArmConstants.highPosition);
-        break;
-      case 4:
-        _arm.setHeight(ArmConstants.pickupPosition);
-        break;
-      case 5:
-        _arm.setHeight(ArmConstants.retracted);
-        break;
-    }
+    _lights.setOut(_functionJoystick.getRawButtonPressed(5), _functionJoystick.getRawButtonPressed(6));
   }
 
   // Called once the command ends or is interrupted.

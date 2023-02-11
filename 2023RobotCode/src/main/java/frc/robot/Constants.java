@@ -68,6 +68,14 @@ public final class Constants {
     public static final double fieldCenterX = 8.23;
     public static final double fieldCenterY = 4.115;
 
+  public static class ArmConstants {
+    public static final double retracted = 0;
+    public static final double lowPosition = 0;
+    public static final double middlePosition = -90;
+    public static final double highPosition = -180;
+    public static final double pickupPosition = -180;
+    public static final double maxExtention = -180;
+  }
 
   public static class PracticeNeoTurnToAngleConstants {
     public static final double kp = .0065;

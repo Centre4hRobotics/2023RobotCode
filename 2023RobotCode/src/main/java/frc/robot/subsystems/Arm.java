@@ -50,6 +50,9 @@ public class Arm extends SubsystemBase {
   public void lower() {
     _doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
+  public double getEncoder() {
+    return _leadMotor.getEncoder().getPosition();
+  }
   //4.167 @ 0"
   //-6.357 @ 2.375"
   //-50.857 @ 13.375"
@@ -60,16 +63,8 @@ public class Arm extends SubsystemBase {
     _leadMotor.setVoltage(volts);
   }
 
-  public void setHeightTop() {
-    _leadMotor.getPIDController().setReference(-180, CANSparkMax.ControlType.kPosition);
-  }
-
-  public void setHeightMiddle() {
-    _leadMotor.getPIDController().setReference(-90, CANSparkMax.ControlType.kPosition);
-  }
-
-  public void setHeightBottom() {
-    _leadMotor.getPIDController().setReference(0, CANSparkMax.ControlType.kPosition);
+  public void setHeight(double position) {
+    _leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
   }
 
 }

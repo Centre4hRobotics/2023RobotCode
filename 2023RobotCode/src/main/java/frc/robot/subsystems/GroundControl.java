@@ -18,8 +18,8 @@ public class GroundControl extends SubsystemBase {
   private final Solenoid _UpDownSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
   private final Solenoid _OpenCloseSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
 
-  private final TalonSRX _leadMotor = new TalonSRX(0);
-  private final TalonSRX _followMotor = new TalonSRX(0);
+  private final TalonSRX _leadMotor = new TalonSRX(11);//right
+  private final TalonSRX _followMotor = new TalonSRX(23);//left
 
   boolean _isUp, _isOpen;
 
