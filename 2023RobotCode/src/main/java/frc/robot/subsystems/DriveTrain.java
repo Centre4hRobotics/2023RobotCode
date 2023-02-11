@@ -126,4 +126,10 @@ public abstract class DriveTrain extends SubsystemBase {
   public abstract double getBalanceIRange();
   public abstract double getBalancekD();
   public abstract double getBalanceBase();
+
+  public abstract double getLockPositionkP();
+  public abstract double getLockPositionkI();
+  public abstract double getLockPositionIRange();
+  public abstract double getLockPositionkD();
+  public abstract double getLockPositionBase();
 }

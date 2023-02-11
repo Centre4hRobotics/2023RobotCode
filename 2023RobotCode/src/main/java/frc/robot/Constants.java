@@ -124,6 +124,14 @@ public final class Constants {
     public static final double base = .27;
   }
 
+  public static class FalconLockPositionConstants {
+    public static final double kp = 50;
+    public static final double ki = .1;
+    public static final double kd = 0;
+    public static final double IRange = 5; 
+    public static final double base = 0;
+  }
+
   public static class FalconSize {
     public static final double length = 1;
     public static final double width = .85;

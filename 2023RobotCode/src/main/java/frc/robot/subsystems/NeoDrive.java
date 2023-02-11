@@ -159,4 +159,15 @@ public class NeoDrive extends DriveTrain {
     @Override
     public double getBalanceBase() {if(_isComp){return CompNeoBalanceConstants.base;} return PracticeNeoBalanceConstants.base;}
 
+    @Override
+    public double getLockPositionkP() { return 0; }
+    @Override
+    public double getLockPositionkI() { return 0; }
+    @Override
+    public double getLockPositionIRange() { return 0; }
+    @Override
+    public double getLockPositionkD() { return 0; }
+    @Override
+    public double getLockPositionBase() { return 0; }
+
 }

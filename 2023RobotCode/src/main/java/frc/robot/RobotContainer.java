@@ -13,6 +13,7 @@ import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.FollowTrajectoryToPose;
 import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.GoToPosition;
+import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnToAngle;
@@ -83,17 +84,19 @@ public class RobotContainer {
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
     r7.onTrue(new Balance(_driveTrain));
 
-    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
-    // r8.whileHeld(new TurnToAngle(_driveTrain, 0, 0));
-    r8.onTrue(new TurnToAngle(_driveTrain, 0, 1));
+    // JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
+    // r8.onTrue(new TurnToAngle(_driveTrain, 0, 1));
 
-    JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
-    r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
+    // JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
+    // r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
+
+    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
+    r8.whileTrue(new LockPosition(_driveTrain));
 
     JoystickButton r10 = new JoystickButton(_rightDriveJoystick, 10);
     // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
     r10.onTrue(new UpdateOdometry(_vision, _driveTrain)
-      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))))
+      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(14.5, 4.5, new Rotation2d(1, 0))))
       // .andThen(new ExampleCommand(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0))))
     );
 
