@@ -39,9 +39,9 @@ public final class Constants {
   
   //robot characterization values
     
-    public static final double ksVolts = .070329;
-    public static final double kvVoltsSecondsPerMeter = 1.1529; //Falcon practice
-    public static final double kaVoltsSecondsSquaredPerMeter = .1136;
+    public static final double ksVolts = .10737;
+    public static final double kvVoltsSecondsPerMeter = 2.3429; //Falcon practice
+    public static final double kaVoltsSecondsSquaredPerMeter = .19912;
     // public static final double ksVolts = 0.62303;
     // public static final double kvVoltsSecondsPerMeter = 2.364; //competition
     // public static final double kaVoltsSecondsSquaredPerMeter = 0.3286;
@@ -130,6 +130,14 @@ public final class Constants {
     public static final double kd = .0008;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
+  }
+
+  public static class FalconLockPositionConstants {
+    public static final double kp = 50;
+    public static final double ki = .1;
+    public static final double kd = 0;
+    public static final double IRange = 5; 
+    public static final double base = 0;
   }
 
   public static class FalconSize {

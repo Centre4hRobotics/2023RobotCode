@@ -22,6 +22,7 @@ import frc.robot.commands.LowerGroundControl;
 import frc.robot.commands.OpenGroundControl;
 import frc.robot.commands.RaiseArm;
 import frc.robot.commands.RaiseGroundControl;
+import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnSlow;
@@ -40,7 +41,7 @@ import java.util.function.ToLongBiFunction;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -137,22 +138,24 @@ public class RobotContainer {
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
     r7.onTrue(new Balance(_driveTrain));
 
-    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
-    // r8.whileHeld(new TurnToAngle(_driveTrain, 0, 0));
-    r8.onTrue(new TurnToAngle(_driveTrain, 0, 1));
+    // JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
+    // r8.onTrue(new TurnToAngle(_driveTrain, 0, 1));
 
-    JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
-    r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
+    // JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
+    // r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
+
+    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
+    r8.whileTrue(new LockPosition(_driveTrain));
 
     JoystickButton r10 = new JoystickButton(_rightDriveJoystick, 10);
     // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
-    r10.onTrue(new UpdateOdometry(_vision, _driveTrain)
-      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))))
+    r10.onTrue(new UpdateOdometry(_vision, _driveTrain, true) //Only update pose if it seems like a good pose
+      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(14.5, 4.5, new Rotation2d(1, 0))))
       // .andThen(new ExampleCommand(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0))))
     );
 
     JoystickButton r11 = new JoystickButton(_rightDriveJoystick, 11);
-    r11.onTrue(new UpdateOdometry(_vision, _driveTrain));
+    r11.onTrue(new UpdateOdometry(_vision, _driveTrain, false));  //Do a total overwrite
 
     JoystickButton r12 = new JoystickButton(_rightDriveJoystick, 12);
     // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));

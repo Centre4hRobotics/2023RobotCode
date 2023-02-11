@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FalconBalanceConstants;
+import frc.robot.Constants.FalconLockPositionConstants;
 import frc.robot.Constants.FalconTurnToAngleConstants;
 
 /** Add your docs here. */
@@ -150,5 +151,16 @@ public class FalconDrive extends DriveTrain {
     public double getBalancekD() {return FalconBalanceConstants.kd;}
     @Override
     public double getBalanceBase() {return FalconBalanceConstants.base;}
+
+    @Override
+    public double getLockPositionkP() {return FalconLockPositionConstants.kp;}
+    @Override
+    public double getLockPositionkI() {return FalconLockPositionConstants.ki;}
+    @Override
+    public double getLockPositionIRange() {return FalconLockPositionConstants.IRange;}
+    @Override
+    public double getLockPositionkD() {return FalconLockPositionConstants.kd;}
+    @Override
+    public double getLockPositionBase() {return FalconLockPositionConstants.base;}
 
 }

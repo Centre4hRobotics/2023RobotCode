@@ -12,11 +12,13 @@ public class UpdateOdometry extends CommandBase {
 
   Vision _vision;
   DriveTrain _driveTrain;
+  boolean _useReasonable;
 
   /** Creates a new UpdateOdometry. */
-  public UpdateOdometry(Vision vision, DriveTrain drive) {
+  public UpdateOdometry(Vision vision, DriveTrain drive, boolean useReasonable) {
     _vision = vision;
     _driveTrain = drive;
+    _useReasonable = useReasonable;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive, vision);
   }
@@ -24,7 +26,7 @@ public class UpdateOdometry extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    _vision.updateOdomentry(_driveTrain);
+    _vision.updateOdomentry(_driveTrain, _useReasonable);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
