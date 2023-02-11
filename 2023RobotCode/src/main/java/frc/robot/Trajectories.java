@@ -71,10 +71,10 @@ public class Trajectories {
     
     public static Trajectory test = TrajectoryGenerator.generateTrajectory(
       List.of(
-        new Pose2d(13, 4.6, new Rotation2d(1, -.3)),
-        new Pose2d(14.5, 3.88, new Rotation2d(1, 0))
+        new Pose2d(0, 0, new Rotation2d(1, 0)),
+        new Pose2d(2, 0, new Rotation2d(1, 0))
       ),
-      getNewConfig(.1, .1)
+      getNewConfig(.35, .9)
     );
 
     

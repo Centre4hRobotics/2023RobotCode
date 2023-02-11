@@ -29,6 +29,7 @@ import java.util.function.ToLongBiFunction;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -95,13 +96,13 @@ public class RobotContainer {
 
     JoystickButton r10 = new JoystickButton(_rightDriveJoystick, 10);
     // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
-    r10.onTrue(new UpdateOdometry(_vision, _driveTrain)
+    r10.onTrue(new UpdateOdometry(_vision, _driveTrain, true) //Only update pose if it seems like a good pose
       .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(14.5, 4.5, new Rotation2d(1, 0))))
       // .andThen(new ExampleCommand(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0))))
     );
 
     JoystickButton r11 = new JoystickButton(_rightDriveJoystick, 11);
-    r11.onTrue(new UpdateOdometry(_vision, _driveTrain));
+    r11.onTrue(new UpdateOdometry(_vision, _driveTrain, false));  //Do a total overwrite
 
     JoystickButton r12 = new JoystickButton(_rightDriveJoystick, 12);
     // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));

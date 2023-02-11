@@ -16,7 +16,7 @@ public class GoToPosition extends SequentialCommandGroup {
   /** Creates a new GoToPosition. */
   public GoToPosition(DriveTrain drive, Pose2d position, Vision vision) {
     super(
-      new UpdateOdometry(vision, drive),
+      new UpdateOdometry(vision, drive, false),//Always update pose
       new ExampleCommand(drive, position)
       // new FollowTrajectory(drive, Trajectories.generateToPose(drive.getPose(), position))
     );
