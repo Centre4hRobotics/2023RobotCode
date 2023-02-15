@@ -8,15 +8,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 
-public class ExtendArmWithJoystick extends CommandBase {
-  /** Creates a new ExtendArmWithJoystick. */
-
-  private Arm _arm;
-  private Joystick _joystick;
-
-  public ExtendArmWithJoystick(Arm arm, Joystick joystick) {
+public class ExtendArmWithButtons extends CommandBase {
+  /** Creates a new ExtendArmWithButtons. */
+  private final Arm _arm;
+  private final Joystick _functionJoystick;
+  public ExtendArmWithButtons(Arm arm, Joystick functionJoystick) {
     _arm = arm;
-    _joystick = joystick;
+    _functionJoystick = functionJoystick;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_arm);
   }
@@ -28,14 +26,22 @@ public class ExtendArmWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _arm.setHeight(_arm.getHeight()+.02*_joystick.getX());
+    if(_functionJoystick.getRawButton(5)) {
+      // _arm.setHeight(_arm.getHeight()+.02);
+      _arm.extendVolts(5);
+    }
+    else if(_functionJoystick.getRawButton(6)) {
+      // _arm.setHeight(_arm.getHeight()-.02);
+      _arm.extendVolts(-5);
+    }
+    else {
+      _arm.extendVolts(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    _arm.extendVolts(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

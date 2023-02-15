@@ -71,10 +71,11 @@ public final class Constants {
   public static class ArmConstants {
     public static final double retracted = 0;
     public static final double lowPosition = 0;
-    public static final double middlePosition = -90;
-    public static final double highPosition = -180;
-    public static final double pickupPosition = -180;
-    public static final double maxExtention = -180;
+    public static final double middlePosition = 0.52696872;
+    public static final double highPosition = 1.05393744;
+    public static final double pickupPosition = 1.05393744;
+    public static final double maxExtention = 1.05393744;
+    public static final double encoderTicksToMeters = -0.005855208;
   }
 
   public static class PracticeNeoTurnToAngleConstants {

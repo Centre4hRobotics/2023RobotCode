@@ -5,14 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
 
 public class SetArmHeight extends CommandBase {
   /** Creates a new SetArmHeight. */
   private final Arm _arm;
-  private final int _height;
-  public SetArmHeight(Arm arm, int height) {
+  private final double _height;
+  public SetArmHeight(Arm arm, double height) {
     _arm = arm;
     _height = height;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,23 +24,7 @@ public class SetArmHeight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch(_height) {
-      case 1:
-        _arm.setHeight(ArmConstants.lowPosition);
-        break;
-      case 2:
-        _arm.setHeight(ArmConstants.middlePosition);
-        break;
-      case 3:
-        _arm.setHeight(ArmConstants.highPosition);
-        break;
-      case 4:
-        _arm.setHeight(ArmConstants.pickupPosition);
-        break;
-      case 5:
-        _arm.setHeight(ArmConstants.retracted);
-        break;
-    }
+    _arm.setHeight(_height);
   }
 
   // Called once the command ends or is interrupted.

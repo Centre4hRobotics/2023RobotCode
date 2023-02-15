@@ -15,14 +15,16 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
 
-  private final CANSparkMax _leadMotor = new CANSparkMax(8, MotorType.kBrushless);
+  private final CANSparkMax _leadMotor = new CANSparkMax(10, MotorType.kBrushless);
   // type is PneumaticsModuleType.CTREPCM or PneumaticsModuleType.REVPH
   private final DoubleSolenoid _doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 3, 4);
   
-  
+  private GroundControl _groundControl;
+  private double _height = 0;
 
 
   /** Creates a new Arm. */
@@ -34,6 +36,10 @@ public class Arm extends SubsystemBase {
     _leadMotor.getPIDController().setIZone(10);
     _leadMotor.getPIDController().setFF(0);
     _leadMotor.getPIDController().setOutputRange(-1, 1);
+  }
+
+  public void get(GroundControl groundControl) {
+    _groundControl = groundControl;
   }
 
   @Override
@@ -48,23 +54,34 @@ public class Arm extends SubsystemBase {
     _doubleSolenoid.set(DoubleSolenoid.Value.kForward);
   }
   public void lower() {
-    _doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+    if(_groundControl.isOpen() || _groundControl.isDown()) {
+      _doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
   }
-  public double getEncoder() {
-    return _leadMotor.getEncoder().getPosition();
+  public boolean isRaised() {
+    return _doubleSolenoid.get()==DoubleSolenoid.Value.kForward;
+  }
+  public boolean isExtended() {
+    return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters>.8;
   }
   //4.167 @ 0"
   //-6.357 @ 2.375"
   //-50.857 @ 13.375"
   //-152.591 @ 36.125"
   //-193.372 @ 45.6875"
+  // -0.23052 inches per tick
+  // -0.005855208 meters per tick
 
   public void extendVolts(double volts) {
     _leadMotor.setVoltage(volts);
   }
 
   public void setHeight(double position) {
+    _height = position;
+    position/=ArmConstants.encoderTicksToMeters;
     _leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
   }
-
+  public double getHeight() {
+    return _height;
+  }
 }

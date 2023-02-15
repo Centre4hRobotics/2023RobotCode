@@ -4,17 +4,21 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Balance;
+import frc.robot.commands.CloseGripper;
 import frc.robot.commands.CloseGroundControl;
 import frc.robot.commands.ControlLights;
 import frc.robot.commands.DriveWithJoysticks;
+import frc.robot.commands.ExtendArmWithButtons;
 import frc.robot.commands.FollowTrajectoryToPose;
 import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.Intake;
 import frc.robot.commands.IntakeWithSwitch;
 import frc.robot.commands.LowerArm;
 import frc.robot.commands.LowerGroundControl;
+import frc.robot.commands.OpenGripper;
 import frc.robot.commands.OpenGroundControl;
 import frc.robot.commands.RaiseArm;
 import frc.robot.commands.RaiseGroundControl;
@@ -26,6 +30,7 @@ import frc.robot.commands.UpdateOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.FalconDrive;
+import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.NeoDrive;
@@ -47,9 +52,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Arm _arm = new Arm();
+  private final Arm _arm = new Arm();  
+  private final GroundControl _groundControl = new GroundControl(_arm);
   private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
-  private final GroundControl _groundControl = new GroundControl();
+  private final Gripper _gripper = new Gripper();
   private final Lights _lights = new Lights();
   private final Vision _vision = new Vision();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
@@ -67,8 +73,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    _arm.get(_groundControl);
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
-    _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick, 5));
+    _arm.setDefaultCommand(new ExtendArmWithButtons(_arm, _functionJoystick));
     _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .4));
     _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
@@ -100,6 +107,7 @@ public class RobotContainer {
     JoystickButton eleven = new JoystickButton(_functionJoystick, 11);
     JoystickButton twelve = new JoystickButton(_functionJoystick, 12);
 
+    
     one.onTrue(new RaiseGroundControl(_groundControl));
     one.onFalse(new LowerGroundControl(_groundControl));
     
@@ -112,17 +120,17 @@ public class RobotContainer {
     seven.onTrue(new RaiseArm(_arm));
     seven.onFalse(new LowerArm(_arm));
 
-    eight.onTrue(new SetArmHeight(_arm, 3)); // top
-    nine.onTrue(new SetArmHeight(_arm, 2)); // middle
-    ten.onTrue(new SetArmHeight(_arm, 1)); // bottom
-    eleven.onTrue(new SetArmHeight(_arm, 4)); // pickup
-    twelve.onTrue(new SetArmHeight(_arm, 5)); // retract
+    eight.onTrue(new SetArmHeight(_arm, ArmConstants.highPosition));
+    nine.onTrue(new SetArmHeight(_arm, ArmConstants.middlePosition));
+    ten.onTrue(new SetArmHeight(_arm, ArmConstants.lowPosition));
+    eleven.onTrue(new SetArmHeight(_arm, ArmConstants.pickupPosition));
+    twelve.onTrue(new SetArmHeight(_arm, ArmConstants.retracted));
     
-    // JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
-    // r4.onTrue(new TurnSlow(_driveTrain, true));
+    JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
+    r4.onTrue(new TurnSlow(_driveTrain, true));
     
-    // JoystickButton r3 = new JoystickButton(_rightDriveJoystick, 3);
-    // r3.onTrue(new TurnSlow(_driveTrain, false));
+    JoystickButton r3 = new JoystickButton(_rightDriveJoystick, 3);
+    r3.onTrue(new TurnSlow(_driveTrain, false));
 
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
