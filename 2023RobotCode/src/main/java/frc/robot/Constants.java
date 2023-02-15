@@ -214,9 +214,22 @@ public final class Constants {
       // not calculated, used pathweaver
       switch (side) {
         case LEFT: 
-          return new Pose2d(3.4, 2.727, new Rotation2d(Math.PI));
+          return new Pose2d(2.9, 2.727, new Rotation2d(Math.PI));
         case RIGHT: 
-          return new Pose2d(13.401, 2.727, new Rotation2d(0));
+          return new Pose2d(13.901, 2.727, new Rotation2d(0));
+        default: 
+          throw new Exception("side isn't left or right?");
+      }
+    }
+
+    //Get position toward center of field that would work to drive off center of charging station
+    public static final Pose2d getOffChargingStationPose(FieldSide side) throws Exception {
+      // not calculated, used pathweaver
+      switch (side) {
+        case LEFT: 
+          return new Pose2d(5.45, 2.727, new Rotation2d(Math.PI));
+        case RIGHT: 
+          return new Pose2d(11.05, 2.727, new Rotation2d(0));
         default: 
           throw new Exception("side isn't left or right?");
       }
