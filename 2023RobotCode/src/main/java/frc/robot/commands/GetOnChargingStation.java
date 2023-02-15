@@ -15,7 +15,7 @@ public class GetOnChargingStation extends CommandBase {
   private DriveTrain _driveTrain;
   private double _speed, _direction;
   private final double targetAngle = 16;
-  private final double targetLow = 14.5;
+  private final double targetLow = 5;//was 14.5
   private ArrayList<Double> angles;
   private boolean passedBump = false;
 
@@ -42,6 +42,7 @@ public class GetOnChargingStation extends CommandBase {
   @Override
   public void initialize() {
     nt.getTable("Get On Charging Station").getEntry("initialized").setValue(true);
+    passedBump = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
