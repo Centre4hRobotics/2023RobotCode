@@ -78,10 +78,10 @@ public class Trajectories {
     );
 
     
-    public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition, boolean reversed) {
+    public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition, boolean reversed, double velocityCoefficient) {
       return TrajectoryGenerator.generateTrajectory(
         List.of(startPosition, endPosition),
-        getNewConfig(.35, .9).setReversed(reversed)
+        getNewConfig(velocityCoefficient, .9).setReversed(reversed)
       );
     }
 
@@ -97,7 +97,8 @@ public class Trajectories {
       return generateToPose(
         FieldPoses.getScoringPose(side, grid, node), 
         FieldPoses.getOnChargingStationPose(side),
-        reversed
+        reversed,
+        .35//Max velocity
       );
     }
 
