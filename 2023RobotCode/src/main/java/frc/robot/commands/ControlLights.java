@@ -6,19 +6,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Lights;
 
-public class ExtendArmWithJoystick extends CommandBase {
-  /** Creates a new ExtendArmWithJoystick. */
-
-  private Arm _arm;
-  private Joystick _joystick;
-
-  public ExtendArmWithJoystick(Arm arm, Joystick joystick) {
-    _arm = arm;
-    _joystick = joystick;
+public class ControlLights extends CommandBase {
+  /** Creates a new ControlLights. */
+  private Lights _lights;
+  private Joystick _functionJoystick;
+  public ControlLights(Lights lights, Joystick functionJoystick) {
+    _lights = lights;
+    _functionJoystick = functionJoystick;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(_arm);
+    addRequirements(_lights);
   }
 
   // Called when the command is initially scheduled.
@@ -28,14 +26,12 @@ public class ExtendArmWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _arm.setHeight(_arm.getHeight()+.02*_joystick.getX());
+    _lights.setOut(_functionJoystick.getRawButton(5), _functionJoystick.getRawButtonPressed(6));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    _arm.extendVolts(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

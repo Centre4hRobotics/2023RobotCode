@@ -4,29 +4,40 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
+import frc.robot.commands.CloseGripper;
+import frc.robot.commands.CloseGroundControl;
+import frc.robot.commands.ControlLights;
 import frc.robot.commands.DriveWithJoysticks;
+import frc.robot.commands.ExtendArmWithButtons;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.FollowTrajectoryToPose;
 import frc.robot.commands.ExtendArmWithJoystick;
+import frc.robot.commands.Intake;
+import frc.robot.commands.IntakeWithSwitch;
+import frc.robot.commands.LowerArm;
+import frc.robot.commands.LowerGroundControl;
+import frc.robot.commands.OpenGripper;
+import frc.robot.commands.OpenGroundControl;
+import frc.robot.commands.RaiseArm;
+import frc.robot.commands.RaiseGroundControl;
+import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
-import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.TurnSlow;
 import frc.robot.commands.UpdateOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.FalconDrive;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.GroundControl;
+import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.NeoDrive;
 import frc.robot.subsystems.Vision;
-
-import java.util.function.ToLongBiFunction;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,8 +53,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain _driveTrain = new FalconDrive(); // change to neoDrive for a neo bot
-  private final Arm _arm = new Arm();
+  private final Arm _arm = new Arm();  
+  private final GroundControl _groundControl = new GroundControl(_arm);
+  private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
+  private final Gripper _gripper = new Gripper();
+  private final Lights _lights = new Lights();
   private final Vision _vision = new Vision();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
@@ -51,6 +65,7 @@ public class RobotContainer {
   private final Joystick _functionJoystick = new Joystick(1);
 
   private final Commands _commands = new Commands(_driveTrain);
+  
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -59,9 +74,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    _arm.get(_groundControl);
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
-    _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick, 5));
-    
+    _arm.setDefaultCommand(new ExtendArmWithButtons(_arm, _functionJoystick));
+    _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .4));
+    _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
     configureBindings();
     autoChooserInit();
@@ -78,16 +95,56 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+    JoystickButton one = new JoystickButton(_functionJoystick, 1);
+    JoystickButton two = new JoystickButton(_functionJoystick, 2);
+    JoystickButton three = new JoystickButton(_functionJoystick, 3); // used by Intake with Switch
+    JoystickButton four = new JoystickButton(_functionJoystick, 4);
+    JoystickButton five = new JoystickButton(_functionJoystick, 5); // lights
+    JoystickButton six = new JoystickButton(_functionJoystick, 6); // lights
+    JoystickButton seven = new JoystickButton(_functionJoystick, 7);
+    JoystickButton eight = new JoystickButton(_functionJoystick, 8);
+    JoystickButton nine = new JoystickButton(_functionJoystick, 9);
+    JoystickButton ten = new JoystickButton(_functionJoystick, 10);
+    JoystickButton eleven = new JoystickButton(_functionJoystick, 11);
+    JoystickButton twelve = new JoystickButton(_functionJoystick, 12);
+
+    
+    one.onTrue(new RaiseGroundControl(_groundControl));
+    one.onFalse(new LowerGroundControl(_groundControl));
+    
+    two.onTrue(new CloseGroundControl(_groundControl));
+    two.onFalse(new OpenGroundControl(_groundControl));
+
+    // three.onTrue(new Intake(_groundControl, .4));
+    four.whileTrue(new Intake(_groundControl, -.4));
+
+    seven.onTrue(new RaiseArm(_arm));
+    seven.onFalse(new LowerArm(_arm));
+
+    eight.onTrue(new SetArmHeight(_arm, ArmConstants.highPosition));
+    nine.onTrue(new SetArmHeight(_arm, ArmConstants.middlePosition));
+    ten.onTrue(new SetArmHeight(_arm, ArmConstants.lowPosition));
+    eleven.onTrue(new SetArmHeight(_arm, ArmConstants.pickupPosition));
+    twelve.onTrue(new SetArmHeight(_arm, ArmConstants.retracted));
+    
+    JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
+    r4.onTrue(new TurnSlow(_driveTrain, true));
+    
+    JoystickButton r3 = new JoystickButton(_rightDriveJoystick, 3);
+    r3.onTrue(new TurnSlow(_driveTrain, false));
+
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
     r7.onTrue(new Balance(_driveTrain));
 
-    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
-    // r8.whileHeld(new TurnToAngle(_driveTrain, 0, 0));
-    r8.onTrue(new TurnToAngle(_driveTrain, 0, 1));
+    // JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
+    // r8.onTrue(new TurnToAngle(_driveTrain, 0, 1));
 
-    JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
-    r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
+    // JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
+    // r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
+
+    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
+    r8.whileTrue(new LockPosition(_driveTrain));
 
     JoystickButton r10 = new JoystickButton(_rightDriveJoystick, 10);
     // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
@@ -102,14 +159,8 @@ public class RobotContainer {
     // JoystickButton r12 = new JoystickButton(_rightDriveJoystick, 12);
     // r12.onTrue(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))));
 
-    JoystickButton l7 = new JoystickButton(_leftDriveJoystick, 7);
-    l7.onTrue(new SetArmHeight(_arm, 1));
 
-    JoystickButton l8 = new JoystickButton(_leftDriveJoystick, 8);
-    l8.onTrue(new SetArmHeight(_arm, 2));
 
-    JoystickButton l9 = new JoystickButton(_leftDriveJoystick, 9);
-    l9.onTrue(new SetArmHeight(_arm, 3));
   }
 
   public void autoChooserInit() {

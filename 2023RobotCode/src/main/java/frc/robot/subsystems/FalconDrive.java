@@ -12,7 +12,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FalconBalanceConstants;
+import frc.robot.Constants.FalconLockPositionConstants;
 import frc.robot.Constants.FalconTurnToAngleConstants;
 
 /** Add your docs here. */
@@ -26,9 +28,11 @@ public class FalconDrive extends DriveTrain {
 
     private final double DISTANCE_PER_REVOLUTION = 0.000021828073956;
 
-    public FalconDrive() {
-        super();
+    private final Arm _arm;
 
+    public FalconDrive(Arm arm) {
+        super();
+        _arm = arm;
         
         // _leftLeadMotor.configFactoryDefault();
         // _leftFollowMotor.configFactoryDefault();
@@ -66,6 +70,10 @@ public class FalconDrive extends DriveTrain {
 
     @Override
     public void tankDriveVolts (double leftVolts, double rightVolts) {
+        if(_arm.isExtended()) {
+            leftVolts = Math.min(leftVolts, 8);
+            rightVolts = Math.min(rightVolts, 8);
+        }
         _leftLeadMotor.setVoltage(leftVolts);
         _rightLeadMotor.setVoltage(rightVolts);
     
@@ -79,6 +87,10 @@ public class FalconDrive extends DriveTrain {
      */
     @Override
     public void arcadeDrive(double speed, double steer) {
+        if(_arm.isExtended()) {
+            speed = Math.min(speed, .65);
+            steer = Math.min(steer, .65);
+        }
         _drive.arcadeDrive(speed, steer);
         _drive.feed();//makes sure differencial drive knows something bad hasn't happened
     }
@@ -141,5 +153,16 @@ public class FalconDrive extends DriveTrain {
     public double getBalancekD() {return FalconBalanceConstants.kd;}
     @Override
     public double getBalanceBase() {return FalconBalanceConstants.base;}
+
+    @Override
+    public double getLockPositionkP() {return FalconLockPositionConstants.kp;}
+    @Override
+    public double getLockPositionkI() {return FalconLockPositionConstants.ki;}
+    @Override
+    public double getLockPositionIRange() {return FalconLockPositionConstants.IRange;}
+    @Override
+    public double getLockPositionkD() {return FalconLockPositionConstants.kd;}
+    @Override
+    public double getLockPositionBase() {return FalconLockPositionConstants.base;}
 
 }

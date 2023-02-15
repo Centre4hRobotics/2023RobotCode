@@ -10,8 +10,8 @@ import frc.robot.subsystems.Arm;
 public class SetArmHeight extends CommandBase {
   /** Creates a new SetArmHeight. */
   private final Arm _arm;
-  private final int _height;
-  public SetArmHeight(Arm arm, int height) {
+  private final double _height;
+  public SetArmHeight(Arm arm, double height) {
     _arm = arm;
     _height = height;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,17 +24,7 @@ public class SetArmHeight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    switch(_height) {
-      case 1:
-        _arm.setHeightBottom();
-        break;
-      case 2:
-        _arm.setHeightMiddle();
-        break;
-      case 3:
-        _arm.setHeightTop();
-        break;
-    }
+    _arm.setHeight(_height);
   }
 
   // Called once the command ends or is interrupted.

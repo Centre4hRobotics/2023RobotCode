@@ -68,6 +68,15 @@ public final class Constants {
     public static final double fieldCenterX = 8.23;
     public static final double fieldCenterY = 4.115;
 
+  public static class ArmConstants {
+    public static final double retracted = 0;
+    public static final double lowPosition = 0;
+    public static final double middlePosition = 0.52696872;
+    public static final double highPosition = 1.05393744;
+    public static final double pickupPosition = 1.05393744;
+    public static final double maxExtention = 1.05393744;
+    public static final double encoderTicksToMeters = -0.005855208;
+  }
 
   public static class PracticeNeoTurnToAngleConstants {
     public static final double kp = .0065;
@@ -122,6 +131,14 @@ public final class Constants {
     public static final double kd = .0008;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
+  }
+
+  public static class FalconLockPositionConstants {
+    public static final double kp = 50;
+    public static final double ki = .1;
+    public static final double kd = 0;
+    public static final double IRange = 5; 
+    public static final double base = 0;
   }
 
   public static class FalconSize {
