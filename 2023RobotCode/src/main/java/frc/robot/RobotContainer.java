@@ -8,11 +8,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.DriveWithJoysticks;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.FollowTrajectoryToPose;
 import frc.robot.commands.ExtendArmWithJoystick;
-import frc.robot.commands.GoToPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnToAngle;
@@ -94,16 +92,15 @@ public class RobotContainer {
     JoystickButton r10 = new JoystickButton(_rightDriveJoystick, 10);
     // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
     r10.onTrue(new UpdateOdometry(_vision, _driveTrain, true) //Only update pose if it seems like a good pose
-      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(14.5, 4.5, new Rotation2d(1, 0))))
+      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(14.5, 4.5, new Rotation2d(1, 0)), .4))
       // .andThen(new ExampleCommand(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0))))
     );
 
     JoystickButton r11 = new JoystickButton(_rightDriveJoystick, 11);
     r11.onTrue(new UpdateOdometry(_vision, _driveTrain, false));  //Do a total overwrite
 
-    JoystickButton r12 = new JoystickButton(_rightDriveJoystick, 12);
-    // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
-    r12.onTrue(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))));
+    // JoystickButton r12 = new JoystickButton(_rightDriveJoystick, 12);
+    // r12.onTrue(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))));
 
     JoystickButton l7 = new JoystickButton(_leftDriveJoystick, 7);
     l7.onTrue(new SetArmHeight(_arm, 1));
@@ -117,7 +114,7 @@ public class RobotContainer {
 
   public void autoChooserInit() {
     String[] autoselector = {
-      "1-ball(LOW) Fender", "test", "Blue Grid 0, Node 0", "Blue Grid 1, Node 0", "Blue Grid 2, Node 0", "balance"
+      "1-ball(LOW) Fender", "test", /*"Blue Grid 0, Node 0", */"Blue Grid 1, Node 0", /*"Blue Grid 2, Node 0", */"balance"
     };
     SmartDashboard.putStringArray("Auto List", autoselector);
   }
