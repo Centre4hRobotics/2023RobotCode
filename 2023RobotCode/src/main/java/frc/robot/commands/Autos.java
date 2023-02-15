@@ -4,9 +4,13 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants;
 import frc.robot.Trajectories;
+import frc.robot.Constants.FieldPoses;
 import frc.robot.Constants.FieldSide;
 import frc.robot.subsystems.DriveTrain;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,10 +28,16 @@ public final class Autos {
     return new FollowTrajectory(driveTrain, Trajectories.test);
   }
 
-  public static SequentialCommandGroup scoreToCharge(DriveTrain driveTrain, FieldSide side, int grid, int node) throws Exception {
-    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, grid, node, true))
+  public static SequentialCommandGroup scoreCenter(DriveTrain driveTrain, FieldSide side, int node) throws Exception {
+
+    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
       .andThen(new GetOnChargingStation(driveTrain, .5, -1))
-      .andThen(new DriveWithSpeed(driveTrain, -.5).withTimeout(.34))
+      //.andThen(new DriveWithSpeed(driveTrain, -.5).withTimeout(.34))
+
+      .andThen(new FollowTrajectoryToPose(driveTrain, FieldPoses.getOffChargingStationPose(side), .3))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getOnChargingStationPose(side), 5))
+      .andThen(new GetOnChargingStation(driveTrain, .5, -1))
+
       .andThen(new Balance(driveTrain));
   }
 
