@@ -34,6 +34,7 @@ public class Commands {
     public Command selectCommand(String command) {
         // System.out.print("selecting command");
         // return Autos.balance(_driveTrain);
+
         try {
             switch(command) {
             case("1-ball(LOW) Fender"):
@@ -46,13 +47,19 @@ public class Commands {
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
                 return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 0, 0);*/
             case("Blue Grid 1, Node 0"):
+                _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 1, 0));
                 return Autos.scoreCenter(_driveTrain, FieldSide.LEFT, 0);
            /*case("Blue Grid 2, Node 0"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 0));
                 return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 2, 0);*/
-            case("balance"):
-                return Autos.balance(_driveTrain);
+            case("Blue Bottom"):
+                _driveTrain.resetGyro();
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
+                return Autos.bottomAutoThree(_driveTrain, FieldSide.LEFT);
+            case("Blue Top"):
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 2));
+                return Autos.topAuto(_driveTrain, FieldSide.LEFT);
             default:    
                 return new StopDrive(_driveTrain);
             }
