@@ -25,6 +25,7 @@ import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnSlow;
+import frc.robot.commands.TurnToAngle;
 import frc.robot.commands.UpdateOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
@@ -158,13 +159,15 @@ public class RobotContainer {
     // JoystickButton r12 = new JoystickButton(_rightDriveJoystick, 12);
     // r12.onTrue(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))));
 
+    JoystickButton l12 = new JoystickButton(_leftDriveJoystick, 12);
+    l12.onTrue(new TurnToAngle(_driveTrain, 0, 3));
 
 
   }
 
   public void autoChooserInit() {
     String[] autoselector = {
-      "1-ball(LOW) Fender", "test", /*"Blue Grid 0, Node 0", */"Blue Grid 1, Node 0", /*"Blue Grid 2, Node 0", */"balance", "Blue Bottom"
+      /*"Blue Grid 0, Node 0", */"Blue Grid 1, Node 0", /*"Blue Grid 2, Node 0", */"balance", "Blue Bottom"
     };
     SmartDashboard.putStringArray("Auto List", autoselector);
   }
