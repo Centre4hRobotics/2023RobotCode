@@ -27,23 +27,28 @@ public class Commands {
 
         try {
             switch(command) {
-            /*case("Blue Grid 0, Node 0"):
-                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
-                return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 0, 0);*/
-            case("Blue Grid 1, Node 0"):
+            case("Blue Center"):
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 1, 0));
                 return Autos.scoreCenter(_driveTrain, FieldSide.LEFT, 0);
-           /*case("Blue Grid 2, Node 0"):
-                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 0));
-                return Autos.scoreToCharge(_driveTrain, FieldSide.LEFT, 2, 0);*/
-            case("Blue Bottom"):
+            case("Blue Right"):
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
                 return Autos.bottomAutoThree(_driveTrain, FieldSide.LEFT);
-            case("Blue Top"):
+            case("Blue Left"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 2));
                 return Autos.topAuto(_driveTrain, FieldSide.LEFT);
+            case("Red Center"):
+                _driveTrain.resetGyro();
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 1, 0));
+                return Autos.scoreCenter(_driveTrain, FieldSide.RIGHT, 0);
+            case("Red Left"):
+                _driveTrain.resetGyro();
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 0, 0));
+                return Autos.bottomAutoThree(_driveTrain, FieldSide.RIGHT);
+            case("Red Right"):
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 2, 2));
+                return Autos.topAuto(_driveTrain, FieldSide.RIGHT);
             default:    
                 return new StopDrive(_driveTrain);
             }
