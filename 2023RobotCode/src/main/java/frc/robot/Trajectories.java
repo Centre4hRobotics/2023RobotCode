@@ -56,7 +56,14 @@ public class Trajectories {
       );
     }
 
-    public static Trajectory generateScoreToStage(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient) throws Exception {
+    public static Trajectory generateScoreToStage(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient, boolean useWaypoint) throws Exception {
+      if(useWaypoint) {
+        return generateToPose(List.of(
+          FieldPoses.getScoringPose(side, grid, node), 
+          FieldPoses.getAvoidChargingStationPose(side, grid==0, false), 
+          FieldPoses.getStagingPose(side, stagePosition)),
+          true, velocityCoefficient);
+      }
       return generateToPose(
         FieldPoses.getScoringPose(side, grid, node),
         FieldPoses.getStagingPose(side, stagePosition),
@@ -65,7 +72,14 @@ public class Trajectories {
       );
     }
 
-    public static Trajectory generateScoreToStage(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient, double angle) throws Exception {
+    public static Trajectory generateScoreToStage(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient, double angle, boolean useWaypoint) throws Exception {
+      if(useWaypoint) {
+        return generateToPose(List.of(
+          FieldPoses.getScoringPose(side, grid, node), 
+          FieldPoses.getAvoidChargingStationPose(side, grid==0, false), 
+          FieldPoses.getStagingPose(side, stagePosition, angle)), 
+          true, velocityCoefficient);
+      }
       return generateToPose(
         FieldPoses.getScoringPose(side, grid, node),
         FieldPoses.getStagingPose(side, stagePosition, angle),
