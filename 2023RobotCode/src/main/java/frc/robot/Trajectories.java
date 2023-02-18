@@ -8,12 +8,9 @@ import java.util.List;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.spline.Spline;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator.ControlVectorList;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.robot.Constants.FieldPoses;
 import frc.robot.Constants.FieldSide;
@@ -28,60 +25,18 @@ public class Trajectories {
     //and add the trajectory's name to autoselector in RobotContainer.java
     //optionally, you can also make a new config for your path
 
-    //Drive forward trajectory
-    public static Trajectory reverse = TrajectoryGenerator.generateTrajectory(
-      List.of(
-        new Pose2d(7.716, 2.764, new Rotation2d(0.312, 0.805)),
-        new Pose2d(7.469, 2.073, new Rotation2d(0.214, 0.608))
-      ),
-      getNewConfig(.5, .5).setReversed(true)
-    );
-    public static Trajectory reverse2 = TrajectoryGenerator.generateTrajectory(
-      List.of(
-        new Pose2d(7.633, 2.747, new Rotation2d(0.312, 0.805)),
-        new Pose2d(6.795, 0.446, new Rotation2d(0.247, 0.625))
-      ),
-      getNewConfig(.5, .5).setReversed(true)
-    );
-
-
-    //Return the trajectory for a two-ball auto starting in bottom blue tarmac on the top left side
-    public static Trajectory getTwoBallCenter () {
-      ControlVectorList list = new TrajectoryGenerator.ControlVectorList();
-      list.add(new Spline.ControlVector(
-        new double[] {6.521, -.5, 0},
-        new double[] {2.604, -0.223, 0}));
-      list.add(new Spline.ControlVector(
-        new double[] {5.087, -0.436, 0},
-        new double[] {1.905, -0.322, 0}));
-      
-      return TrajectoryGenerator.generateTrajectory(list, getNewConfig(.4, .4));
-    }
-    public static Trajectory getTwoBallCenterPt2 () {
-      ControlVectorList list = new TrajectoryGenerator.ControlVectorList();
-      list.add(new Spline.ControlVector(
-        new double[] {5.087, 1.183, 0},
-        new double[] {1.905, -0.115, 0}));
-        list.add(new Spline.ControlVector(
-        new double[] {7.173, 1.183, 0},
-        new double[] {1.662, -0.115, 0}));
-      return TrajectoryGenerator.generateTrajectory(list, getNewConfig(.4, .4));
-    }
-
     
-    public static Trajectory test = TrajectoryGenerator.generateTrajectory(
-      List.of(
-        new Pose2d(0, 0, new Rotation2d(1, 0)),
-        new Pose2d(2, 0, new Rotation2d(1, 0))
-      ),
-      getNewConfig(.35, .9)
-    );
-
     
     public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition, boolean reversed, double velocityCoefficient) {
       return TrajectoryGenerator.generateTrajectory(
         List.of(startPosition, endPosition),
         getNewConfig(velocityCoefficient, .9).setReversed(reversed)
+      );
+    }
+    public static Trajectory generateToPose(List<Pose2d> points, boolean reversed, double velocityCoefficient) {
+      return TrajectoryGenerator.generateTrajectory(
+      points,
+      getNewConfig(velocityCoefficient, .9).setReversed(reversed)
       );
     }
 

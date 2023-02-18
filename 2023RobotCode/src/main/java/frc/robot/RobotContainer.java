@@ -12,9 +12,7 @@ import frc.robot.commands.CloseGroundControl;
 import frc.robot.commands.ControlLights;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExtendArmWithButtons;
-import frc.robot.commands.FollowTrajectory;
 import frc.robot.commands.FollowTrajectoryToPose;
-import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.Intake;
 import frc.robot.commands.IntakeWithSwitch;
 import frc.robot.commands.LowerArm;
@@ -34,7 +32,6 @@ import frc.robot.subsystems.FalconDrive;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
 import frc.robot.subsystems.Lights;
-import frc.robot.subsystems.NeoDrive;
 import frc.robot.subsystems.Vision;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -125,7 +122,9 @@ public class RobotContainer {
     nine.onTrue(new SetArmHeight(_arm, ArmConstants.middlePosition));
     ten.onTrue(new SetArmHeight(_arm, ArmConstants.lowPosition));
     eleven.onTrue(new SetArmHeight(_arm, ArmConstants.pickupPosition));
-    twelve.onTrue(new SetArmHeight(_arm, ArmConstants.retracted));
+    // twelve.onTrue(new SetArmHeight(_arm, ArmConstants.retracted));
+    twelve.onTrue(new CloseGripper(_gripper));
+    twelve.onFalse(new OpenGripper(_gripper));
     
     JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
     r4.onTrue(new TurnSlow(_driveTrain, true));

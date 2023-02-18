@@ -9,26 +9,12 @@ import frc.robot.Trajectories;
 import frc.robot.Constants.FieldPoses;
 import frc.robot.Constants.FieldSide;
 import frc.robot.subsystems.DriveTrain;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
 
-  public static CommandBase reverse(DriveTrain _driveTrain) {
-    return new SequentialCommandGroup(
-      new FollowTrajectory(_driveTrain, Trajectories.reverse)
-    );
-  }
-
-  public static CommandBase test(DriveTrain driveTrain) {
-    return new FollowTrajectory(driveTrain, Trajectories.test);
-  }
 
   public static SequentialCommandGroup scoreCenter(DriveTrain driveTrain, FieldSide side, int node) throws Exception {
     // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
