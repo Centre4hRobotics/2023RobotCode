@@ -106,7 +106,7 @@ public class RobotContainer {
     JoystickButton eleven = new JoystickButton(_functionJoystick, 11);
     JoystickButton twelve = new JoystickButton(_functionJoystick, 12);
 
-    
+    //Function Button Board
     one.onTrue(new RaiseGroundControl(_groundControl));
     one.onFalse(new LowerGroundControl(_groundControl));
     
@@ -127,11 +127,28 @@ public class RobotContainer {
     twelve.onTrue(new CloseGripper(_gripper));
     twelve.onFalse(new OpenGripper(_gripper));
     
+
+
+    //Right Drive Joystick
     JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
     r4.onTrue(new TurnSlow(_driveTrain, true));
     
     JoystickButton r3 = new JoystickButton(_rightDriveJoystick, 3);
     r3.onTrue(new TurnSlow(_driveTrain, false));
+
+
+
+    //Left Drive Joystick
+    JoystickButton l5 = new JoystickButton(_leftDriveJoystick, 5);
+    l5.whileTrue(new LockPosition(_driveTrain));
+
+    JoystickButton l3 = new JoystickButton(_leftDriveJoystick, 3);
+    l3.whileTrue(new Balance(_driveTrain));
+
+
+
+
+    //Comment out Button Bindings below here for competitions (they are tests)
 
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
@@ -167,7 +184,7 @@ public class RobotContainer {
 
   public void autoChooserInit() {
     String[] autoselector = {
-      /*"Blue Grid 0, Node 0", */"Blue Grid 1, Node 0", /*"Blue Grid 2, Node 0", */"balance", "Blue Bottom"
+      "Blue Left", "Blue Center", "Blue Right", "Red Left", "Red Center", "Red Right"
     };
     SmartDashboard.putStringArray("Auto List", autoselector);
   }
