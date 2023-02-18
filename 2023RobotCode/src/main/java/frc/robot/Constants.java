@@ -320,6 +320,38 @@ public final class Constants {
   
       return new Pose2d(x, y, rotation);
     }
+
+    /**
+     * Get a waypoint around charging station
+     * @param side
+     * @param isCloseToWall
+     * @param isFacingGrid
+     * @return pose for waypoint around charging station
+     */
+    public static final Pose2d getAvoidChargingStationPose(FieldSide side, boolean isCloseToWall, boolean isFacingGrid){
+      double x;
+      if (side == FieldSide.LEFT){
+        x = 4.77;
+      } else{
+        x = 11.77;
+      }
+
+      double y;
+      if (isCloseToWall){
+        y = .7425;
+      } else{
+        y = 4.642;
+      }
+
+      Rotation2d rotation;
+      if ((side == FieldSide.LEFT && isFacingGrid) || (side == FieldSide.RIGHT && !isFacingGrid)){
+        rotation = new Rotation2d(Math.PI);
+      } else{
+        rotation = new Rotation2d(0);
+      }
+
+      return new Pose2d(x, y, rotation);
+    }
   }
 }
 
