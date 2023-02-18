@@ -5,15 +5,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
@@ -51,15 +47,15 @@ public class Arm extends SubsystemBase {
   }
 
   public void raise() {
-    _doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+    _doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
   public void lower() {
     if(_groundControl.isOpen() || _groundControl.isDown()) {
-      _doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+      _doubleSolenoid.set(DoubleSolenoid.Value.kForward);
     }
   }
   public boolean isRaised() {
-    return _doubleSolenoid.get()==DoubleSolenoid.Value.kForward;
+    return _doubleSolenoid.get()==DoubleSolenoid.Value.kReverse;
   }
   public boolean isExtended() {
     return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters>.8;

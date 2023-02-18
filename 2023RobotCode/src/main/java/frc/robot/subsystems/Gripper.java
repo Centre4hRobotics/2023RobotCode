@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Gripper extends SubsystemBase {
 
-  private final Solenoid _Solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 2);
+  private final Solenoid _Solenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
 
   /** Creates a new Gripper. */
   public Gripper() {}

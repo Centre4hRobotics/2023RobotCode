@@ -32,7 +32,7 @@ public class LockPosition extends CommandBase {
     _PidController = new PIDController(kp, ki, kd);
     _driveTrain = driveTrain;
 
-    // if (tab.getComponents().isEmpty()) {
+    if (tab.getComponents().isEmpty()) {
       PEntry = tab.add("P", _driveTrain.getLockPositionkP())
         .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
       IEntry = tab.add("I", _driveTrain.getLockPositionkI())
@@ -43,7 +43,7 @@ public class LockPosition extends CommandBase {
         .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
       baseEntry = tab.add("base", _driveTrain.getLockPositionBase())
         .withWidget(BuiltInWidgets.kTextView).withProperties(Map.of("min", 0)).getEntry();
-    // } 
+    } 
     
 
     // Use addRequirements() here to declare subsystem dependencies.

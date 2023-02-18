@@ -35,25 +35,25 @@ public final class Autos {
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 0, 0, .35, false)));
   }
 
-  public static CommandBase bottomAutoThree(DriveTrain driveTrain, FieldSide side) throws Exception {
-    double velocityCoefficient = .8;
+  public static CommandBase bottomAutoThree(DriveTrain driveTrain, FieldSide side, int grid, int node) throws Exception {
+    double velocityCoefficient = .5;
     double angle=.67617;
     if(side==FieldSide.RIGHT) {
-      angle=Math.PI-angle;
+      angle-=Math.PI;
     }
     angle+=Math.PI;
-    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, 0, 0, 1, velocityCoefficient, angle, true))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, 1), 3).withTimeout(.5))
+    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?1:2, velocityCoefficient, angle, true))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?1:2), 3).withTimeout(.5))
       .andThen(new WaitCommand(.5))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, true, true), 3).withTimeout(.5))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 0, 1, velocityCoefficient, true)))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(.5))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?1:2, velocityCoefficient, true)))
       .andThen(new WaitCommand(.5))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToSideStage(side, 0, 0, velocityCoefficient)))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToSideStage(side, grid, node, velocityCoefficient)))
       .andThen(new TurnToAngle(driveTrain, 90, 3))
       .andThen(new DriveWithSpeed(driveTrain, velocityCoefficient).withTimeout(.1/velocityCoefficient))
       .andThen(new WaitCommand(.5))
       .andThen(new TurnToAngle(driveTrain, 20, 3).withTimeout(.5))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 1, 0, velocityCoefficient, true)));
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)));
       
   }
 

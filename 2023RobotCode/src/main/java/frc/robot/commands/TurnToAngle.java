@@ -83,6 +83,13 @@ public class TurnToAngle extends CommandBase {
     if (_target != null) {
       Pose2d currentPose = _driveTrain.getPose();
       double offset = (Math.atan2(_target.getY() - currentPose.getY(), _target.getX() - currentPose.getX()) - _driveTrain.getPose().getRotation().getRadians()) * 180 / Math.PI;
+      offset%=360;
+      if(offset>180) {
+        offset-=360;
+      }
+      else if(offset<-180) {
+        offset+=360;
+      }
       _targetAngle = _driveTrain.getAngle()+offset;
       NetworkTableInstance nt = NetworkTableInstance.getDefault();
       nt.getTable("TurnToAngle PID").getEntry("Target Angle").setValue(_targetAngle);

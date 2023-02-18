@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class GroundControl extends SubsystemBase {
   /** Creates a new GroundControl. */
 
-  private final Solenoid _UpDownSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
-  private final Solenoid _OpenCloseSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
+  private final Solenoid _UpDownSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 2);
+  private final Solenoid _OpenCloseSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
 
   private final TalonSRX _leadMotor = new TalonSRX(11);//right
   private final TalonSRX _followMotor = new TalonSRX(10);//left
@@ -48,15 +48,15 @@ public class GroundControl extends SubsystemBase {
   }
 
   public void close() {
-    // if(_arm.isRaised() || isDown()) {
+    if(_arm.isRaised() || isDown()) {
       _OpenCloseSolenoid.set(true);
-    // }
+    }
   }
 
   public void raise() {
-    // if(_arm.isRaised() || isOpen()) {
+    if(_arm.isRaised() || isOpen()) {
       _UpDownSolenoid.set(false);
-    // }
+    }
   }
 
   public void lower() {

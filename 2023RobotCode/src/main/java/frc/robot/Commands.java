@@ -34,7 +34,7 @@ public class Commands {
             case("Blue Right"):
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
-                return Autos.bottomAutoThree(_driveTrain, FieldSide.LEFT);
+                return Autos.bottomAutoThree(_driveTrain, FieldSide.LEFT, 0, 0);
             case("Blue Left"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 2));
                 return Autos.topAuto(_driveTrain, FieldSide.LEFT);
@@ -42,12 +42,12 @@ public class Commands {
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 1, 0));
                 return Autos.scoreCenter(_driveTrain, FieldSide.RIGHT, 0);
-            case("Red Left"):
-                _driveTrain.resetGyro();
-                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 0, 0));
-                return Autos.bottomAutoThree(_driveTrain, FieldSide.RIGHT);
             case("Red Right"):
+                _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 2, 2));
+                return Autos.bottomAutoThree(_driveTrain, FieldSide.RIGHT, 2, 2);
+            case("Red Left"):
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 0, 0));
                 return Autos.topAuto(_driveTrain, FieldSide.RIGHT);
             default:    
                 return new StopDrive(_driveTrain);

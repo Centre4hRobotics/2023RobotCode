@@ -108,11 +108,17 @@ public class Trajectories {
 
     public static Trajectory generateScoreToSideStage(FieldSide side, int grid, int node, double velocityCoefficient) throws Exception {
       Rotation2d rotation;
-      if((grid==0 && side==FieldSide.LEFT) || (grid==2 && side==FieldSide.RIGHT)) {
+      if(grid==0 && side==FieldSide.LEFT) {
         rotation = new Rotation2d((-Math.PI/2)*1.2);
       }
-      else {
+      else if(grid==2 && side==FieldSide.RIGHT) {
+        rotation = new Rotation2d((-Math.PI/2)*1.2+Math.PI);
+      }
+      else if(grid==0 && side==FieldSide.RIGHT) {
         rotation = new Rotation2d((Math.PI/2)*1.2);
+      }
+      else {
+        rotation = new Rotation2d((Math.PI/2)*1.2+Math.PI);
       }
       return generateToPose(List.of(
         FieldPoses.getScoringPose(side, grid, node),
