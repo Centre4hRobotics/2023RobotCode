@@ -190,6 +190,11 @@ public final class Constants {
       3.860798882, 4.4196, 4.978401118
     };
 
+    private static final double leftStagingX = leftScoringX + 5.6896, rightStagingX = rightScoringX - 5.6896;
+    private static final double[] yStagingPositions = {
+      0.92075, 0.92075 + 1.2192, 0.92075 + 2 * 1.2192, 0.92075 + 3 * 1.2192
+    };
+
     /**
      * Get pose of a scoring position
      * @param side Which side of the field, either LEFT (Blue) or RIGHT (Red)
@@ -212,14 +217,14 @@ public final class Constants {
           rotation = new Rotation2d(0);
           break;
         default: 
-          throw new Exception("side isn't left or right?");
+          throw new IllegalArgumentException("side isn't left or right?");
       }
 
       if (grid < 0 || grid > 2) {
-        throw new Exception("grid should be between 0 and 2");
+        throw new IllegalArgumentException("grid should be between 0 and 2");
       }
       if (node < 0 || node > 2) {
-        throw new Exception("node should be between 0 and 2");
+        throw new IllegalArgumentException("node should be between 0 and 2");
       }
       
       double y = yScoringPositions[grid * 3 + node];
@@ -227,6 +232,13 @@ public final class Constants {
       return new Pose2d(x, y, rotation);
     }
 
+    /**
+     * Get pose for being partially on charging station
+     * @param side LEFT (Blue) or RIGHT (Red)
+     * @param chargeSide INSIDE or OUTSIDE (inside is within community, closer to scoring grids)
+     * @return
+     * @throws Exception
+     */
     public static final Pose2d getOnChargingStationPose(FieldSide side) throws Exception {
       // not calculated, used pathweaver
       switch (side) {
@@ -248,8 +260,66 @@ public final class Constants {
         case RIGHT: 
           return new Pose2d(11.05, 2.727, new Rotation2d(0));
         default: 
-          throw new Exception("side isn't left or right?");
+          throw new IllegalArgumentException("side isn't left or right");
       }
+    }
+
+    /**
+     * Get Pose2d of game pieces near middle of the field
+     * @param side LEFT (Blue) or RIGHT (RED)
+     * @param position 0 is closest to edge of field, 3 is farthest
+     * @return
+     * @throws Exception
+     */
+    public static final Pose2d getStagingPose(FieldSide side, int position) throws Exception {
+      double grabberOffset = .3;
+
+      double x;
+      Rotation2d rotation;
+      switch (side) {
+        case LEFT:
+          x = leftStagingX - FalconSize.length / 2 - grabberOffset;
+          rotation = new Rotation2d(Math.PI); // faces opposite way, turns in auto
+          break;
+        case RIGHT:
+          x = rightStagingX + FalconSize.length / 2 + grabberOffset;
+          rotation = new Rotation2d(0);
+          break;
+        default: 
+          throw new IllegalArgumentException("side isn't left or right?");
+      }
+
+      assert 0 <= position && position <= 3;
+
+      double y = yStagingPositions[position];
+
+      return new Pose2d(x, y, rotation);
+    }
+
+    public static final Pose2d getStagingPose(FieldSide side, int position, double angle) throws Exception {
+      double grabberOffset = .3;
+  
+      double x;
+      Rotation2d rotation;
+      switch (side) {
+        case LEFT:
+          x = leftStagingX - FalconSize.length / 2 - grabberOffset;
+          rotation = new Rotation2d(angle); // faces opposite way, turns in auto
+          break;
+        case RIGHT:
+          x = rightStagingX + FalconSize.length / 2 + grabberOffset;
+          rotation = new Rotation2d(angle);
+          break;
+        default: 
+          throw new IllegalArgumentException("side isn't left or right?");
+      }
+  
+      assert 0 <= position && position <= 3;
+  
+      double y = yStagingPositions[position];
+  
+      return new Pose2d(x, y, rotation);
     }
   }
 }
+

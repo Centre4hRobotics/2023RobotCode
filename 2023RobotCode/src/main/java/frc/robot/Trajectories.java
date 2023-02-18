@@ -92,7 +92,6 @@ public class Trajectories {
       );
     }
 
-    
     public static Trajectory generateScoreToCharge(FieldSide side, int grid, int node, boolean reversed) throws Exception {
       return generateToPose(
         FieldPoses.getScoringPose(side, grid, node), 
@@ -102,6 +101,32 @@ public class Trajectories {
       );
     }
 
+    public static Trajectory generateScoreToStage(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient) throws Exception {
+      return generateToPose(
+        FieldPoses.getScoringPose(side, grid, node),
+        FieldPoses.getStagingPose(side, stagePosition),
+        true,
+        velocityCoefficient
+      );
+    }
+
+    public static Trajectory generateScoreToStage(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient, double angle) throws Exception {
+      return generateToPose(
+        FieldPoses.getScoringPose(side, grid, node),
+        FieldPoses.getStagingPose(side, stagePosition, angle),
+        true,
+        velocityCoefficient
+      );
+    }
+
+    public static Trajectory generateStageToScore(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient) throws Exception {
+      return generateToPose(
+        FieldPoses.getStagingPose(side, stagePosition),
+        FieldPoses.getScoringPose(side, grid, node),
+        false,
+        velocityCoefficient
+      );
+    }
     
     public static TrajectoryConfig getNewConfig(double velocityCoefficient, double accelerationCoefficient) {
         
