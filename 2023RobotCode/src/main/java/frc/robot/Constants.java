@@ -352,6 +352,39 @@ public final class Constants {
 
       return new Pose2d(x, y, rotation);
     }
+
+    public static final Pose2d getAvoidGamePiecePose(FieldSide side, int grid) {
+      double offset = .6;
+      if(side==FieldSide.LEFT) {
+        if(grid==0) {
+          return new Pose2d(getTrueStagingPose(side, grid).getX()-offset, getTrueStagingPose(side, grid).getY()+offset, new Rotation2d(-(Math.PI*3)/4));
+        }
+        return new Pose2d(getTrueStagingPose(side, grid).getX()-offset, getTrueStagingPose(side, grid).getY()-offset, new Rotation2d((Math.PI*3)/4));
+      }
+      if(grid==0) {
+        return new Pose2d(getTrueStagingPose(side, grid).getX()+offset, getTrueStagingPose(side, grid).getY()+offset, new Rotation2d(-(Math.PI)/4));
+      }
+      return new Pose2d(getTrueStagingPose(side, grid).getX()+offset, getTrueStagingPose(side, grid).getY()+offset, new Rotation2d((Math.PI)/4));
+    }
+
+    //No staging pose of field elements without offset
+    public static final Pose2d getTrueStagingPose(FieldSide side, int position){
+      double x;
+      switch (side) {
+        case LEFT:
+          x = leftStagingX;
+          break;
+        case RIGHT:
+          x = rightStagingX;
+          break;
+        default: 
+          throw new IllegalArgumentException("side isn't left or right?");
+      }
+  
+      double y = yStagingPositions[position];
+
+      return new Pose2d(x, y, new Rotation2d(0));
+    }
   }
 }
 

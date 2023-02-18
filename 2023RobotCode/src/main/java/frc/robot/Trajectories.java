@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -60,7 +62,7 @@ public class Trajectories {
       if(useWaypoint) {
         return generateToPose(List.of(
           FieldPoses.getScoringPose(side, grid, node), 
-          FieldPoses.getAvoidChargingStationPose(side, grid==0, false), 
+          FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 
           FieldPoses.getStagingPose(side, stagePosition)),
           true, velocityCoefficient);
       }
@@ -76,7 +78,7 @@ public class Trajectories {
       if(useWaypoint) {
         return generateToPose(List.of(
           FieldPoses.getScoringPose(side, grid, node), 
-          FieldPoses.getAvoidChargingStationPose(side, grid==0, false), 
+          FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 
           FieldPoses.getStagingPose(side, stagePosition, angle)), 
           true, velocityCoefficient);
       }
@@ -88,13 +90,36 @@ public class Trajectories {
       );
     }
 
-    public static Trajectory generateStageToScore(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient) throws Exception {
+    public static Trajectory generateStageToScore(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient, boolean useWaypoint) throws Exception {
+      if(useWaypoint) {
+        return generateToPose(List.of(
+          FieldPoses.getStagingPose(side, stagePosition),
+          FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
+          FieldPoses.getScoringPose(side, grid, node)
+        ), false, velocityCoefficient);
+      }
       return generateToPose(
         FieldPoses.getStagingPose(side, stagePosition),
         FieldPoses.getScoringPose(side, grid, node),
         false,
         velocityCoefficient
       );
+    }
+
+    public static Trajectory generateScoreToSideStage(FieldSide side, int grid, int node, double velocityCoefficient) throws Exception {
+      Rotation2d rotation;
+      if((grid==0 && side==FieldSide.LEFT) || (grid==2 && side==FieldSide.RIGHT)) {
+        rotation = new Rotation2d((-Math.PI/2)*1.2);
+      }
+      else {
+        rotation = new Rotation2d((Math.PI/2)*1.2);
+      }
+      return generateToPose(List.of(
+        FieldPoses.getScoringPose(side, grid, node),
+        FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
+        FieldPoses.getAvoidGamePiecePose(side, grid),
+        new Pose2d(FieldPoses.getTrueStagingPose(side, grid==0?1:2/*if grid==0 return 1 else 2*/).getTranslation(), rotation)
+      ), true, velocityCoefficient);
     }
     
     public static TrajectoryConfig getNewConfig(double velocityCoefficient, double accelerationCoefficient) {
@@ -111,7 +136,7 @@ public class Trajectories {
                 Constants.kvVoltsSecondsPerMeter,
                 Constants.kaVoltsSecondsSquaredPerMeter),
             Constants.kDriveKinematics,
-            4); // 10
+            10); // 10
 
         //Create trajectoryConfig object
         TrajectoryConfig config =

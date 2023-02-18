@@ -82,8 +82,8 @@ public class TurnToAngle extends CommandBase {
     //Grab PID info from shuffleboard and apply it
     if (_target != null) {
       Pose2d currentPose = _driveTrain.getPose();
-      _targetAngle = Math.atan2(_target.getY() - currentPose.getY(), _target.getX() - currentPose.getX()) * 180 / Math.PI;
-
+      double offset = (Math.atan2(_target.getY() - currentPose.getY(), _target.getX() - currentPose.getX()) - _driveTrain.getPose().getRotation().getRadians()) * 180 / Math.PI;
+      _targetAngle = _driveTrain.getAngle()+offset;
       NetworkTableInstance nt = NetworkTableInstance.getDefault();
       nt.getTable("TurnToAngle PID").getEntry("Target Angle").setValue(_targetAngle);
     }
@@ -113,7 +113,7 @@ public class TurnToAngle extends CommandBase {
     else {
       pidValue-=base;
     }
-    double maxVal = 1;
+    double maxVal = .8;
     if(pidValue>maxVal) { // caps pidValue to maxVal
       pidValue = maxVal;
     }

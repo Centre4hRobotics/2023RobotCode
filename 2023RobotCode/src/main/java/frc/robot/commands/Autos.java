@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
 import frc.robot.Trajectories;
 import frc.robot.Constants.FieldPoses;
 import frc.robot.Constants.FieldSide;
@@ -23,39 +22,43 @@ public final class Autos {
       // .andThen(new FollowTrajectoryToPose(driveTrain, FieldPoses.getOffChargingStationPose(side), .3))
       .andThen(new GetOffChargingStation(driveTrain, .5, -1))
       .andThen(new DriveWithSpeed(driveTrain, -.5).withTimeout(.25))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getOnChargingStationPose(side), 5))
+      .andThen(new TurnToAngle(driveTrain, 180, 5))
       .andThen(new GetOnChargingStation(driveTrain, .5, -1))
-
       .andThen(new Balance(driveTrain));
   }
 
   public static CommandBase bottomAuto(DriveTrain driveTrain, FieldSide side) throws Exception {
-    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, 0, 0, 0, .35))
+    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, 0, 0, 0, .35, false))
       .andThen(new TurnToAngle(driveTrain, -180, 3)) // angle is relative to starting angle...
       .andThen(new WaitCommand(1))
       .andThen(new TurnToAngle(driveTrain, 0, 3))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 0, 0, .35)));
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 0, 0, .35, false)));
   }
 
   public static CommandBase bottomAutoThree(DriveTrain driveTrain, FieldSide side) throws Exception {
-    double velocityCoefficient = .5;
-    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, 0, 0, 0, velocityCoefficient))
-      .andThen(new TurnToAngle(driveTrain, -180, 3)) // angle is relative to starting angle...
-      .andThen(new WaitCommand(1))
-      .andThen(new TurnToAngle(driveTrain, 0, 3))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 0, 0, velocityCoefficient)))
-      .andThen(new WaitCommand(1))
-      .andThen(new FollowTrajectory(driveTrain, 
-        Trajectories.generateScoreToStage(side, 0, 0, 1, velocityCoefficient, Math.PI / 2)))
-      .andThen(new TurnToAngle(driveTrain, -180, 3))
-      .andThen(new WaitCommand(1))
-      .andThen(new TurnToAngle(driveTrain, 0, 3))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 0, 1, velocityCoefficient)));
+    double velocityCoefficient = .8;
+    double angle=.67617;
+    if(side==FieldSide.RIGHT) {
+      angle=Math.PI-angle;
+    }
+    angle+=Math.PI;
+    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, 0, 0, 1, velocityCoefficient, angle, true))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, 1), 3).withTimeout(.5))
+      .andThen(new WaitCommand(.5))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, true, true), 3).withTimeout(.5))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 0, 1, velocityCoefficient, true)))
+      .andThen(new WaitCommand(.5))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToSideStage(side, 0, 0, velocityCoefficient)))
+      .andThen(new TurnToAngle(driveTrain, 90, 3))
+      .andThen(new DriveWithSpeed(driveTrain, velocityCoefficient).withTimeout(.1/velocityCoefficient))
+      .andThen(new WaitCommand(.5))
+      .andThen(new TurnToAngle(driveTrain, 20, 3).withTimeout(.5))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 1, 0, velocityCoefficient, true)));
       
   }
 
   public static CommandBase topAuto(DriveTrain driveTrain, FieldSide side) throws Exception {
-    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, 2, 2, 3, .35))
+    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, 2, 2, 3, .35, false))
       .andThen(new TurnToAngle(driveTrain, 0, 3));
   }
 
