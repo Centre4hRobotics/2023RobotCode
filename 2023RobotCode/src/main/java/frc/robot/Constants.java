@@ -39,12 +39,12 @@ public final class Constants {
   
   //robot characterization values
     
-    public static final double ksVolts = .10737;
-    public static final double kvVoltsSecondsPerMeter = 2.3429; //Falcon practice
-    public static final double kaVoltsSecondsSquaredPerMeter = .19912;
-    // public static final double ksVolts = 0.62303;
-    // public static final double kvVoltsSecondsPerMeter = 2.364; //competition
-    // public static final double kaVoltsSecondsSquaredPerMeter = 0.3286;
+    // public static final double ksVolts = .10737;
+    // public static final double kvVoltsSecondsPerMeter = 2.3429; //Falcon practice
+    // public static final double kaVoltsSecondsSquaredPerMeter = .19912;
+    public static final double ksVolts = 0.106;
+    public static final double kvVoltsSecondsPerMeter = 2.7472; //competition
+    public static final double kaVoltsSecondsSquaredPerMeter = 0.59873;
 
     //Porportional control in PID loop (need to tune this)
     public static final double kpDriveVel = 0.5;  //Characterization tool suggests 2.1325
@@ -70,12 +70,13 @@ public final class Constants {
 
   public static class ArmConstants {
     public static final double retracted = 0;
-    public static final double lowPosition = 0;
-    public static final double middlePosition = 0.52696872;
-    public static final double highPosition = 1.05393744;
-    public static final double pickupPosition = 1.05393744;
-    public static final double maxExtention = 1.05393744;
-    public static final double encoderTicksToMeters = -0.005855208;
+    public static final double lowPosition = 26*ArmConstants.encoderTicksToMeters;
+    public static final double middlePosition = 114.810*ArmConstants.encoderTicksToMeters;
+    public static final double highPosition = 187.706*ArmConstants.encoderTicksToMeters;
+    public static final double pickupPosition = 48.5*ArmConstants.encoderTicksToMeters;
+    public static final double maxExtention = 199.6*ArmConstants.encoderTicksToMeters;
+    public static final double encoderTicksToMeters = 0.005855208;
+
   }
 
   public static class PracticeNeoTurnToAngleConstants {

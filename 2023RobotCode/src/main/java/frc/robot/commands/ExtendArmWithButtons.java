@@ -12,11 +12,13 @@ public class ExtendArmWithButtons extends CommandBase {
   /** Creates a new ExtendArmWithButtons. */
   private final Arm _arm;
   private final Joystick _functionJoystick;
+  private boolean wasPressedLastCycle;
   public ExtendArmWithButtons(Arm arm, Joystick functionJoystick) {
     _arm = arm;
     _functionJoystick = functionJoystick;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_arm);
+    wasPressedLastCycle = false;
   }
 
   // Called when the command is initially scheduled.
@@ -27,15 +29,17 @@ public class ExtendArmWithButtons extends CommandBase {
   @Override
   public void execute() {
     if(_functionJoystick.getRawButton(5)) {
-      // _arm.setHeight(_arm.getHeight()+.02);
       _arm.extendVolts(5);
+      wasPressedLastCycle = true;
     }
     else if(_functionJoystick.getRawButton(6)) {
-      // _arm.setHeight(_arm.getHeight()-.02);
       _arm.extendVolts(-5);
+      wasPressedLastCycle = true;
     }
-    else {
+    else if(wasPressedLastCycle) {
       _arm.extendVolts(0);
+      _arm.setHeight(_arm.getHeight());
+      wasPressedLastCycle = false;
     }
   }
 

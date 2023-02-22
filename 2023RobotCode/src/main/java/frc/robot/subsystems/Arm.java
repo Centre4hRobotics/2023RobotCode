@@ -27,11 +27,13 @@ public class Arm extends SubsystemBase {
   public Arm() {
     super();
     _leadMotor.getPIDController().setP(.02); // change only this one
-    _leadMotor.getPIDController().setI(.002);
+    _leadMotor.getPIDController().setI(0);
     _leadMotor.getPIDController().setD(0);
     _leadMotor.getPIDController().setIZone(10);
     _leadMotor.getPIDController().setFF(0);
     _leadMotor.getPIDController().setOutputRange(-1, 1);
+
+    _leadMotor.setSmartCurrentLimit(20);
   }
 
   public void get(GroundControl groundControl) {
@@ -44,6 +46,7 @@ public class Arm extends SubsystemBase {
     
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Arm").getEntry("encoderValue").setValue(_leadMotor.getEncoder().getPosition());
+    _leadMotor.getPIDController().setOutputRange(-5, 5);
   }
 
   public void raise() {
@@ -68,16 +71,21 @@ public class Arm extends SubsystemBase {
   // -0.23052 inches per tick
   // -0.005855208 meters per tick
 
+  // 187.706 high
+  // 114.810 mid
+  // 26 low
+  // 48.5 pickup
+  // 
+
   public void extendVolts(double volts) {
     _leadMotor.setVoltage(volts);
   }
 
   public void setHeight(double position) {
-    _height = position;
     position/=ArmConstants.encoderTicksToMeters;
     _leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
   }
   public double getHeight() {
-    return _height;
+    return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters;
   }
 }

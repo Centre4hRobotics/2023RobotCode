@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -25,6 +26,16 @@ public class GroundControl extends SubsystemBase {
     _followMotor.setInverted(true);
     _followMotor.follow(_leadMotor);
     _arm = arm;
+
+    _leadMotor.enableCurrentLimit(true);
+    _followMotor.enableCurrentLimit(true);
+
+    _leadMotor.configContinuousCurrentLimit(20);
+    _followMotor.configContinuousCurrentLimit(20);
+
+    _leadMotor.configPeakCurrentLimit(20);
+    _followMotor.configPeakCurrentLimit(20);
+
   }
 
   @Override

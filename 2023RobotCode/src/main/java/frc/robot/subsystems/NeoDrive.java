@@ -58,6 +58,11 @@ public class NeoDrive extends DriveTrain {
         _leftEncoder = _leftLeadMotor.getEncoder();
         _rightEncoder = _rightLeadMotor.getEncoder();
 
+        _leftLeadMotor.setSmartCurrentLimit(40);
+        _leftFollowMotor.setSmartCurrentLimit(40);
+        _rightLeadMotor.setSmartCurrentLimit(40);
+        _rightFollowMotor.setSmartCurrentLimit(40);
+        
         
         //Set lead and follow motors
         _leftFollowMotor.follow(_leftLeadMotor);

@@ -54,7 +54,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Arm _arm = new Arm();  
   private final GroundControl _groundControl = new GroundControl(_arm);
-  private final DriveTrain _driveTrain = new FalconDrive(_arm); // change to neoDrive for a neo bot
+  private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
   private final Gripper _gripper = new Gripper();
   private final Lights _lights = new Lights();
   private final Vision _vision = new Vision();
@@ -120,10 +120,10 @@ public class RobotContainer {
     seven.onTrue(new RaiseArm(_arm));
     seven.onFalse(new LowerArm(_arm));
 
-    eight.onTrue(new SetArmHeight(_arm, ArmConstants.highPosition));
-    nine.onTrue(new SetArmHeight(_arm, ArmConstants.middlePosition));
-    ten.onTrue(new SetArmHeight(_arm, ArmConstants.lowPosition));
-    eleven.onTrue(new SetArmHeight(_arm, ArmConstants.pickupPosition));
+    eight.whileTrue(new SetArmHeight(_arm, ArmConstants.highPosition));
+    nine.whileTrue(new SetArmHeight(_arm, ArmConstants.middlePosition));
+    ten.whileTrue(new SetArmHeight(_arm, ArmConstants.lowPosition));
+    eleven.whileTrue(new SetArmHeight(_arm, ArmConstants.pickupPosition));
     // twelve.onTrue(new SetArmHeight(_arm, ArmConstants.retracted));
     twelve.onTrue(new CloseGripper(_gripper));
     twelve.onFalse(new OpenGripper(_gripper));
