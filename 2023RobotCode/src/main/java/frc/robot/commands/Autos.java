@@ -5,9 +5,12 @@
 package frc.robot.commands;
 
 import frc.robot.Trajectories;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldPoses;
 import frc.robot.Constants.FieldSide;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Gripper;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -27,12 +30,20 @@ public final class Autos {
       .andThen(new Balance(driveTrain));
   }
 
-  public static CommandBase bottomAuto(DriveTrain driveTrain, FieldSide side) throws Exception {
-    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, 0, 0, 0, .35, false))
-      .andThen(new TurnToAngle(driveTrain, -180, 3)) // angle is relative to starting angle...
-      .andThen(new WaitCommand(1))
-      .andThen(new TurnToAngle(driveTrain, 0, 3))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, 0, 0, 0, .35, false)));
+  public static CommandBase bottomAuto(DriveTrain driveTrain, FieldSide side, int grid, int node) throws Exception {
+    double velocityCoefficient = .5;
+    double angle=.67617;
+    if(side==FieldSide.RIGHT) {
+      angle-=Math.PI;
+    }
+    angle+=Math.PI;
+    return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(.6))
+      .andThen(new WaitCommand(.5))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(.6))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?0:3, velocityCoefficient, true)))
+      .andThen(new WaitCommand(.6));
+    
   }
 
   public static CommandBase bottomAutoThree(DriveTrain driveTrain, FieldSide side, int grid, int node) throws Exception {
@@ -64,6 +75,22 @@ public final class Autos {
 
   public static CommandBase balance(DriveTrain driveTrain) {
     return new Balance(driveTrain);
+  }
+
+  /**
+   * Command to lower and extend arm, open gripper, retract and then raise the arm
+   * @param arm
+   * @param level 1-3 with 1 for ground and 3 for highest
+   * @return command to do all this
+   */
+  public static SequentialCommandGroup score(Arm arm, Gripper gripper, double height){
+    return
+      new LowerArm(arm)
+      .andThen(new SetArmHeight(arm, height))
+      .andThen(new OpenGripper(gripper))
+      .andThen(new WaitCommand(.25))
+      .andThen(new SetArmHeight(arm, ArmConstants.retracted))
+      .andThen(new RaiseArm(arm));
   }
 
   private Autos() {
