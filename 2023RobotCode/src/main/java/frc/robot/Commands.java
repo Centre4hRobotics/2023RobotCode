@@ -10,13 +10,22 @@ import frc.robot.Constants.FieldPoses;
 import frc.robot.Constants.FieldSide;
 import frc.robot.commands.Autos;
 import frc.robot.commands.StopDrive;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.GroundControl;
 
 /** Add your docs here. */
 public class Commands {
     private DriveTrain _driveTrain;
-    public Commands(DriveTrain driveTrain) {
+    private GroundControl _groundControl;
+    private Arm _arm;
+    private Gripper _gripper;
+    public Commands(DriveTrain driveTrain, GroundControl groundControl, Arm arm, Gripper gripper) {
         _driveTrain = driveTrain;
+        _groundControl = groundControl;
+        _arm = arm;
+        _gripper = gripper;
     }
 
 
@@ -30,22 +39,24 @@ public class Commands {
             case("Blue Center"):
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 1, 0));
-                return Autos.scoreCenter(_driveTrain, FieldSide.LEFT, 0);
+                return Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0);
             case("Blue Right"):
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
-                return Autos.bottomAutoThree(_driveTrain, FieldSide.LEFT, 0, 0);
+                //return Autos.bottomAutoThree(_driveTrain, FieldSide.LEFT, 0, 0);
+                return Autos.bottomAuto(_driveTrain, _groundControl, FieldSide.LEFT, 0, 0);
             case("Blue Left"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 2));
-                return Autos.topAuto(_driveTrain, FieldSide.LEFT);
+                return Autos.bottomAuto(_driveTrain, _groundControl, FieldSide.LEFT, 2, 2);
             case("Red Center"):
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 1, 0));
-                return Autos.scoreCenter(_driveTrain, FieldSide.RIGHT, 0);
+                return Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.RIGHT, 0);
             case("Red Right"):
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 2, 2));
-                return Autos.bottomAutoThree(_driveTrain, FieldSide.RIGHT, 2, 2);
+                //return Autos.bottomAutoThree(_driveTrain, FieldSide.RIGHT, 2, 2);
+                return Autos.bottomAuto(_driveTrain, _groundControl, FieldSide.RIGHT, 2, 2);
             case("Red Left"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 0, 0));
                 return Autos.topAuto(_driveTrain, FieldSide.RIGHT);
