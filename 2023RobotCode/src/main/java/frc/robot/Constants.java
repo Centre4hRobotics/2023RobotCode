@@ -72,7 +72,7 @@ public final class Constants {
     public static final double retracted = 0;
     public static final double lowPosition = 26*ArmConstants.encoderTicksToMeters;
     public static final double middlePosition = 114.810*ArmConstants.encoderTicksToMeters;
-    public static final double highPosition = 187.706*ArmConstants.encoderTicksToMeters;
+    public static final double highPosition = 184.6*ArmConstants.encoderTicksToMeters;//was 187.706
     public static final double pickupPosition = 48.5*ArmConstants.encoderTicksToMeters;
     public static final double maxExtention = 199.6*ArmConstants.encoderTicksToMeters;
     public static final double encoderTicksToMeters = 0.005855208;
