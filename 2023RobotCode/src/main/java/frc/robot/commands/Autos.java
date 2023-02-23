@@ -11,6 +11,7 @@ import frc.robot.Constants.FieldSide;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.GroundControl;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -18,10 +19,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public final class Autos {
 
 
-  public static SequentialCommandGroup scoreCenter(DriveTrain driveTrain, FieldSide side, int node) throws Exception {
+  public static SequentialCommandGroup scoreCenter(DriveTrain driveTrain, Arm arm, Gripper gripper, FieldSide side, int node) throws Exception {
     // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
     return 
-      new GetOnChargingStation(driveTrain, .5, -1)
+      score(arm, gripper, ArmConstants.highPosition)
+      .andThen(new GetOnChargingStation(driveTrain, .5, -1))
       // .andThen(new FollowTrajectoryToPose(driveTrain, FieldPoses.getOffChargingStationPose(side), .3))
       .andThen(new GetOffChargingStation(driveTrain, .5, -1))
       .andThen(new DriveWithSpeed(driveTrain, -.5).withTimeout(.25))
@@ -30,19 +32,26 @@ public final class Autos {
       .andThen(new Balance(driveTrain));
   }
 
-  public static CommandBase bottomAuto(DriveTrain driveTrain, FieldSide side, int grid, int node) throws Exception {
+  public static CommandBase bottomAuto(DriveTrain driveTrain, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
     double velocityCoefficient = .5;
-    double angle=.67617;
+    double angle=0;
     if(side==FieldSide.RIGHT) {
       angle-=Math.PI;
     }
     angle+=Math.PI;
     return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(.6))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(1))
+      .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.5))
+      .andThen(new DriveWithSpeed(driveTrain, .35).withTimeout(.9))
+      .andThen(new CloseGroundControl(groundControl))
+      .andThen(new WaitCommand(.5))
+      .andThen(new RaiseGroundControl(groundControl))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(.6))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?0:3, velocityCoefficient, true)))
-      .andThen(new WaitCommand(.6));
+      .andThen(new LowerGroundControl(groundControl))
+      .andThen(new WaitCommand(.5))
+      .andThen(new OpenGroundControl(groundControl));
     
   }
 

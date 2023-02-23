@@ -64,7 +64,7 @@ public class RobotContainer {
 
   private final Joystick _functionJoystick = new Joystick(1);
 
-  private final Commands _commands = new Commands(_driveTrain);
+  private final Commands _commands = new Commands(_driveTrain, _groundControl, _arm, _gripper);
   
 
 
@@ -181,8 +181,6 @@ public class RobotContainer {
     JoystickButton l12 = new JoystickButton(_leftDriveJoystick, 12);
     l12.onTrue(new TurnToAngle(_driveTrain, 0, 3));
     */
-    JoystickButton l12 = new JoystickButton(_leftDriveJoystick, 12);
-    l12.onTrue(Autos.score(_arm, _gripper, ArmConstants.highPosition));
 
 
   }

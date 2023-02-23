@@ -46,7 +46,7 @@ public class GetOffChargingStation extends CommandBase {
 
     _driveTrain.arcadeDrive(_speed * _direction, 0);
 
-    if (!passedBump && Math.abs(_driveTrain.getRobotPitch()) > targetAngle) {
+    if (!passedBump && Math.abs(_driveTrain.getRoll()) > targetAngle) {
       passedBump = true;
     }
 
@@ -61,6 +61,6 @@ public class GetOffChargingStation extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return passedBump && Math.abs(_driveTrain.getRobotPitch()) < targetLow;
+    return passedBump && Math.abs(_driveTrain.getRoll()) < targetLow;
   }
 }

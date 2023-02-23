@@ -14,7 +14,7 @@ public class GetOnChargingStation extends CommandBase {
 
   private DriveTrain _driveTrain;
   private double _speed, _direction;
-  private final double targetAngle = 16;
+  private final double targetAngle = 10; // was 16
   private final double targetLow = 5;//was 14.5
   private ArrayList<Double> angles;
   private boolean passedBump = false;
@@ -49,7 +49,8 @@ public class GetOnChargingStation extends CommandBase {
   @Override
   public void execute() {
 
-    angles.add(_driveTrain.getRobotPitch());
+    // was pitch
+    angles.add(_driveTrain.getRoll());
     if (angles.size() > 5) angles.remove(0);
 
     _driveTrain.arcadeDrive(_speed * _direction, 0);
@@ -63,7 +64,7 @@ public class GetOnChargingStation extends CommandBase {
         (angles.get(angles.size() - 1)));
     }
 
-    if (!passedBump && Math.abs(_driveTrain.getRobotPitch()) > targetAngle) {
+    if (!passedBump && Math.abs(_driveTrain.getRoll()) > targetAngle) {
       passedBump = true;
     }
 
@@ -78,6 +79,6 @@ public class GetOnChargingStation extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return passedBump && Math.abs(_driveTrain.getRobotPitch()) < targetLow;
+    return passedBump && Math.abs(_driveTrain.getRoll()) < targetLow;
   }
 }
