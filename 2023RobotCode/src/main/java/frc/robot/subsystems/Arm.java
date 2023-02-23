@@ -34,6 +34,8 @@ public class Arm extends SubsystemBase {
     _leadMotor.getPIDController().setOutputRange(-1, 1);
 
     _leadMotor.setSmartCurrentLimit(20);
+
+    _leadMotor.getEncoder().setPosition(0);
   }
 
   public void get(GroundControl groundControl) {
@@ -46,7 +48,7 @@ public class Arm extends SubsystemBase {
     
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Arm").getEntry("encoderValue").setValue(_leadMotor.getEncoder().getPosition());
-    _leadMotor.getPIDController().setOutputRange(-5, 5);
+    // _leadMotor.getPIDController().setOutputRange(-5, 5);
   }
 
   public void raise() {
@@ -82,10 +84,15 @@ public class Arm extends SubsystemBase {
   }
 
   public void setHeight(double position) {
+    _height = position;
     position/=ArmConstants.encoderTicksToMeters;
     _leadMotor.getPIDController().setReference(position, CANSparkMax.ControlType.kPosition);
   }
   public double getHeight() {
     return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters;
+  }
+
+  public boolean isOnTarget() {
+    return Math.abs(getHeight() - _height) < .02; // meters
   }
 }
