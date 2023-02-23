@@ -26,10 +26,10 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public Arm() {
     super();
-    _leadMotor.getPIDController().setP(.02); // change only this one
-    _leadMotor.getPIDController().setI(0);
+    _leadMotor.getPIDController().setP(.022); // change only this one
+    _leadMotor.getPIDController().setI(0.00005);
     _leadMotor.getPIDController().setD(0);
-    _leadMotor.getPIDController().setIZone(10);
+    _leadMotor.getPIDController().setIZone(15);
     _leadMotor.getPIDController().setFF(0);
     _leadMotor.getPIDController().setOutputRange(-1, 1);
 
@@ -93,6 +93,6 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean isOnTarget() {
-    return Math.abs(getHeight() - _height) < .02; // meters
+    return Math.abs(getHeight() - _height) < .04; // meters
   }
 }
