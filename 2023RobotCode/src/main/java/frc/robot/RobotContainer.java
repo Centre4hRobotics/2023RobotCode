@@ -120,10 +120,10 @@ public class RobotContainer {
     seven.onTrue(new RaiseArm(_arm));
     seven.onFalse(new LowerArm(_arm));
 
-    eight.whileTrue(new SetArmHeight(_arm, ArmConstants.highPosition));
-    nine.whileTrue(new SetArmHeight(_arm, ArmConstants.middlePosition));
-    ten.whileTrue(new SetArmHeight(_arm, ArmConstants.lowPosition));
-    eleven.whileTrue(new SetArmHeight(_arm, ArmConstants.pickupPosition));
+    eight.onTrue(new SetArmHeight(_arm, ArmConstants.highPosition));
+    nine.onTrue(new SetArmHeight(_arm, ArmConstants.middlePosition));
+    ten.onTrue(new SetArmHeight(_arm, ArmConstants.lowPosition));
+    eleven.onTrue(new SetArmHeight(_arm, ArmConstants.pickupPosition));
     // twelve.onTrue(new SetArmHeight(_arm, ArmConstants.retracted));
     twelve.onTrue(new CloseGripper(_gripper));
     twelve.onFalse(new OpenGripper(_gripper));
