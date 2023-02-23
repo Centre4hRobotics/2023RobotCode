@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.CloseGripper;
 import frc.robot.commands.CloseGroundControl;
@@ -57,7 +58,7 @@ public class RobotContainer {
   private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
   private final Gripper _gripper = new Gripper();
   private final Lights _lights = new Lights();
-  private final Vision _vision = new Vision();
+  //private final Vision _vision = new Vision();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
 
@@ -140,8 +141,8 @@ public class RobotContainer {
 
 
     //Left Drive Joystick
-    JoystickButton l5 = new JoystickButton(_leftDriveJoystick, 5);
-    l5.whileTrue(new LockPosition(_driveTrain));
+    JoystickButton l4 = new JoystickButton(_leftDriveJoystick, 5);
+    l4.whileTrue(new LockPosition(_driveTrain));
 
     JoystickButton l3 = new JoystickButton(_leftDriveJoystick, 3);
     l3.whileTrue(new Balance(_driveTrain));
@@ -150,7 +151,7 @@ public class RobotContainer {
 
 
     //Comment out Button Bindings below here for competitions (they are tests)
-
+    /*
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
     r7.onTrue(new Balance(_driveTrain));
@@ -179,6 +180,9 @@ public class RobotContainer {
 
     JoystickButton l12 = new JoystickButton(_leftDriveJoystick, 12);
     l12.onTrue(new TurnToAngle(_driveTrain, 0, 3));
+    */
+    JoystickButton l12 = new JoystickButton(_leftDriveJoystick, 12);
+    l12.onTrue(Autos.score(_arm, _gripper, ArmConstants.highPosition));
 
 
   }
