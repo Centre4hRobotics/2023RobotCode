@@ -52,10 +52,12 @@ public class Arm extends SubsystemBase {
   }
 
   public void raise() {
-    _doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+    if (!isExtended()) {
+      _doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
   }
   public void lower() {
-    if(_groundControl.isOpen() || _groundControl.isDown()) {
+    if(!isExtended() && (_groundControl.isOpen() || _groundControl.isDown())) {
       _doubleSolenoid.set(DoubleSolenoid.Value.kForward);
     }
   }
