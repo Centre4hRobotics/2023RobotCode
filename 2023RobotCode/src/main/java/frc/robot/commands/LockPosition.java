@@ -51,11 +51,21 @@ public class LockPosition extends CommandBase {
   }
 
   private void setPID() {
-    kp = PEntry.getDouble(_driveTrain.getLockPositionkP());
-    ki = IEntry.getDouble(_driveTrain.getLockPositionkI());
-    IRange = IRangeEntry.getDouble(_driveTrain.getLockPositionIRange());
-    kd = DEntry.getDouble(_driveTrain.getLockPositionkD());
-    base = baseEntry.getDouble(_driveTrain.getLockPositionBase());
+    if (PEntry == null) {
+      kp = _driveTrain.getLockPositionkP();
+      ki = _driveTrain.getLockPositionkI();
+      IRange = _driveTrain.getLockPositionIRange();
+      kd = _driveTrain.getLockPositionkD();
+      base = _driveTrain.getLockPositionBase();
+    }
+    else {
+      kp = PEntry.getDouble(_driveTrain.getLockPositionkP());
+      ki = IEntry.getDouble(_driveTrain.getLockPositionkI());
+      IRange = IRangeEntry.getDouble(_driveTrain.getLockPositionIRange());
+      kd = DEntry.getDouble(_driveTrain.getLockPositionkD());
+      base = baseEntry.getDouble(_driveTrain.getLockPositionBase());
+    }
+
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lock Position PID").getEntry("P").setValue(kp);
     nt.getTable("Lock Position PID").getEntry("I").setValue(ki);

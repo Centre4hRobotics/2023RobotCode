@@ -13,6 +13,7 @@ public class ExtendArmWithJoystick extends CommandBase {
 
   private Arm _arm;
   private Joystick _joystick;
+  private boolean wasPressedLastCycle=false;
 
   public ExtendArmWithJoystick(Arm arm, Joystick joystick) {
     _arm = arm;
@@ -28,14 +29,20 @@ public class ExtendArmWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _arm.setHeight(_arm.getHeight()+.02*_joystick.getX());
+    if(_joystick.getX()!=0) {
+      _arm.extendVolts(5*_joystick.getX());
+      wasPressedLastCycle = true;
+    }
+    else if(wasPressedLastCycle) {
+      _arm.extendVolts(0);
+      _arm.setHeight(_arm.getHeight());
+      wasPressedLastCycle = false;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    _arm.extendVolts(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
