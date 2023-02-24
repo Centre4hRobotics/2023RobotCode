@@ -72,9 +72,9 @@ public final class Constants {
     public static final double retracted = 0;
     public static final double lowPosition = 26*ArmConstants.encoderTicksToMeters;
     public static final double middlePosition = 114.810*ArmConstants.encoderTicksToMeters;
-    public static final double highPosition = 184.6*ArmConstants.encoderTicksToMeters;//was 187.706
-    public static final double pickupPosition = 48.5*ArmConstants.encoderTicksToMeters;
-    public static final double maxExtention = 199.6*ArmConstants.encoderTicksToMeters;
+    public static final double highPosition = 175*ArmConstants.encoderTicksToMeters;//was 184.6
+    public static final double pickupPosition = 50.5*ArmConstants.encoderTicksToMeters; // was 48.5
+    public static final double maxExtention = 176*ArmConstants.encoderTicksToMeters; // was 199.6
     public static final double encoderTicksToMeters = 0.005855208;
 
   }
@@ -114,6 +114,14 @@ public final class Constants {
     public static final double kd = .0008;
     public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
     public static final double base = .27;
+  }
+
+  public static class CompNeoLockPositionConstants {
+    public static final double kp = 50;
+    public static final double ki = .1;
+    public static final double kd = 0;
+    public static final double IRange = 5; 
+    public static final double base = 0;
   }
 
   public static class FalconTurnToAngleConstants {

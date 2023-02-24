@@ -28,11 +28,11 @@ public class ExtendArmWithButtons extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(_functionJoystick.getRawButton(5)) {
+    if(_functionJoystick.getRawButton(6)) {
       _arm.extendVolts(5);
       wasPressedLastCycle = true;
     }
-    else if(_functionJoystick.getRawButton(6)) {
+    else if(_functionJoystick.getRawButton(7)) {
       _arm.extendVolts(-5);
       wasPressedLastCycle = true;
     }

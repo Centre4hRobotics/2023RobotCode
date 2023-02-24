@@ -10,12 +10,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 
-public class GetOnChargingStation extends CommandBase {
+public class BasicBalance extends CommandBase {
 
   private DriveTrain _driveTrain;
   private double _speed, _direction;
-  private final double targetAngle = 12; // was 16
-  private final double targetLow = 13;//was 14.5
+  private final double targetAngle = 12.5; // was 16
+  private final double targetLow = 12;//was 14.5
   private ArrayList<Double> angles;
   private boolean passedBump = false;
 
@@ -27,7 +27,7 @@ public class GetOnChargingStation extends CommandBase {
    * @param speed driving speed, 0 to 1
    * @param direction 1 or -1 (forwards or backwards)
    * */
-  public GetOnChargingStation(DriveTrain driveTrain, double speed, double direction) {
+  public BasicBalance(DriveTrain driveTrain, double speed, double direction) {
     _driveTrain = driveTrain;
     _speed = speed;
     _direction = direction;

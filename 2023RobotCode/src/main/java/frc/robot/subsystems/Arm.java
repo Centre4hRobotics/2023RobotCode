@@ -65,7 +65,7 @@ public class Arm extends SubsystemBase {
     return _doubleSolenoid.get()==DoubleSolenoid.Value.kReverse;
   }
   public boolean isExtended() {
-    return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters>.8;
+    return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters > ArmConstants.middlePosition / 2;
   }
   //4.167 @ 0"
   //-6.357 @ 2.375"

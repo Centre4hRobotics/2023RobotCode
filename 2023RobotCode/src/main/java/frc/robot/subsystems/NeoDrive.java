@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CompNeoBalanceConstants;
+import frc.robot.Constants.CompNeoLockPositionConstants;
 import frc.robot.Constants.CompNeoTurnToAngleConstants;
 import frc.robot.Constants.PracticeNeoBalanceConstants;
 import frc.robot.Constants.PracticeNeoTurnToAngleConstants;
@@ -90,8 +91,8 @@ public class NeoDrive extends DriveTrain {
     @Override
     public void tankDriveVolts (double leftVolts, double rightVolts) {
         if(_arm.isExtended()) {
-            leftVolts = Math.min(leftVolts, 8);
-            rightVolts = Math.min(rightVolts, 8);
+            leftVolts = Math.signum(leftVolts) * Math.min(Math.abs(leftVolts), 12*.05);
+            rightVolts = Math.signum(rightVolts) * Math.min(Math.abs(rightVolts), 12*.05);
         }
         _leftLeadMotor.setVoltage(leftVolts);
         _rightLeadMotor.setVoltage(rightVolts);
@@ -107,8 +108,8 @@ public class NeoDrive extends DriveTrain {
     @Override
     public void arcadeDrive(double speed, double steer) {
         if(_arm.isExtended()) {
-            speed = Math.min(speed, .65);
-            steer = Math.min(steer, .65);
+            speed = Math.signum(speed) * Math.min(Math.abs(speed), .05);
+            steer = Math.signum(steer) * Math.min(Math.abs(steer), .05);
         }
         _drive.arcadeDrive(speed, steer);
         _drive.feed();//makes sure differencial drive knows something bad hasn't happened
@@ -175,14 +176,14 @@ public class NeoDrive extends DriveTrain {
     public double getBalanceBase() {if(_isComp){return CompNeoBalanceConstants.base;} return PracticeNeoBalanceConstants.base;}
 
     @Override
-    public double getLockPositionkP() { return 0; }
+    public double getLockPositionkP() { return CompNeoLockPositionConstants.kp; }
     @Override
-    public double getLockPositionkI() { return 0; }
+    public double getLockPositionkI() { return CompNeoLockPositionConstants.ki; }
     @Override
-    public double getLockPositionIRange() { return 0; }
+    public double getLockPositionIRange() { return CompNeoLockPositionConstants.IRange; }
     @Override
-    public double getLockPositionkD() { return 0; }
+    public double getLockPositionkD() { return CompNeoLockPositionConstants.kd; }
     @Override
-    public double getLockPositionBase() { return 0; }
+    public double getLockPositionBase() { return CompNeoLockPositionConstants.base; }
 
 }

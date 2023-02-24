@@ -57,14 +57,15 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Arm _arm = new Arm();  
   private final GroundControl _groundControl = new GroundControl(_arm);
-  private final DriveTrain _driveTrain = new FalconDrive(_arm); // change to neoDrive for a neo bot
+  private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
   private final Gripper _gripper = new Gripper();
   private final Lights _lights = new Lights();
   //private final Vision _vision = new Vision();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
 
-  private final Joystick _functionJoystick = new Joystick(1);
+  private final Joystick _functionJoystick = new Joystick(0);
+  private final Joystick _functionJoystick2 = new Joystick(1);
 
   private final Commands _commands = new Commands(_driveTrain, _groundControl, _arm, _gripper);
   
@@ -78,8 +79,8 @@ public class RobotContainer {
   public RobotContainer() {
     _arm.get(_groundControl);
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
-    _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick));
-    _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .4));
+    _arm.setDefaultCommand(new ExtendArmWithButtons(_arm, _functionJoystick));
+    _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .25));
     _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
     configureBindings();
@@ -105,12 +106,12 @@ public class RobotContainer {
     JoystickButton six = new JoystickButton(_functionJoystick, 6); 
     JoystickButton seven = new JoystickButton(_functionJoystick, 7);
 
-    JoystickButton one2 = new JoystickButton(_functionJoystick, 1);
-    JoystickButton two2 = new JoystickButton(_functionJoystick, 2);
-    JoystickButton three2 = new JoystickButton(_functionJoystick, 3);
-    JoystickButton four2 = new JoystickButton(_functionJoystick, 4);
-    JoystickButton five2 = new JoystickButton(_functionJoystick, 5);
-    JoystickButton six2 = new JoystickButton(_functionJoystick, 6);
+    JoystickButton one2 = new JoystickButton(_functionJoystick2, 1);
+    JoystickButton two2 = new JoystickButton(_functionJoystick2, 2);
+    JoystickButton three2 = new JoystickButton(_functionJoystick2, 3);
+    JoystickButton four2 = new JoystickButton(_functionJoystick2, 4);
+    JoystickButton five2 = new JoystickButton(_functionJoystick2, 5);
+    JoystickButton six2 = new JoystickButton(_functionJoystick2, 6);
 
     //Function Button Board
     one.onTrue(new RaiseGroundControl(_groundControl));
@@ -119,18 +120,22 @@ public class RobotContainer {
     two.onTrue(new OpenGroundControl(_groundControl));
     two.onFalse(new CloseGroundControl(_groundControl));
 
-    three.onTrue(new Intake(_groundControl, -.4));
+    three.whileTrue(new Intake(_groundControl, -.4));
     four.whileTrue(new Intake(_groundControl, .4));
 
     one2.onTrue(new RaiseArm(_arm));
     one2.onFalse(new LowerArm(_arm));
 
-    five2.onTrue(new SetArmHeight(_arm, ArmConstants.highPosition));
-    six2.onTrue(new SetArmHeight(_arm, ArmConstants.middlePosition));
-    four2.onTrue(new SetArmHeight(_arm, ArmConstants.pickupPosition));
-    three2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted));
-    two2.onTrue(new CloseGripper(_gripper));
-    two2.onFalse(new OpenGripper(_gripper));
+    five2.onTrue(new LowerArm(_arm)
+      .andThen(new SetArmHeight(_arm, ArmConstants.highPosition)));
+    six2.onTrue(new LowerArm(_arm)
+      .andThen(new SetArmHeight(_arm, ArmConstants.middlePosition)));
+    four2.onTrue(new RaiseArm(_arm)
+      .andThen(new SetArmHeight(_arm, ArmConstants.pickupPosition)));
+    three2.onTrue(new RaiseArm(_arm)
+      .andThen(new SetArmHeight(_arm, ArmConstants.retracted)));
+    two2.onFalse(new CloseGripper(_gripper));
+    two2.onTrue(new OpenGripper(_gripper));
     
 
 
@@ -153,7 +158,7 @@ public class RobotContainer {
 
 
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
-    r7.onTrue(new GetOnChargingStation(_driveTrain, .5, 1).andThen(new LockPosition(_driveTrain)));
+    r7.onTrue(new GetOnChargingStation(_driveTrain, .3, 1).andThen(new LockPosition(_driveTrain)));
 
     //Comment out Button Bindings below here for competitions (they are tests)
     /*
