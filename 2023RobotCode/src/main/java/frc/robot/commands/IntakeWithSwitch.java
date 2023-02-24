@@ -28,7 +28,7 @@ public class IntakeWithSwitch extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(_functionJoystick.getRawButton(3)) {
+    if(_functionJoystick.getRawButton(5)) {
       _groundControl.setSpeed(_speed);
     }
     else {
