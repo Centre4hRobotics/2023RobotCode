@@ -43,6 +43,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -114,26 +115,34 @@ public class RobotContainer {
     JoystickButton six2 = new JoystickButton(_functionJoystick2, 6);
 
     //Function Button Board
-    one.onTrue(new RaiseGroundControl(_groundControl));
+    one.onTrue(new RaiseArm(_arm)
+      .andThen(new RaiseGroundControl(_groundControl)));
     one.onFalse(new LowerGroundControl(_groundControl));
     
     two.onTrue(new OpenGroundControl(_groundControl));
-    two.onFalse(new CloseGroundControl(_groundControl));
+    two.onFalse(new RaiseArm(_arm)
+      .andThen(new CloseGroundControl(_groundControl)));
 
     three.whileTrue(new Intake(_groundControl, -.4));
     four.whileTrue(new Intake(_groundControl, .4));
 
     one2.onTrue(new RaiseArm(_arm));
-    one2.onFalse(new LowerArm(_arm));
+    one2.onFalse(new OpenGroundControl(_groundControl)
+      .andThen(new WaitCommand(.02))
+      .andThen(new LowerArm(_arm)));
 
-    five2.onTrue(new LowerArm(_arm)
-      .andThen(new SetArmHeight(_arm, ArmConstants.highPosition)));
-    six2.onTrue(new LowerArm(_arm)
-      .andThen(new SetArmHeight(_arm, ArmConstants.middlePosition)));
+    five2.onTrue(new OpenGroundControl(_groundControl)
+      .andThen(new WaitCommand(.02))
+      .andThen(new LowerArm(_arm)
+      .andThen(new SetArmHeight(_arm, ArmConstants.highPosition))));
+    six2.onTrue(new OpenGroundControl(_groundControl)
+      .andThen(new WaitCommand(.02))
+      .andThen(new LowerArm(_arm)
+      .andThen(new SetArmHeight(_arm, ArmConstants.middlePosition))));
     four2.onTrue(new RaiseArm(_arm)
       .andThen(new SetArmHeight(_arm, ArmConstants.pickupPosition)));
-    three2.onTrue(new RaiseArm(_arm)
-      .andThen(new SetArmHeight(_arm, ArmConstants.retracted)));
+    three2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted)
+      .andThen(new RaiseArm(_arm)));
     two2.onFalse(new CloseGripper(_gripper));
     two2.onTrue(new OpenGripper(_gripper));
     
@@ -157,8 +166,8 @@ public class RobotContainer {
 
 
 
-    JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
-    r7.onTrue(new GetOnChargingStation(_driveTrain, .3, 1).andThen(new LockPosition(_driveTrain)));
+    // JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
+    // r7.onTrue(new GetOnChargingStation(_driveTrain, .3, 1).andThen(new LockPosition(_driveTrain)));
 
     //Comment out Button Bindings below here for competitions (they are tests)
     /*
