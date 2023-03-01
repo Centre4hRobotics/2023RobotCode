@@ -67,6 +67,12 @@ public class Arm extends SubsystemBase {
   public boolean isExtended() {
     return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters > ArmConstants.middlePosition / 2;
   }
+
+  public double getExtension() {
+    double current = _leadMotor.getEncoder().getPosition() * ArmConstants.encoderTicksToMeters;
+    return (current - ArmConstants.retracted) / (ArmConstants.highPosition - ArmConstants.retracted);
+  }
+
   //4.167 @ 0"
   //-6.357 @ 2.375"
   //-50.857 @ 13.375"
