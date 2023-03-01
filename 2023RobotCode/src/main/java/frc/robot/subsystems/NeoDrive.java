@@ -88,11 +88,25 @@ public class NeoDrive extends DriveTrain {
         
     }
 
+    private double getDriveScale(double minScale, double maxScale) {
+        // staged scale
+        // if (_arm.getExtension() > .9) {
+        //     return .05;
+        // } else if (_arm.getExtension() > .5) {
+        //     return .5;
+        // } else {
+        //     return 1;
+        // }
+
+        // continuous scale (visual here https://www.desmos.com/calculator/hlgqndvgej)
+        return minScale + Math.pow(1 - _arm.getExtension(), .7) * (maxScale - minScale);
+    }
+
     @Override
     public void tankDriveVolts (double leftVolts, double rightVolts) {
         if(_arm.isExtended()) {
-            leftVolts = Math.signum(leftVolts) * Math.min(Math.abs(leftVolts), 12*.05);
-            rightVolts = Math.signum(rightVolts) * Math.min(Math.abs(rightVolts), 12*.05);
+            leftVolts = Math.signum(leftVolts) * Math.min(Math.abs(leftVolts), 12 * getDriveScale(.05, 1));
+            rightVolts = Math.signum(rightVolts) * Math.min(Math.abs(rightVolts), 12 * getDriveScale(.05, 1));
         }
         _leftLeadMotor.setVoltage(leftVolts);
         _rightLeadMotor.setVoltage(rightVolts);
@@ -107,10 +121,9 @@ public class NeoDrive extends DriveTrain {
      */
     @Override
     public void arcadeDrive(double speed, double steer) {
-        if(_arm.isExtended()) {
-            speed = Math.signum(speed) * Math.min(Math.abs(speed), .05);
-            steer = Math.signum(steer) * Math.min(Math.abs(steer), .05);
-        }
+        speed = Math.signum(speed) * Math.min(Math.abs(speed), getDriveScale(.05, 1));
+        steer = Math.signum(steer) * Math.min(Math.abs(steer), getDriveScale(.05, 1));
+
         _drive.arcadeDrive(speed, steer);
         _drive.feed();//makes sure differencial drive knows something bad hasn't happened
     }
