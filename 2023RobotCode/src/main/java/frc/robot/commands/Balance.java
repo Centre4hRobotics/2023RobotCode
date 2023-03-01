@@ -66,21 +66,23 @@ public class Balance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // was pitch in practice
-    if(Math.abs(_driveTrain.getRoll())<IRange) {
+    boolean useIRange = Math.abs(_driveTrain.getRoll())<IRange;// was pitch in practice
+    
+    if(useIRange) {
       // changing the behavior of IRange to accumulate integral only while within IRange, instead of using it as a max for the accumulation.
       _PidController.setPID(kp, ki, kd);
     }
     else {
       _PidController.setPID(kp, 0, kd);
     }
+
     double pidValue = _PidController.calculate(_driveTrain.getRoll(), 0);
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Balance PID").getEntry("RobotPitch").setValue(_driveTrain.getRoll());
-    if(pidValue>0) { //adds a base motor power to overcome friction
+    if(pidValue>0 && !useIRange) { //adds a base motor power to overcome friction
       pidValue+=base;
     }
-    else {
+    else if(!useIRange){
       pidValue-=base;
     }
     double maxVal = .65;
@@ -90,6 +92,7 @@ public class Balance extends CommandBase {
     else if(pidValue<-maxVal) {
       pidValue=-maxVal;
     }
+
     if(Math.abs(_driveTrain.getRoll())>5) {//Was 1
       _driveTrain.arcadeDrive(pidValue, 0);
     } else {
