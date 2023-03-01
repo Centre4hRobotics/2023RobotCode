@@ -36,8 +36,8 @@ public class ExtendArmWithJoystick extends CommandBase {
     nt.getTable("ExtendArmWithJoystick").getEntry("joystick X").setValue(_joystick.getX());
     nt.getTable("ExtendArmWithJoystick").getEntry("running").setValue(true);
 
-    if(_joystick.getY()!=0) {
-      _arm.extendVolts(5*_joystick.getY());
+    if(Math.abs(_joystick.getY()) > 0.5) {  //If the joystick is pressed
+      _arm.extendVolts(11.5*_joystick.getY());
       wasPressedLastCycle = true;
     }
     else if(wasPressedLastCycle) {

@@ -80,7 +80,7 @@ public class RobotContainer {
   public RobotContainer() {
     _arm.get(_groundControl);
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
-    _arm.setDefaultCommand(new ExtendArmWithButtons(_arm, _functionJoystick));
+    _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick));//Was with buttons
     _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .25));
     _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
