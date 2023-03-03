@@ -70,13 +70,12 @@ public final class Constants {
 
   public static class ArmConstants {
     public static final double retracted = 0;
-    public static final double lowPosition = 26*ArmConstants.encoderTicksToMeters;
-    public static final double middlePosition = 114.810*ArmConstants.encoderTicksToMeters;
-    public static final double highPosition = 175*ArmConstants.encoderTicksToMeters;//was 184.6
-    public static final double pickupPosition = 39*ArmConstants.encoderTicksToMeters; // was 48.5, 50.5
-    public static final double maxExtention = 176*ArmConstants.encoderTicksToMeters; // was 199.6
-    public static final double encoderTicksToMeters = 0.005855208;
-
+    public static final double lowPosition = .1522;
+    public static final double middlePosition = .6722;
+    public static final double highPosition = 1.0247; //was 184.6*old encoderTicksToMeters
+    public static final double pickupPosition = .2284; // was 48.5, 50.5*old encoderTicksToMeters
+    public static final double maxExtention = 1.0305; // was 199.6*old encoderTicksToMeters
+    public static final double encoderTicksToMeters = 0.005855208 * (15./9.); // gearbox conversion
   }
 
   public static class PracticeNeoTurnToAngleConstants {
@@ -87,7 +86,6 @@ public final class Constants {
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
     public static final double maxAccel = .3; //per 20 ms, from 0-1. .2 means you can go 0-full in .1s
-    
   }
 
   public static class PracticeNeoBalanceConstants {

@@ -24,6 +24,7 @@ import frc.robot.commands.OpenGripper;
 import frc.robot.commands.OpenGroundControl;
 import frc.robot.commands.RaiseArm;
 import frc.robot.commands.RaiseGroundControl;
+import frc.robot.commands.ResetArmEncoder;
 import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
@@ -80,7 +81,7 @@ public class RobotContainer {
   public RobotContainer() {
     _arm.get(_groundControl);
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
-    _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick));//Was with buttons
+    _arm.setDefaultCommand(new ExtendArmWithButtons(_arm, _functionJoystick));//Was with buttons
     _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .25));
     _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
@@ -164,7 +165,9 @@ public class RobotContainer {
     JoystickButton l3 = new JoystickButton(_leftDriveJoystick, 3);
     l3.whileTrue(new Balance(_driveTrain));
 
-
+    JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
+    r7.onTrue(new ResetArmEncoder(_arm));
+    
 
     // JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     // r7.onTrue(new GetOnChargingStation(_driveTrain, .3, 1).andThen(new LockPosition(_driveTrain)));
