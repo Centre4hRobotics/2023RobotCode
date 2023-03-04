@@ -81,7 +81,7 @@ public class RobotContainer {
   public RobotContainer() {
     _arm.get(_groundControl);
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
-    _arm.setDefaultCommand(new ExtendArmWithButtons(_arm, _functionJoystick));//Was with buttons
+    _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick2));//Was with buttons
     _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .25));
     _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
@@ -124,7 +124,7 @@ public class RobotContainer {
     two.onFalse(new RaiseArm(_arm)
       .andThen(new CloseGroundControl(_groundControl)));
 
-    three.whileTrue(new Intake(_groundControl, -.4));
+    three.whileTrue(new Intake(_groundControl, -.6));
     four.whileTrue(new Intake(_groundControl, .4));
 
     one2.onTrue(new RaiseArm(_arm));
@@ -159,7 +159,7 @@ public class RobotContainer {
 
 
     //Left Drive Joystick
-    JoystickButton l4 = new JoystickButton(_leftDriveJoystick, 5);
+    JoystickButton l4 = new JoystickButton(_leftDriveJoystick, 4);
     l4.whileTrue(new LockPosition(_driveTrain));
 
     JoystickButton l3 = new JoystickButton(_leftDriveJoystick, 3);
@@ -167,6 +167,14 @@ public class RobotContainer {
 
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     r7.onTrue(new ResetArmEncoder(_arm));
+
+    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
+    r8.onTrue(new TurnToAngle(_driveTrain, 0, 0));
+
+    JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
+    r9.onFalse(new TurnToAngle(_driveTrain, 180, 0));
+
+    
     
 
     // JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
