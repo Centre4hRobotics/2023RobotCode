@@ -26,7 +26,7 @@ public class ControlLights extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _lights.setOut(_functionJoystick.getRawButton(5), _functionJoystick.getRawButtonPressed(6));
+    _lights.setOut(_functionJoystick.getRawButton(7), _functionJoystick.getRawButton(6));
   }
 
   // Called once the command ends or is interrupted.
