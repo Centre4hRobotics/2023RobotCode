@@ -100,6 +100,10 @@ public class Arm extends SubsystemBase {
     return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters;
   }
 
+  public void resetEncoder() {
+    _leadMotor.getEncoder().setPosition(0);
+  }
+
   public boolean isOnTarget() {
     return Math.abs(getHeight() - _height) < .04; // meters
   }

@@ -50,8 +50,8 @@ public class DriveWithJoysticks extends CommandBase {
 
     //cut power by 1/4 if right trigger is pressed
     if(_right.getRawButton(1)) {
-      leftVolts*=0.25;
-      rightVolts*=0.25;
+      leftVolts*=0.35;
+      rightVolts*=0.35;
     }
 
     _driveTrain.tankDriveVolts(leftVolts, rightVolts);
