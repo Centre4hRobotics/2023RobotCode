@@ -88,6 +88,12 @@ public class NeoDrive extends DriveTrain {
         
     }
 
+    /**
+     * A multiplier to limit speed of drive based on the arm extension
+     * @param minScale Smallest scale for when arm is fully extended
+     * @param maxScale Largest scale for when arm is fully retracted
+     * @return The scale, a value between minScale and maxScale
+     */
     private double getDriveScale(double minScale, double maxScale) {
         // staged scale
         // if (_arm.getExtension() > .9) {
@@ -98,8 +104,8 @@ public class NeoDrive extends DriveTrain {
         //     return 1;
         // }
 
-        // continuous scale (visual here https://www.desmos.com/calculator/hlgqndvgej)
-        return Math.min(maxScale, (minScale + 1.1*Math.pow(1 - _arm.getExtension(), .7) * (maxScale - minScale)));
+        // continuous scale (visual here https://www.desmos.com/calculator/wkwibifzxw)
+        return Math.max(minScale, Math.min(maxScale, (minScale + 1.1*Math.pow(1 - _arm.getExtension(), .7) * (maxScale - minScale))));
     }
 
     @Override

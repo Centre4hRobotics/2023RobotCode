@@ -68,9 +68,13 @@ public class Arm extends SubsystemBase {
     return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters > ArmConstants.middlePosition / 2;
   }
 
+  /**
+   * @return The extension of the arm as a demical, 0.0 when fully retracted and 1.0 when fully extended
+   */
   public double getExtension() {
     double current = _leadMotor.getEncoder().getPosition() * ArmConstants.encoderTicksToMeters;
-    return (current - ArmConstants.retracted) / (ArmConstants.highPosition - ArmConstants.retracted);
+    double val = (current - ArmConstants.retracted) / (ArmConstants.highPosition - ArmConstants.retracted);
+    return Math.min(Math.max(val, 0), 1);
   }
 
   //4.167 @ 0"
