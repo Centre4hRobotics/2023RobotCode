@@ -11,16 +11,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Lights extends SubsystemBase {
   /** Creates a new Lights. */
-  private AddressableLED leftLED;
-  private AddressableLED rightLED;
-  private AddressableLEDBuffer leftBuffer;
-  private AddressableLEDBuffer rightBuffer;
+  private AddressableLED stripLED;
+  private AddressableLEDBuffer stripBuffer;
+
   
   public Lights() {
-    leftLED = new AddressableLED(0);
+    stripLED = new AddressableLED(0);
     //rightLED = new AddressableLED(1);
-    leftBuffer = new AddressableLEDBuffer(6);
-    leftLED.setLength(leftBuffer.getLength());
+    stripBuffer = new AddressableLEDBuffer(12);
+    stripLED.setLength(stripBuffer.getLength());
     //rightBuffer = new AddressableLEDBuffer(6);
     //rightLED.setLength(rightBuffer.getLength());
   }
@@ -30,6 +29,7 @@ public class Lights extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
 
   public void setOut(boolean value1, boolean value2) {
    
@@ -51,13 +51,13 @@ public class Lights extends SubsystemBase {
     nt.getTable("Lights").getEntry("state").setValue("off");
     
 
-    for (var i = 0; i < leftBuffer.getLength(); i++) {
+    for (var i = 0; i < stripBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      leftBuffer.setRGB(i, 0,0, 0);//just for testing
+      stripBuffer.setRGB(i, 0,0, 0);//just for testing
    }
    
-   leftLED.setData(leftBuffer);
-   leftLED.start();
+   stripLED.setData(stripBuffer);
+   stripLED.start();
    /*for (var i = 0; i < rightBuffer.getLength(); i++) {
     // Sets the specified LED to the RGB values for red
     rightBuffer.setRGB(i, 0,0, 0);
@@ -70,13 +70,13 @@ public class Lights extends SubsystemBase {
   public void setCube() {
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lights").getEntry("state").setValue("cube");
-    for (var i = 3; i < leftBuffer.getLength(); i++) {
+    for (var i = 0; i < stripBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      leftBuffer.setRGB(i, 255,0, 255);
+      stripBuffer.setRGB(i, 255,0, 255);
    }
    
-   leftLED.setData(leftBuffer);
-leftLED.start();
+   stripLED.setData(stripBuffer);
+stripLED.start();
    /*for (var i = 0; i < rightBuffer.getLength(); i++) {
     // Sets the specified LED to the RGB values for red
     rightBuffer.setRGB(i, 153,0, 153);
@@ -90,13 +90,13 @@ leftLED.start();
     
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lights").getEntry("state").setValue("cone");
-    for (var i = 0; i < leftBuffer.getLength(); i++) {
+    for (var i = 0; i < stripBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      leftBuffer.setRGB(i, 255,255, 0);
+      stripBuffer.setRGB(i, 255,255, 0);
    }
    
-   leftLED.setData(leftBuffer);
-   leftLED.start();
+   stripLED.setData(stripBuffer);
+   stripLED.start();
 /*   for (var i = 0; i < rightBuffer.getLength(); i++) {
     // Sets the specified LED to the RGB values for red
     rightBuffer.setRGB(i, 255,255, 0);
