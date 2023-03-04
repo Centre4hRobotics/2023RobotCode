@@ -29,11 +29,11 @@ public class ExtendArmWithButtons extends CommandBase {
   @Override
   public void execute() {
     if(_functionJoystick.getRawButton(6)) {
-      _arm.extendVolts(8);
+      _arm.extendVolts(6.5);
       wasPressedLastCycle = true;
     }
     else if(_functionJoystick.getRawButton(7)) {
-      _arm.extendVolts(-8);
+      _arm.extendVolts(-6.5);
       wasPressedLastCycle = true;
     }
     else if(wasPressedLastCycle) {
