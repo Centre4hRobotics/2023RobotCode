@@ -120,7 +120,7 @@ public class TurnToAngle extends CommandBase {
     else {
       pidValue-=base;
     }
-    double maxVal = .8;
+    double maxVal = 1;
     if(pidValue>maxVal) { // caps pidValue to maxVal
       pidValue = maxVal;
     }

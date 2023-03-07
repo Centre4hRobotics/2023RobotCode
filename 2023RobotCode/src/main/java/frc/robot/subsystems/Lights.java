@@ -4,40 +4,110 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Lights extends SubsystemBase {
   /** Creates a new Lights. */
-  private DigitalOutput _out1 = new DigitalOutput(0);
-  private DigitalOutput _out2 = new DigitalOutput(2);
-  public Lights() {}
+  private AddressableLED stripLED;
+  private AddressableLEDBuffer stripBuffer;
+
+  
+  public Lights() {
+    stripLED = new AddressableLED(0);
+    //rightLED = new AddressableLED(1);
+    stripBuffer = new AddressableLEDBuffer(12);
+    stripLED.setLength(stripBuffer.getLength());
+    //rightBuffer = new AddressableLEDBuffer(6);
+    //rightLED.setLength(rightBuffer.getLength());
+  }
+  
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 
+
   public void setOut(boolean value1, boolean value2) {
-    _out1.set(value1);
-    _out2.set(value2);
+   
+    if (value1){
+      setCube();
+    }
+    else if(value2){
+      setCone();
+    }
+    else {
+      setOff();
+    }
+    
   }
 
 
   public void setOff() {
-    _out1.set(false);
-    _out2.set(false);
-  }
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Lights").getEntry("state").setValue("off");
+    
+
+    for (var i = 0; i < stripBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      stripBuffer.setRGB(i, 0,0, 0);//just for testing
+   }
+   
+   stripLED.setData(stripBuffer);
+   stripLED.start();
+   /*for (var i = 0; i < rightBuffer.getLength(); i++) {
+    // Sets the specified LED to the RGB values for red
+    rightBuffer.setRGB(i, 0,0, 0);
+ }
+ 
+ rightLED.setData(rightBuffer);
+ */
+}
+
   public void setCube() {
-    _out1.set(false);
-    _out2.set(true);
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Lights").getEntry("state").setValue("cube");
+    for (var i = 0; i < stripBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      stripBuffer.setRGB(i, 255,0, 255);
+   }
+   
+   stripLED.setData(stripBuffer);
+stripLED.start();
+   /*for (var i = 0; i < rightBuffer.getLength(); i++) {
+    // Sets the specified LED to the RGB values for red
+    rightBuffer.setRGB(i, 153,0, 153);
+ }
+ 
+ rightLED.setData(rightBuffer);*/
+
+
   }
   public void setCone() {
-    _out1.set(true);
-    _out2.set(false);
+    
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Lights").getEntry("state").setValue("cone");
+    for (var i = 0; i < stripBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      stripBuffer.setRGB(i, 255,255, 0);
+   }
+   
+   stripLED.setData(stripBuffer);
+   stripLED.start();
+/*   for (var i = 0; i < rightBuffer.getLength(); i++) {
+    // Sets the specified LED to the RGB values for red
+    rightBuffer.setRGB(i, 255,255, 0);
+ }
+ 
+ rightLED.setData(rightBuffer);*/
   }
+  
   public void setFloorCube() {
-    _out1.set(true);
-    _out2.set(true);
+   
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Lights").getEntry("state").setValue("floorCube");
   }
 }

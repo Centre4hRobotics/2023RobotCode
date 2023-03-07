@@ -70,13 +70,12 @@ public final class Constants {
 
   public static class ArmConstants {
     public static final double retracted = 0;
-    public static final double lowPosition = 26*ArmConstants.encoderTicksToMeters;
-    public static final double middlePosition = 114.810*ArmConstants.encoderTicksToMeters;
-    public static final double highPosition = 175*ArmConstants.encoderTicksToMeters;//was 184.6
-    public static final double pickupPosition = 39*ArmConstants.encoderTicksToMeters; // was 48.5, 50.5
-    public static final double maxExtention = 176*ArmConstants.encoderTicksToMeters; // was 199.6
-    public static final double encoderTicksToMeters = 0.005855208;
-
+    public static final double lowPosition = .1522;
+    public static final double middlePosition = .6722;
+    public static final double highPosition = 1.0247; //was 184.6*old encoderTicksToMeters
+    public static final double pickupPosition = .2997; // was 48.5, 50.5*old encoderTicksToMeters
+    public static final double maxExtention = 1.0305; // was 199.6*old encoderTicksToMeters
+    public static final double encoderTicksToMeters = 0.005855208 * (15./9.); // gearbox conversion
   }
 
   public static class PracticeNeoTurnToAngleConstants {
@@ -87,7 +86,6 @@ public final class Constants {
     public static final double base = .27;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
     public static final double maxAccel = .3; //per 20 ms, from 0-1. .2 means you can go 0-full in .1s
-    
   }
 
   public static class PracticeNeoBalanceConstants {
@@ -99,21 +97,21 @@ public final class Constants {
   }
 
   public static class CompNeoTurnToAngleConstants {
-    public static final double kp = .0065;
-    public static final double ki = .01;
-    public static final double kd = 0.00025;
-    public static final double IRange = 5; //range, in degrees, in which the integral will start accumulating
-    public static final double base = .27;
+    public static final double kp = .007;
+    public static final double ki = .018;
+    public static final double kd = 0.00039;
+    public static final double IRange = 9; //range, in degrees, in which the integral will start accumulating
+    public static final double base = .095;
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
     public static final double maxAccel = .3; //per 20 ms, from 0-1. .2 means you can go 0-full in .1s
   }
 
   public static class CompNeoBalanceConstants {
-    public static final double kp = .006;
+    public static final double kp = .024;// .006
     public static final double ki = .01;
     public static final double kd = .0032;//Was .0008, .0015, semi-worked at .0025, then 0.003
     public static final double IRange = 7; //range, in degrees, in which the integral will start accumulating
-    public static final double base = .27;
+    public static final double base = 0;// .27
   }
 
   public static class CompNeoLockPositionConstants {

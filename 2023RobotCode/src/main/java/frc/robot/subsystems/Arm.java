@@ -26,7 +26,7 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public Arm() {
     super();
-    _leadMotor.getPIDController().setP(.022); // change only this one
+    _leadMotor.getPIDController().setP(.06); // change only this one
     _leadMotor.getPIDController().setI(0.00005);
     _leadMotor.getPIDController().setD(0);
     _leadMotor.getPIDController().setIZone(15);
@@ -47,7 +47,8 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
     
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
-    nt.getTable("Arm").getEntry("encoderValue").setValue(_leadMotor.getEncoder().getPosition());
+    nt.getTable("Arm").getEntry("encoderValueInMeters").setValue(_leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters);
+    nt.getTable("Arm").getEntry("extention").setValue(Double.toString(getExtension()));
     // _leadMotor.getPIDController().setOutputRange(-5, 5);
   }
 
@@ -68,9 +69,13 @@ public class Arm extends SubsystemBase {
     return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters > ArmConstants.middlePosition / 2;
   }
 
+  /**
+   * @return The extension of the arm as a demical, 0.0 when fully retracted and 1.0 when fully extended
+   */
   public double getExtension() {
     double current = _leadMotor.getEncoder().getPosition() * ArmConstants.encoderTicksToMeters;
-    return (current - ArmConstants.retracted) / (ArmConstants.highPosition - ArmConstants.retracted);
+    double val = (current - ArmConstants.retracted) / (ArmConstants.highPosition - ArmConstants.retracted);
+    return Math.min(Math.max(val, 0), 1);
   }
 
   //4.167 @ 0"
@@ -98,6 +103,10 @@ public class Arm extends SubsystemBase {
   }
   public double getHeight() {
     return _leadMotor.getEncoder().getPosition()*ArmConstants.encoderTicksToMeters;
+  }
+
+  public void resetEncoder() {
+    _leadMotor.getEncoder().setPosition(0);
   }
 
   public boolean isOnTarget() {

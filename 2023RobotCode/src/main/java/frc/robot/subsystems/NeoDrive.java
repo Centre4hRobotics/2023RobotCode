@@ -88,6 +88,12 @@ public class NeoDrive extends DriveTrain {
         
     }
 
+    /**
+     * A multiplier to limit speed of drive based on the arm extension
+     * @param minScale Smallest scale for when arm is fully extended
+     * @param maxScale Largest scale for when arm is fully retracted
+     * @return The scale, a value between minScale and maxScale
+     */
     private double getDriveScale(double minScale, double maxScale) {
         // staged scale
         // if (_arm.getExtension() > .9) {
@@ -98,15 +104,15 @@ public class NeoDrive extends DriveTrain {
         //     return 1;
         // }
 
-        // continuous scale (visual here https://www.desmos.com/calculator/hlgqndvgej)
-        return minScale + Math.pow(1 - _arm.getExtension(), .7) * (maxScale - minScale);
+        // continuous scale (visual here https://www.desmos.com/calculator/wkwibifzxw)
+        return Math.max(minScale, Math.min(maxScale, (minScale + 1.1*Math.pow(1 - _arm.getExtension(), .7) * (maxScale - minScale))));
     }
 
     @Override
     public void tankDriveVolts (double leftVolts, double rightVolts) {
         if(_arm.isExtended()) {
-            leftVolts = Math.signum(leftVolts) * Math.min(Math.abs(leftVolts), 12 * getDriveScale(.05, 1));
-            rightVolts = Math.signum(rightVolts) * Math.min(Math.abs(rightVolts), 12 * getDriveScale(.05, 1));
+            leftVolts = Math.signum(leftVolts) * Math.min(Math.abs(leftVolts), 12 * getDriveScale(.10, 1));
+            rightVolts = Math.signum(rightVolts) * Math.min(Math.abs(rightVolts), 12 * getDriveScale(.10, 1));
         }
         _leftLeadMotor.setVoltage(leftVolts);
         _rightLeadMotor.setVoltage(rightVolts);
@@ -121,8 +127,8 @@ public class NeoDrive extends DriveTrain {
      */
     @Override
     public void arcadeDrive(double speed, double steer) {
-        speed = Math.signum(speed) * Math.min(Math.abs(speed), getDriveScale(.05, 1));
-        steer = Math.signum(steer) * Math.min(Math.abs(steer), getDriveScale(.05, 1));
+        speed = Math.signum(speed) * Math.min(Math.abs(speed), getDriveScale(.1, 1));
+        steer = Math.signum(steer) * Math.min(Math.abs(steer), getDriveScale(.1, 1));
 
         _drive.arcadeDrive(speed, steer);
         _drive.feed();//makes sure differencial drive knows something bad hasn't happened
