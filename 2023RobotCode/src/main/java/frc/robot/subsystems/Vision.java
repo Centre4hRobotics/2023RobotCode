@@ -42,10 +42,14 @@ public class Vision extends SubsystemBase {
   private final double yTolerance = .8;
   private final double xTolerance = .6;
 
+  private boolean _isCompBot;
+  private final Arm _arm;
+
 
   /** Creates a new Vision. */
-  public Vision() {
-    
+  public Vision(boolean isCompBot, Arm arm) {
+    _isCompBot = isCompBot;
+    _arm = arm;
   }
 
   @Override
@@ -71,7 +75,7 @@ public class Vision extends SubsystemBase {
           continue; //Tag isn't on the field. Go to next one
         } else{
           //Get robot's position
-          Transform3d robotToCameraPose = CameraPoses.getCameraPose(); //Get Camera's position relative to tag
+          Transform3d robotToCameraPose = CameraPoses.getCameraPose(_arm.isRaised(), _isCompBot); //Get Camera's position relative to tag
           Pose3d robotPose3d = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTargetPose, tagPose, robotToCameraPose); //Get robot's position on field
           Pose2d robotPose2d = robotPose3d.toPose2d();
 
@@ -79,7 +83,7 @@ public class Vision extends SubsystemBase {
           if(Math.abs(robotPose2d.getY()-poseY) > yTolerance || Math.abs(robotPose2d.getX()-poseX) > xTolerance){
             //See if alternate position works
             Transform3d AltCameraToTargetPose = t.getAlternateCameraToTarget();
-            Transform3d AltRobotToCameraPose = CameraPoses.getCameraPose();
+            Transform3d AltRobotToCameraPose = CameraPoses.getCameraPose(_arm.isRaised(), _isCompBot);
             Pose3d AltRobotPose3d = PhotonUtils.estimateFieldToRobotAprilTag(AltCameraToTargetPose, tagPose, AltRobotToCameraPose); //Get robot's position on field
             Pose2d AltRobotPose2d = AltRobotPose3d.toPose2d();
 

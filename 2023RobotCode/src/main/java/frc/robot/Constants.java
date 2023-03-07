@@ -181,8 +181,26 @@ public final class Constants {
     private static final Translation3d practiceBotTranslation = new Translation3d(.2, .025, -.47);//Center of robot in relation to camera
     private static final Rotation3d practiceBotRotation = new Rotation3d(0, 0, 0);
 
-    public static final Transform3d getCameraPose() {
-      return new Transform3d(practiceBotTranslation, practiceBotRotation);
+    private static final Translation3d compBotHighTranslation = new Translation3d(-0.231647, 0.094997, -0.5070817);
+    private static final Rotation3d compBotHighRotation = new Rotation3d(0, -0.144512, 0);
+
+    private static final Translation3d compBotLowTranslation = new Translation3d(-0.190258, 0.094997, -0.4533225);
+    private static final Rotation3d compBotLowRotation = new Rotation3d(0, -0.004885, 0);
+    
+
+    public static final Transform3d getCameraPose(boolean armIsUp, boolean isCompBot) {
+      if (isCompBot){
+        if(armIsUp){
+          //Return for competition bot when arm (& camera) is up
+          return new Transform3d(compBotHighTranslation, compBotHighRotation);
+        } else{
+          //Return for competition bot when arm (& camera) is down
+          return new Transform3d(compBotLowTranslation, compBotLowRotation);
+        }
+      } else{
+        //Return for practice bot no matter arm state
+        return new Transform3d(practiceBotTranslation, practiceBotRotation);
+      }
     }
   }
 
