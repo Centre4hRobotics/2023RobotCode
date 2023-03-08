@@ -42,7 +42,7 @@ public final class Autos {
   }
 
   public static CommandBase sideAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
-    double velocityCoefficient = .75;
+    double velocityCoefficient = .99;
     double angle=0;
     if(side==FieldSide.RIGHT) {
       angle-=Math.PI;
@@ -62,7 +62,29 @@ public final class Autos {
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.5))
       .andThen(new Intake(groundControl, -.8).withTimeout(.5));
-    
+  }
+
+  public static CommandBase sideAutoTest(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
+    double velocityCoefficient = .99;
+    double angle=0;
+    if(side==FieldSide.RIGHT) {
+      angle-=Math.PI;
+    }
+    angle+=Math.PI;
+    return 
+      scoreWithMoveBack(driveTrain, arm, gripper, ArmConstants.highPosition)
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(2))
+      .andThen(groundGrabWithMoveForward(driveTrain, groundControl))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(2))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?0:3, velocityCoefficient, true)))
+      // .andThen(new FollowTrajectoryToPose(driveTrain, List.of(
+      //   FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
+      //   FieldPoses.getScoringPose(side, grid, node)
+      // ), false, velocityCoefficient))    
+      .andThen(new LowerGroundControl(groundControl))
+      .andThen(new WaitCommand(.5))
+      .andThen(new Intake(groundControl, -.8).withTimeout(.5));
   }
 
   public static CommandBase bottomAutoThree(DriveTrain driveTrain, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
@@ -112,22 +134,26 @@ public final class Autos {
       .andThen(new RaiseArm(arm));
   }
 
-  public static SequentialCommandGroup scoreWithoutRetract(Arm arm, Gripper gripper, double height) {
+  public static CommandBase scoreWithMoveBack(DriveTrain driveTrain, Arm arm, Gripper gripper, double height) {
     return
       new LowerArm(arm)
       .andThen(new SetArmHeight(arm, height))
       .andThen(new OpenGripper(gripper))
-      .andThen(new WaitCommand(.1));
+      .andThen(new WaitCommand(.25))
+      .andThen(new SetArmHeight(arm, ArmConstants.retracted))
+        .alongWith(new DriveForDistance(driveTrain, .3, -.3))
+      .andThen(new Log("sideAuto", "moved back"))
+      .andThen(new RaiseArm(arm));
   }
 
   public static SequentialCommandGroup groundGrabWithMoveForward(DriveTrain driveTrain, GroundControl groundControl) {
     return 
     new LowerGroundControl(groundControl)
     .andThen(new WaitCommand(.5))
-    .andThen(new DriveWithSpeed(driveTrain, .35).withTimeout(.9))
-
+    .andThen(new DriveWithSpeed(driveTrain, .5).withTimeout(.3))
+    // .andThen(new FollowTrajectoryToPose(driveTrain, -.2, 0, .3))
     .andThen(new CloseGroundControl(groundControl))
-    .andThen(new WaitCommand(.5))
+    .andThen(new WaitCommand(.25))
     .andThen(new RaiseGroundControl(groundControl))
     .andThen(new WaitCommand(.5));
   }

@@ -90,6 +90,15 @@ public class Trajectories {
       );
     }
 
+    /**
+     * Get list of poses EXCLUDING starting position
+     */
+    public static List<Pose2d> getScoreToStagePoses(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient, double angle, boolean useWaypoint) throws Exception {
+      return List.of(
+        FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 
+        FieldPoses.getStagingPose(side, stagePosition, angle));
+    }
+
     public static Trajectory generateStageToScore(FieldSide side, int grid, int node, int stagePosition, double velocityCoefficient, boolean useWaypoint) throws Exception {
       if(useWaypoint) {
         return generateToPose(List.of(

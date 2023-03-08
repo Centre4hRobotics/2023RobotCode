@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -105,6 +106,9 @@ public class FollowTrajectoryToPose extends CommandBase {
       bestTrajectory = Trajectories.generateToPose(_positions, _reversed, _maxVelocityCoefficient);
     }
 
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Running " + bestTrajectory.getInitialPose().toString());
+
     _command = new FollowTrajectory(_driveTrain, bestTrajectory);
     _command.schedule();
   }
@@ -122,6 +126,8 @@ public class FollowTrajectoryToPose extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Not Running");
     _command.cancel();
   }
 
