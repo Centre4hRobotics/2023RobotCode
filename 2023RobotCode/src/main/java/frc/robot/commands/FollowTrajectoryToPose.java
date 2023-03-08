@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -19,7 +22,9 @@ public class FollowTrajectoryToPose extends CommandBase {
   /** Creates a new FollowTrajectoryToPose. */
 
   DriveTrain _driveTrain;
-  Pose2d _position;
+  private Pose2d _position;
+  private ArrayList<Pose2d> _positions;
+
   double _offsetX, _offsetY, _maxVelocityCoefficient;
   private RamseteCommand _command;
   
@@ -28,10 +33,29 @@ public class FollowTrajectoryToPose extends CommandBase {
   private DoubleLogEntry visionX;
   private DoubleLogEntry visionY;
 
+  private boolean _reversed;
+
   public FollowTrajectoryToPose(DriveTrain driveTrain, Pose2d position, double maxVelocityCoef) {
     _driveTrain = driveTrain;
     _position = position;
     _maxVelocityCoefficient = maxVelocityCoef;
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(driveTrain);
+  }
+
+  /**
+   * Drive to pose from current DriveTrain pose
+   * @param driveTrain
+   * @param positions points AFTER current DriveTrain pose
+   * @param maxVelocityCoef
+   */
+  public FollowTrajectoryToPose(DriveTrain driveTrain, List<Pose2d> positions, boolean reversed, double maxVelocityCoef) {
+    _driveTrain = driveTrain;
+    _positions = new ArrayList<>();
+    for (Pose2d p : positions) _positions.add(p);
+    _maxVelocityCoefficient = maxVelocityCoef;
+    _reversed = reversed;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveTrain);
@@ -51,28 +75,35 @@ public class FollowTrajectoryToPose extends CommandBase {
   @Override
   public void initialize() {
   
-
-    if (_position == null) {
+    // offset constructor
+    if (_position == null && _positions == null) {
       _position = _driveTrain.getPose().transformBy(
         new Transform2d(new Translation2d(_offsetX, _offsetY), new Rotation2d(_driveTrain.getAngle()))
       );
     }
 
-    //Calculate distance from target pose to a little in front/behind robot
-    double frontHypot = Math.hypot(
-      _position.getX()-(_driveTrain.getPose().getX()+_driveTrain.getPose().getRotation().getCos()),
-      _position.getY()-(_driveTrain.getPose().getY()+_driveTrain.getPose().getRotation().getSin())
-    );
-    double backHypot = Math.hypot(
-      _position.getX()-(_driveTrain.getPose().getX()-_driveTrain.getPose().getRotation().getCos()),
-      _position.getY()-(_driveTrain.getPose().getY()-_driveTrain.getPose().getRotation().getSin())
-    );
+    // pose / offset constructor
+    Trajectory bestTrajectory;
+    if (_positions == null) {
+      //Calculate distance from target pose to a little in front/behind robot
+      double frontHypot = Math.hypot(
+        _position.getX()-(_driveTrain.getPose().getX()+_driveTrain.getPose().getRotation().getCos()),
+        _position.getY()-(_driveTrain.getPose().getY()+_driveTrain.getPose().getRotation().getSin())
+      );
+      double backHypot = Math.hypot(
+        _position.getX()-(_driveTrain.getPose().getX()-_driveTrain.getPose().getRotation().getCos()),
+        _position.getY()-(_driveTrain.getPose().getY()-_driveTrain.getPose().getRotation().getSin())
+      );
 
-    //Use these distances to determine if the trajectory should go forward or backward
-    boolean useReverse = backHypot < frontHypot;
+      //Use these distances to determine if the trajectory should go forward or backward
+      _reversed = backHypot < frontHypot;
 
-    //Generate trajectory
-    Trajectory bestTrajectory = Trajectories.generateToPose(_driveTrain.getPose(), _position, useReverse, _maxVelocityCoefficient);
+      bestTrajectory = Trajectories.generateToPose(_driveTrain.getPose(), _position, _reversed, _maxVelocityCoefficient);
+    } else {
+      // current position constructor
+      _positions.add(0, _driveTrain.getPose());
+      bestTrajectory = Trajectories.generateToPose(_positions, _reversed, _maxVelocityCoefficient);
+    }
 
     _command = new FollowTrajectory(_driveTrain, bestTrajectory);
     _command.schedule();

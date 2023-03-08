@@ -61,7 +61,7 @@ public class RobotContainer {
   private final GroundControl _groundControl = new GroundControl(_arm);
   private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
   private final Gripper _gripper = new Gripper();
-  private final Lights _lights = new Lights();
+  // private final Lights _lights = new Lights();
   //private final Vision _vision = new Vision();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
@@ -83,7 +83,7 @@ public class RobotContainer {
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
     _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick2));//Was with buttons
     _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .25));
-    _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
+    // _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
     configureBindings();
     autoChooserInit();

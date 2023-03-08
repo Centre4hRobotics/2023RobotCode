@@ -12,12 +12,15 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
+
+import java.util.List;
+
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {
-
 
   public static SequentialCommandGroup scoreCenter(DriveTrain driveTrain, Arm arm, Gripper gripper, FieldSide side, int node) throws Exception {
     // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
@@ -38,28 +41,27 @@ public final class Autos {
       .andThen(new Balance(driveTrain));
   }
 
-  public static CommandBase bottomAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
-    double velocityCoefficient = .5;
+  public static CommandBase sideAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
+    double velocityCoefficient = .75;
     double angle=0;
     if(side==FieldSide.RIGHT) {
       angle-=Math.PI;
     }
     angle+=Math.PI;
-    return score(arm, gripper, ArmConstants.highPosition)
+    return 
+      score(arm, gripper, ArmConstants.highPosition)
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(2))
-      .andThen(new LowerGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new DriveWithSpeed(driveTrain, .35).withTimeout(.9))
-      .andThen(new CloseGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new RaiseGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(.6))
+      .andThen(groundGrabWithMoveForward(driveTrain, groundControl))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(2))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?0:3, velocityCoefficient, true)))
+      // .andThen(new FollowTrajectoryToPose(driveTrain, List.of(
+      //   FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
+      //   FieldPoses.getScoringPose(side, grid, node)
+      // ), false, velocityCoefficient))    
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.5))
-      .andThen(new OpenGroundControl(groundControl));
+      .andThen(new Intake(groundControl, -.8).withTimeout(.5));
     
   }
 
@@ -72,12 +74,7 @@ public final class Autos {
     angle+=Math.PI;
     return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?1:2, velocityCoefficient, angle, true))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?1:2), 3).withTimeout(1))
-      .andThen(new LowerGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new DriveWithSpeed(driveTrain, .35).withTimeout(.9))
-      .andThen(new CloseGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new RaiseGroundControl(groundControl))
+      .andThen(groundGrabWithMoveForward(driveTrain, groundControl))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(.6))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?1:2, velocityCoefficient, true)))
       .andThen(new LowerGroundControl(groundControl))
@@ -90,30 +87,6 @@ public final class Autos {
       .andThen(new TurnToAngle(driveTrain, 20, 3).withTimeout(.5))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)));
       
-  }
-
-  public static CommandBase topAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
-    double velocityCoefficient = .5;
-    double angle=0;
-    if(side==FieldSide.RIGHT) {
-      angle-=Math.PI;
-    }
-    angle+=Math.PI;
-    return score(arm, gripper, ArmConstants.highPosition)
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(2))
-      .andThen(new LowerGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new DriveWithSpeed(driveTrain, .35).withTimeout(.9))
-      .andThen(new CloseGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new RaiseGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(.6))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?0:3, velocityCoefficient, true)))
-      .andThen(new LowerGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new OpenGroundControl(groundControl));
   }
 
   public static CommandBase balance(DriveTrain driveTrain) {
@@ -129,11 +102,34 @@ public final class Autos {
   public static SequentialCommandGroup score(Arm arm, Gripper gripper, double height){
     return
       new LowerArm(arm)
+      .andThen(new Log("Auto", "before set arm height"))
       .andThen(new SetArmHeight(arm, height))
+      .andThen(new Log("Auto", "after set arm height"))
       .andThen(new OpenGripper(gripper))
+      .andThen(new Log("Auto", "after open gripper"))
       .andThen(new WaitCommand(.25))
       .andThen(new SetArmHeight(arm, ArmConstants.retracted))
       .andThen(new RaiseArm(arm));
+  }
+
+  public static SequentialCommandGroup scoreWithoutRetract(Arm arm, Gripper gripper, double height) {
+    return
+      new LowerArm(arm)
+      .andThen(new SetArmHeight(arm, height))
+      .andThen(new OpenGripper(gripper))
+      .andThen(new WaitCommand(.1));
+  }
+
+  public static SequentialCommandGroup groundGrabWithMoveForward(DriveTrain driveTrain, GroundControl groundControl) {
+    return 
+    new LowerGroundControl(groundControl)
+    .andThen(new WaitCommand(.5))
+    .andThen(new DriveWithSpeed(driveTrain, .35).withTimeout(.9))
+
+    .andThen(new CloseGroundControl(groundControl))
+    .andThen(new WaitCommand(.5))
+    .andThen(new RaiseGroundControl(groundControl))
+    .andThen(new WaitCommand(.5));
   }
 
   private Autos() {
