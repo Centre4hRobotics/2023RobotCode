@@ -17,6 +17,7 @@ import java.util.List;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -137,12 +138,14 @@ public final class Autos {
   public static CommandBase scoreWithMoveBack(DriveTrain driveTrain, Arm arm, Gripper gripper, double height) {
     return
       new LowerArm(arm)
+      .andThen(new SetArmHeight(arm, .3))
       .andThen(new SetArmHeight(arm, height))
       .andThen(new OpenGripper(gripper))
       .andThen(new WaitCommand(.25))
-      .andThen(new SetArmHeight(arm, ArmConstants.retracted))
-        .alongWith(new DriveForDistance(driveTrain, .3, -.3))
-      .andThen(new Log("sideAuto", "moved back"))
+      .andThen(new ParallelCommandGroup(
+        new SetArmHeight(arm, ArmConstants.retracted),
+        new DriveForDistance(driveTrain, .3, -0.3)
+      ))
       .andThen(new RaiseArm(arm));
   }
 
