@@ -6,16 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.CloseGripper;
 import frc.robot.commands.CloseGroundControl;
-import frc.robot.commands.ControlLights;
 import frc.robot.commands.DriveWithJoysticks;
-import frc.robot.commands.ExtendArmWithButtons;
 import frc.robot.commands.ExtendArmWithJoystick;
-import frc.robot.commands.FollowTrajectoryToPose;
-import frc.robot.commands.GetOnChargingStation;
 import frc.robot.commands.Intake;
 import frc.robot.commands.IntakeWithSwitch;
 import frc.robot.commands.LowerArm;
@@ -29,18 +24,13 @@ import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnSlow;
-import frc.robot.commands.TurnToAngle;
-import frc.robot.commands.UpdateOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.FalconDrive;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
 import frc.robot.subsystems.Lights;
 import frc.robot.subsystems.NeoDrive;
 import frc.robot.subsystems.Vision;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -114,40 +104,38 @@ public class RobotContainer {
     JoystickButton four2 = new JoystickButton(_functionJoystick2, 4);
     JoystickButton five2 = new JoystickButton(_functionJoystick2, 5);
     JoystickButton six2 = new JoystickButton(_functionJoystick2, 6);
+    JoystickButton seven2 = new JoystickButton(_functionJoystick2, 7);
+    JoystickButton eight2 = new JoystickButton(_functionJoystick2, 8);
 
     //Function Button Board
-    one.onTrue(new RaiseArm(_arm)
-      .andThen(new RaiseGroundControl(_groundControl)));
-    one.onFalse(new LowerGroundControl(_groundControl));
-    
-    two.onTrue(new OpenGroundControl(_groundControl));
-    two.onFalse(new RaiseArm(_arm)
-      .andThen(new CloseGroundControl(_groundControl)));
-
-    three.whileTrue(new Intake(_groundControl, -.6));
-    four.whileTrue(new Intake(_groundControl, .4));
-
-    one2.onTrue(new RaiseArm(_arm));
-    one2.onFalse(new OpenGroundControl(_groundControl)
-      .andThen(new WaitCommand(.02))
-      .andThen(new LowerArm(_arm)));
+    one.whileTrue(new Intake(_groundControl, -.6));
+    two.whileTrue(new Intake(_groundControl, .4));
+    one2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted)
+    .andThen(new RaiseArm(_arm)));
+    two2.onTrue(new OpenGroundControl(_groundControl)
+    .andThen(new WaitCommand(.02))
+    .andThen(new LowerArm(_arm)
+    .andThen(new SetArmHeight(_arm, ArmConstants.middlePosition))));
+    three2.onTrue(new OpenGroundControl(_groundControl)
+    .andThen(new WaitCommand(.02))
+    .andThen(new LowerArm(_arm)
+    .andThen(new SetArmHeight(_arm, ArmConstants.highPosition))));
+    four2.onTrue(new RaiseArm(_arm)
+    .andThen(new SetArmHeight(_arm, ArmConstants.pickupPosition)));
 
     five2.onTrue(new OpenGroundControl(_groundControl)
       .andThen(new WaitCommand(.02))
-      .andThen(new LowerArm(_arm)
-      .andThen(new SetArmHeight(_arm, ArmConstants.highPosition))));
-    six2.onTrue(new OpenGroundControl(_groundControl)
-      .andThen(new WaitCommand(.02))
-      .andThen(new LowerArm(_arm)
-      .andThen(new SetArmHeight(_arm, ArmConstants.middlePosition))));
-    four2.onTrue(new RaiseArm(_arm)
-      .andThen(new SetArmHeight(_arm, ArmConstants.pickupPosition)));
-    three2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted)
-      .andThen(new RaiseArm(_arm)));
-    two2.onFalse(new CloseGripper(_gripper));
-    two2.onTrue(new OpenGripper(_gripper));
+      .andThen(new LowerArm(_arm)));
+    five2.onFalse(new RaiseArm(_arm));
+    six2.onTrue(new CloseGripper(_gripper));
+    six2.onFalse(new OpenGripper(_gripper));
     
-
+    seven2.onTrue(new LowerGroundControl(_groundControl));
+    seven2.onFalse(new RaiseArm(_arm)
+      .andThen(new RaiseGroundControl(_groundControl)));
+    eight2.onTrue(new RaiseArm(_arm)
+      .andThen(new CloseGroundControl(_groundControl)));
+    eight2.onFalse(new OpenGroundControl(_groundControl));
 
     //Right Drive Joystick
     JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
@@ -166,52 +154,7 @@ public class RobotContainer {
     l3.whileTrue(new Balance(_driveTrain));
 
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
-    r7.onTrue(new ResetArmEncoder(_arm));
-
-    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
-    r8.onTrue(new TurnToAngle(_driveTrain, 0, 0));
-
-    JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
-    r9.onFalse(new TurnToAngle(_driveTrain, 180, 0));
-
-    
-    
-
-    // JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
-    // r7.onTrue(new GetOnChargingStation(_driveTrain, .3, 1).andThen(new LockPosition(_driveTrain)));
-
-    //Comment out Button Bindings below here for competitions (they are tests)
-    /*
-    JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
-    // r7.whileHeld(new TuneTurnToAngle(_driveTrain));
-    r7.onTrue(new Balance(_driveTrain));
-
-    // JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
-    // r8.onTrue(new TurnToAngle(_driveTrain, 0, 1));
-
-    // JoystickButton r9 = new JoystickButton(_rightDriveJoystick, 9);
-    // r9.onTrue(new TurnToAngle(_driveTrain, new Pose2d(45, 45, new Rotation2d(0)), 1));
-
-    JoystickButton r8 = new JoystickButton(_rightDriveJoystick, 8);
-    r8.whileTrue(new LockPosition(_driveTrain));
-
-    JoystickButton r10 = new JoystickButton(_rightDriveJoystick, 10);
-    // r10.onTrue(new GoToPosition(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0)), _vision));
-    r10.onTrue(new UpdateOdometry(_vision, _driveTrain, true) //Only update pose if it seems like a good pose
-      .andThen(new FollowTrajectoryToPose(_driveTrain, new Pose2d(14.5, 4.5, new Rotation2d(1, 0)), .4))
-      // .andThen(new ExampleCommand(_driveTrain, new Pose2d(14, 3.88, new Rotation2d(1, 0))))
-    );
-
-    JoystickButton r11 = new JoystickButton(_rightDriveJoystick, 11);
-    r11.onTrue(new UpdateOdometry(_vision, _driveTrain, false));  //Do a total overwrite
-
-    // JoystickButton r12 = new JoystickButton(_rightDriveJoystick, 12);
-    // r12.onTrue(new FollowTrajectoryToPose(_driveTrain, new Pose2d(13.5, 4.5, new Rotation2d(1, 0))));
-
-    JoystickButton l12 = new JoystickButton(_leftDriveJoystick, 12);
-    l12.onTrue(new TurnToAngle(_driveTrain, 0, 3));
-    */
-
+    r7.onTrue(new ResetArmEncoder(_arm));    
 
   }
 

@@ -10,7 +10,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CompNeoBalanceConstants;
 import frc.robot.Constants.CompNeoLockPositionConstants;
 import frc.robot.Constants.CompNeoTurnToAngleConstants;

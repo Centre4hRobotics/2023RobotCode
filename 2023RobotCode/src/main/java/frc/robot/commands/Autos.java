@@ -13,9 +13,6 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
 
-import java.util.List;
-
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -55,7 +52,7 @@ public final class Autos {
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(2))
       .andThen(groundGrabWithMoveForward(driveTrain, groundControl))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(2))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?0:3, velocityCoefficient, true)))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)))
       // .andThen(new FollowTrajectoryToPose(driveTrain, List.of(
       //   FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
       //   FieldPoses.getScoringPose(side, grid, node)
@@ -84,7 +81,7 @@ public final class Autos {
       //   FieldPoses.getScoringPose(side, grid, node)
       // ), false, velocityCoefficient))    
       .andThen(new LowerGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
+      .andThen(new DriveForDistance(driveTrain, .3, .4))
       .andThen(new Intake(groundControl, -.8).withTimeout(.5));
   }
 
@@ -124,9 +121,9 @@ public final class Autos {
    */
   public static SequentialCommandGroup score(Arm arm, Gripper gripper, double height){
     return
-      new LowerArm(arm)
-      .andThen(new Log("Auto", "before set arm height"))
-      .andThen(new SetArmHeight(arm, height))
+      new Log("Auto", "before set arm height")
+      .andThen(new SetArmHeight(arm, height)
+        .alongWith(new WaitCommand(.15).andThen(new LowerArm(arm))))
       .andThen(new Log("Auto", "after set arm height"))
       .andThen(new OpenGripper(gripper))
       .andThen(new Log("Auto", "after open gripper"))
@@ -137,9 +134,8 @@ public final class Autos {
 
   public static CommandBase scoreWithMoveBack(DriveTrain driveTrain, Arm arm, Gripper gripper, double height) {
     return
-      new LowerArm(arm)
-      .andThen(new SetArmHeight(arm, .3))
-      .andThen(new SetArmHeight(arm, height))
+      (new SetArmHeight(arm, height)
+        .alongWith(new WaitCommand(.15).andThen(new LowerArm(arm))))
       .andThen(new OpenGripper(gripper))
       .andThen(new WaitCommand(.25))
       .andThen(new ParallelCommandGroup(

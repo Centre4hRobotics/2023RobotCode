@@ -44,7 +44,7 @@ public class Commands {
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
                 // return Autos.bottomAutoThree(_driveTrain, FieldSide.LEFT, 0, 0);
-                return Autos.sideAutoTest(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, 0);
+                return Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, 0);
             case("Blue Left"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 2));
                 return Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 2, 2);

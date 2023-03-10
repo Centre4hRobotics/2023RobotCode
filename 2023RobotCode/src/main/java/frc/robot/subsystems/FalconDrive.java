@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FalconBalanceConstants;
 import frc.robot.Constants.FalconLockPositionConstants;
 import frc.robot.Constants.FalconTurnToAngleConstants;

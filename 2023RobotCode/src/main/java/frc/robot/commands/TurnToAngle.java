@@ -158,7 +158,7 @@ public class TurnToAngle extends CommandBase {
   private void setPID() {
     kp = P.getDouble(_driveTrain.getTurnToAnglekP());
     ki = I.getDouble(_driveTrain.getTurnToAnglekI());
-    IRange = this.IRangeTable.getDouble(_driveTrain.getTurnToAngleIRange());
+    IRange = IRangeTable.getDouble(_driveTrain.getTurnToAngleIRange());
     kd = D.getDouble(_driveTrain.getTurnToAnglekD());
     base = baseEntry.getDouble(_driveTrain.getTurnToAngleBase());
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
