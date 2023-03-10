@@ -23,7 +23,8 @@ public class DriveForDistance extends CommandBase {
   */
   public DriveForDistance(DriveTrain driveTrain, double distance, double speed) {
     _driveTrain = driveTrain;
-    _distance = distance;
+    _distance = Math.abs(distance);
+    _speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(_driveTrain);
   }
@@ -50,6 +51,7 @@ public class DriveForDistance extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     _driveTrain.arcadeDrive(0, 0);
+
   }
 
   // Returns true when the command should end.
