@@ -54,14 +54,14 @@ public class RobotContainer {
   private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
   private final Gripper _gripper = new Gripper();
   private final Lights _lights = new Lights();
-  //private final Vision _vision = new Vision();
+  private final Vision _vision = new Vision(true, _arm);
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
 
   private final Joystick _functionJoystick = new Joystick(0);
   private final Joystick _functionJoystick2 = new Joystick(1);
 
-  private final Commands _commands = new Commands(_driveTrain, _groundControl, _arm, _gripper);
+  private final Commands _commands = new Commands(_driveTrain, _groundControl, _arm, _gripper, _vision);
   
 
 
