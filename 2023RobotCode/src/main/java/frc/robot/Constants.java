@@ -73,7 +73,7 @@ public final class Constants {
     public static final double retracted = 0;
     public static final double lowPosition = .1522;
     public static final double middlePosition = .6722;
-    public static final double highPosition = 1.115; // 1.0247 / was 184.6*old encoderTicksToMeters
+    public static final double highPosition = 1.06; // 1.0247 / was 184.6*old encoderTicksToMeters
     public static final double pickupPosition = .2997; // was 48.5, 50.5*old encoderTicksToMeters
     public static final double maxExtention = 1.115; // 1.0305 / was 199.6*old encoderTicksToMeters
     public static final double encoderTicksToMeters = 0.005855208 * (15./9.); // gearbox conversion
@@ -203,6 +203,10 @@ public final class Constants {
     }
   }
 
+  public static enum GamePiece {
+    CONE, CUBE
+  }
+
   public static enum FieldSide {
     LEFT, RIGHT
   }
@@ -254,6 +258,37 @@ public final class Constants {
       }
       
       double y = yScoringPositions[grid * 3 + node];
+
+      return new Pose2d(x, y, rotation);
+    }
+
+    public static final Pose2d getVisionPose(FieldSide side, int grid){
+      double x;
+      double y;
+      int tagID;
+
+      if(side == FieldSide.LEFT){
+        x = 4.3;
+        if(grid == 1){
+          y = .8;
+          tagID = 8;
+        }else{
+          y = 4.668;
+          tagID = 6;
+        }
+      } else {
+        x = 12.206;
+        if(grid == 1){
+          y = .8;
+          tagID = 1;
+        }else{
+          y = 4.668;
+          tagID = 3;
+        }
+      }
+
+      Pose3d tagPose = AprilTagPoses.getPose(tagID);
+      Rotation2d rotation = new Rotation2d(tagPose.getX()-x, tagPose.getY()-y);
 
       return new Pose2d(x, y, rotation);
     }
