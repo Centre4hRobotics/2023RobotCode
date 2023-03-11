@@ -49,8 +49,9 @@ public final class Constants {
     //Porportional control in PID loop (need to tune this)
     public static final double kpDriveVel = 0.5;  //Characterization tool suggests 2.1325
 
-    
-    public static final double kTrackwidthMeters = 0.558; //Width of robot (between wheels)
+    //Width of robot (between wheels)
+    // public static final double kTrackwidthMeters = 0.558; //Falcon Practive
+    public static final double kTrackwidthMeters = 0.545; //Competition neo
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
 
 
@@ -179,10 +180,10 @@ public final class Constants {
     private static final Translation3d practiceBotTranslation = new Translation3d(.2, .025, -.47);//Center of robot in relation to camera
     private static final Rotation3d practiceBotRotation = new Rotation3d(0, 0, 0);
 
-    private static final Translation3d compBotHighTranslation = new Translation3d(-0.231647, 0.094997, -0.5070817);
+    private static final Translation3d compBotHighTranslation = new Translation3d(-0.231647, 0.087504, -0.5070817);//y was 0.094997
     private static final Rotation3d compBotHighRotation = new Rotation3d(0, -0.144512, 0);
 
-    private static final Translation3d compBotLowTranslation = new Translation3d(-0.190258, 0.094997, -0.4533225);
+    private static final Translation3d compBotLowTranslation = new Translation3d(-0.190258, 0.087504, -0.4533225);//y was 0.094997
     private static final Rotation3d compBotLowRotation = new Rotation3d(0, -0.004885, 0);
     
 
