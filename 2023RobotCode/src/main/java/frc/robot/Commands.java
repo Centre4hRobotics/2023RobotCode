@@ -14,6 +14,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
+import frc.robot.subsystems.Vision;
 
 /** Add your docs here. */
 public class Commands {
@@ -21,11 +22,13 @@ public class Commands {
     private GroundControl _groundControl;
     private Arm _arm;
     private Gripper _gripper;
-    public Commands(DriveTrain driveTrain, GroundControl groundControl, Arm arm, Gripper gripper) {
+    private Vision _vision;
+    public Commands(DriveTrain driveTrain, GroundControl groundControl, Arm arm, Gripper gripper, Vision vision) {
         _driveTrain = driveTrain;
         _groundControl = groundControl;
         _arm = arm;
         _gripper = gripper;
+        _vision = vision;
     }
 
 
@@ -56,7 +59,8 @@ public class Commands {
                 _driveTrain.resetGyro();
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 2, 2));
                 //return Autos.bottomAutoThree(_driveTrain, FieldSide.RIGHT, 2, 2);
-                return Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.RIGHT, 2, 2);
+                //return Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.RIGHT, 2, 2);
+                return Autos.sideAutoTest(_driveTrain, _arm, _gripper, _groundControl, FieldSide.RIGHT, 2, 2, _vision);
             case("Red Left"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.RIGHT, 0, 0));
                 return Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.RIGHT, 0, 0);
