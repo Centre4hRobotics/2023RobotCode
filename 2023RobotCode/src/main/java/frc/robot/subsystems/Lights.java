@@ -30,22 +30,6 @@ public class Lights extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-
-  public void setOut(boolean value1, boolean value2) {
-   
-    if (value1){
-      setCube();
-    }
-    else if(value2){
-      setCone();
-    }
-    else {
-      setOff();
-    }
-    
-  }
-
-
   public void setOff() {
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lights").getEntry("state").setValue("off");

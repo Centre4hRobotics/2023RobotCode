@@ -7,8 +7,10 @@ package frc.robot;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Balance;
+import frc.robot.commands.BasicBalance;
 import frc.robot.commands.CloseGripper;
 import frc.robot.commands.CloseGroundControl;
+import frc.robot.commands.ControlLights;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.Intake;
@@ -51,7 +53,7 @@ public class RobotContainer {
   private final GroundControl _groundControl = new GroundControl(_arm);
   private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
   private final Gripper _gripper = new Gripper();
-  // private final Lights _lights = new Lights();
+  private final Lights _lights = new Lights();
   //private final Vision _vision = new Vision();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
@@ -73,7 +75,6 @@ public class RobotContainer {
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
     _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick2));//Was with buttons
     _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .25));
-    // _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
     configureBindings();
     autoChooserInit();
@@ -92,9 +93,9 @@ public class RobotContainer {
 
     JoystickButton one = new JoystickButton(_functionJoystick, 1);
     JoystickButton two = new JoystickButton(_functionJoystick, 2);
-    JoystickButton three = new JoystickButton(_functionJoystick, 3); 
+    JoystickButton three = new JoystickButton(_functionJoystick, 3); // used by Intake with Switch 
     JoystickButton four = new JoystickButton(_functionJoystick, 4);
-    JoystickButton five = new JoystickButton(_functionJoystick, 5); // used by Intake with Switch
+    JoystickButton five = new JoystickButton(_functionJoystick, 5); 
     JoystickButton six = new JoystickButton(_functionJoystick, 6); 
     JoystickButton seven = new JoystickButton(_functionJoystick, 7);
 
@@ -110,6 +111,16 @@ public class RobotContainer {
     //Function Button Board
     one.whileTrue(new Intake(_groundControl, -.6));
     two.whileTrue(new Intake(_groundControl, .4));
+
+    four.onTrue(new ControlLights(_lights, _functionJoystick));
+    four.onFalse(new ControlLights(_lights, _functionJoystick));
+    five.onTrue(new ControlLights(_lights, _functionJoystick));
+    five.onFalse(new ControlLights(_lights, _functionJoystick));
+    six.onTrue(new ControlLights(_lights, _functionJoystick));
+    six.onFalse(new ControlLights(_lights, _functionJoystick));
+    seven.onTrue(new ControlLights(_lights, _functionJoystick));
+    seven.onFalse(new ControlLights(_lights, _functionJoystick));
+
     one2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted)
     .andThen(new RaiseArm(_arm)));
     two2.onTrue(new OpenGroundControl(_groundControl)
@@ -156,6 +167,41 @@ public class RobotContainer {
     JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
     r7.onTrue(new ResetArmEncoder(_arm));    
 
+    // expiremental - remove before competition
+
+    JoystickButton l7 = new JoystickButton(_leftDriveJoystick, 7);
+    l7.onTrue(new BasicBalance(_driveTrain, .3, 1));
+
+  }
+
+  public void resetPneumatics() {
+    if(_functionJoystick2.getRawButton(5)) {
+      new OpenGroundControl(_groundControl).schedule();
+      new LowerArm(_arm).schedule();
+    }
+    else {
+      new RaiseArm(_arm).schedule();
+    }
+    if(_functionJoystick2.getRawButton(8)) {
+      new RaiseArm(_arm).schedule();
+      new CloseGroundControl(_groundControl).schedule();
+    }
+    else {
+      new OpenGroundControl(_groundControl).schedule();
+    }
+    if(_functionJoystick2.getRawButton(7)) {
+      new LowerGroundControl(_groundControl).schedule();
+    }
+    else {
+      new RaiseArm(_arm).schedule();
+      new RaiseGroundControl(_groundControl).schedule();
+    }
+    if(_functionJoystick.getRawButton(6)) {
+      new CloseGripper(_gripper).schedule();
+    }
+    else {
+      new OpenGripper(_gripper).schedule();
+    }
   }
 
   public void autoChooserInit() {
