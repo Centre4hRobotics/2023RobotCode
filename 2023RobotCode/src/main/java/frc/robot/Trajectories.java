@@ -114,6 +114,17 @@ public class Trajectories {
       );
     }
 
+
+    public static Trajectory generateStageToVision(FieldSide side, int grid, int stagePosition, double velocityCoefficient) throws Exception {
+      return generateToPose(
+        FieldPoses.getStagingPose(side, stagePosition),
+        FieldPoses.getVisionPose(side, grid),
+        false,
+        velocityCoefficient
+      );
+    }
+
+
     public static Trajectory generateScoreToSideStage(FieldSide side, int grid, int node, double velocityCoefficient) throws Exception {
       Rotation2d rotation;
       if(grid==0 && side==FieldSide.LEFT) {

@@ -8,13 +8,15 @@ import frc.robot.Trajectories;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldPoses;
 import frc.robot.Constants.FieldSide;
+import frc.robot.Constants.GamePiece;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
-
+import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -50,7 +52,7 @@ public final class Autos {
       score(arm, gripper, ArmConstants.highPosition)
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(2))
-      .andThen(groundGrabWithMoveForward(driveTrain, groundControl))
+      .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.CONE))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(2))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)))
       // .andThen(new FollowTrajectoryToPose(driveTrain, List.of(
@@ -62,26 +64,26 @@ public final class Autos {
       .andThen(new Intake(groundControl, -.8).withTimeout(.5));
   }
 
-  public static CommandBase sideAutoTest(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
-    double velocityCoefficient = .99;
+  public static CommandBase sideAutoTest(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node, Vision vision) throws Exception {
+    double velocityCoefficient = .4;
     double angle=0;
     if(side==FieldSide.RIGHT) {
       angle-=Math.PI;
     }
     angle+=Math.PI;
     return 
-      scoreWithMoveBack(driveTrain, arm, gripper, ArmConstants.highPosition)
+      score(arm, gripper, ArmConstants.highPosition)
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(2))
-      .andThen(groundGrabWithMoveForward(driveTrain, groundControl))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(2))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?0:3, velocityCoefficient, true)))
-      // .andThen(new FollowTrajectoryToPose(driveTrain, List.of(
-      //   FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
-      //   FieldPoses.getScoringPose(side, grid, node)
-      // ), false, velocityCoefficient))    
-      .andThen(new LowerGroundControl(groundControl))
-      .andThen(new DriveForDistance(driveTrain, .3, .4))
+      .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.CUBE))
+      .andThen(new ParallelDeadlineGroup(
+        new TurnToAngle(driveTrain, side==FieldSide.LEFT?180:0, 3).withTimeout(2)
+          .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToVision(side, grid, grid==0?0:3, velocityCoefficient)))
+          .andThen(new LowerGroundControl(groundControl))
+          .andThen(new WaitCommand(.5))
+          .andThen(new UpdateOdometry(vision, driveTrain, true))
+          .andThen(new FollowTrajectoryToPose(driveTrain, FieldPoses.getScoringPose(side, grid, 1), velocityCoefficient)),
+        new Intake(groundControl, .25)))
       .andThen(new Intake(groundControl, -.8).withTimeout(.5));
   }
 
@@ -94,7 +96,7 @@ public final class Autos {
     angle+=Math.PI;
     return new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?1:2, velocityCoefficient, angle, true))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?1:2), 3).withTimeout(1))
-      .andThen(groundGrabWithMoveForward(driveTrain, groundControl))
+      .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.CONE))
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 3).withTimeout(.6))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, node, grid==0?1:2, velocityCoefficient, true)))
       .andThen(new LowerGroundControl(groundControl))
@@ -145,16 +147,27 @@ public final class Autos {
       .andThen(new RaiseArm(arm));
   }
 
-  public static SequentialCommandGroup groundGrabWithMoveForward(DriveTrain driveTrain, GroundControl groundControl) {
-    return 
-    new LowerGroundControl(groundControl)
-    .andThen(new WaitCommand(.5))
-    .andThen(new DriveWithSpeed(driveTrain, .5).withTimeout(.3))
-    // .andThen(new FollowTrajectoryToPose(driveTrain, -.2, 0, .3))
-    .andThen(new CloseGroundControl(groundControl))
-    .andThen(new WaitCommand(.25))
-    .andThen(new RaiseGroundControl(groundControl))
-    .andThen(new WaitCommand(.5));
+  public static SequentialCommandGroup groundGrabWithMoveForward(DriveTrain driveTrain, GroundControl groundControl, GamePiece piece) {
+    if (piece == GamePiece.CONE) {
+      return 
+      new LowerGroundControl(groundControl)
+      .andThen(new WaitCommand(.5))
+      .andThen(new DriveWithSpeed(driveTrain, .5).withTimeout(.3))
+      // .andThen(new FollowTrajectoryToPose(driveTrain, -.2, 0, .3))
+      .andThen(new CloseGroundControl(groundControl))
+      .andThen(new WaitCommand(.25))
+      .andThen(new RaiseGroundControl(groundControl))
+      .andThen(new WaitCommand(.5));
+    } else {
+      return 
+      new LowerGroundControl(groundControl)
+      .andThen(new WaitCommand(.5))
+      .andThen(new ParallelDeadlineGroup(
+        new DriveForDistance(driveTrain, .6, .55),
+        new Intake(groundControl, .4)));
+      // .andThen(new RaiseGroundControl(groundControl))
+      // .andThen(new WaitCommand(.5));
+    }
   }
 
   private Autos() {
