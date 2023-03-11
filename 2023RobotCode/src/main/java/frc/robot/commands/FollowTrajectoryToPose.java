@@ -128,7 +128,7 @@ public class FollowTrajectoryToPose extends CommandBase {
   public void end(boolean interrupted) {
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Not Running");
-    _command.cancel();
+    _command.end(interrupted);
   }
 
   // Returns true when the command should end.
