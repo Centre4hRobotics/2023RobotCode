@@ -108,8 +108,8 @@ public final class Constants {
   }
 
   public static class CompNeoBalanceConstants {
-    public static final double kp = .024;// .006
-    public static final double ki = .01;
+    public static final double kp = .031;// .006
+    public static final double ki = .0095;
     public static final double kd = .0032;//Was .0008, .0015, semi-worked at .0025, then 0.003
     public static final double IRange = 7; //range, in degrees, in which the integral will start accumulating
     public static final double base = 0;// .27
