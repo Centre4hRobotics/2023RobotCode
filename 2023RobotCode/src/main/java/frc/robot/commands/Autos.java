@@ -74,7 +74,7 @@ public final class Autos {
     return 
       score(arm, gripper, ArmConstants.highPosition)
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(2))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(1.5))
       .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.CUBE))
       // .andThen(new ParallelDeadlineGroup(
       //   new TurnToAngle(driveTrain, side==FieldSide.LEFT?180:0, 3).withTimeout(2)
@@ -84,7 +84,7 @@ public final class Autos {
       //     .andThen(new UpdateOdometry(vision, driveTrain, true))
       //     .andThen(new FollowTrajectoryToPose(driveTrain, FieldPoses.getScoringPose(side, grid, 1), velocityCoefficient)),
       //   new Intake(groundControl, .25)))
-      .andThen(new TurnToAngle(driveTrain, side==FieldSide.LEFT?180:0, 3).withTimeout(2))
+      .andThen(new TurnToAngle(driveTrain, side==FieldSide.LEFT?180:0, 3).withTimeout(1.5))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToVision(side, grid, grid==0?0:3, velocityCoefficient)))
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.5))

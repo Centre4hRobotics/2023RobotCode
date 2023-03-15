@@ -14,8 +14,8 @@ public class GetOnChargingStation extends CommandBase {
 
   private DriveTrain _driveTrain;
   private double _speed, _direction;
-  private final double targetAngle = 12; // was 16
-  private final double targetLow = 13;//was 14.5
+  private final double targetAngle = 14.5; // was 16
+  private final double targetLow = 14;//was 14.5
   private ArrayList<Double> angles;
   private boolean passedBump = false;
 

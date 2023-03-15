@@ -109,7 +109,7 @@ public class RobotContainer {
     JoystickButton eight2 = new JoystickButton(_functionJoystick2, 8);
 
     //Function Button Board
-    one.whileTrue(new Intake(_groundControl, -.6));
+    one.whileTrue(new Intake(_groundControl, -.8));
     two.whileTrue(new Intake(_groundControl, .4));
 
     four.onTrue(new ControlLights(_lights, _functionJoystick));
@@ -170,7 +170,9 @@ public class RobotContainer {
     // expiremental - remove before competition
 
     JoystickButton l7 = new JoystickButton(_leftDriveJoystick, 7);
-    l7.onTrue(new BasicBalance(_driveTrain, .3, 1));
+    l7.whileTrue(new BasicBalance(_driveTrain, .3, 1));
+    JoystickButton l8 = new JoystickButton(_leftDriveJoystick, 8);
+    l8.whileTrue(new Balance(_driveTrain));
 
   }
 

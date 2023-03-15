@@ -31,13 +31,13 @@ public class Trajectories {
     public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition, boolean reversed, double velocityCoefficient) {
       return TrajectoryGenerator.generateTrajectory(
         List.of(startPosition, endPosition),
-        getNewConfig(velocityCoefficient, .9).setReversed(reversed)
+        getNewConfig(velocityCoefficient, .6).setReversed(reversed)
       );
     }
     public static Trajectory generateToPose(List<Pose2d> points, boolean reversed, double velocityCoefficient) {
       return TrajectoryGenerator.generateTrajectory(
       points,
-      getNewConfig(velocityCoefficient, .9).setReversed(reversed)
+      getNewConfig(velocityCoefficient, .6).setReversed(reversed)
       );
     }
 
@@ -103,7 +103,7 @@ public class Trajectories {
         return generateToPose(List.of(
           FieldPoses.getStagingPose(side, stagePosition),
           FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
-          FieldPoses.getScoringPose(side, grid, node)
+          new Pose2d(FieldPoses.getScoringPose(side, grid, node).getX(), FieldPoses.getScoringPose(side, grid, node).getY()+(grid==0?-.15:.15), FieldPoses.getScoringPose(side, grid, node).getRotation())
         ), false, velocityCoefficient);
       }
       return generateToPose(
