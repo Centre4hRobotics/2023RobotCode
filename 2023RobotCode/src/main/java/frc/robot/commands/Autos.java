@@ -67,8 +67,8 @@ public final class Autos {
       //   FieldPoses.getScoringPose(side, grid, node)
       // ), false, velocityCoefficient))    
       .andThen(new LowerGroundControl(groundControl))
-      .andThen(new WaitCommand(.5))
-      .andThen(new Intake(groundControl, -.8).withTimeout(.5));
+      .andThen(new WaitCommand(.2))
+      .andThen(new Intake(groundControl, -.9));
   }
 
   public static CommandBase sideAutoTest(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node, Vision vision) throws Exception {
@@ -165,7 +165,7 @@ public final class Autos {
       return 
       new LowerGroundControl(groundControl)
       .andThen(new WaitCommand(.5))
-      .andThen(new DriveWithSpeed(driveTrain, .5).withTimeout(.65))//was .3, .4
+      .andThen(new DriveWithSpeed(driveTrain, .5).withTimeout(.85))//was .3, .4, .65
       // .andThen(new FollowTrajectoryToPose(driveTrain, -.2, 0, .3))
       .andThen(new CloseGroundControl(groundControl))
       .andThen(new WaitCommand(.25))
