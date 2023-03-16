@@ -72,8 +72,8 @@ public final class Constants {
   public static class ArmConstants {
     public static final double retracted = 0;
     public static final double lowPosition = .1522;
-    public static final double middlePosition = .6722;
-    public static final double highPosition = 1.075; // 1.0247 / was 184.6*old encoderTicksToMeters
+    public static final double middlePosition = .6522;//was .6722
+    public static final double highPosition = 1.06; // 1.0247 / was 184.6*old encoderTicksToMeters; 1.075
     public static final double pickupPosition = .2997; // was 48.5, 50.5*old encoderTicksToMeters
     public static final double maxExtention = 1.115; // 1.0305 / was 199.6*old encoderTicksToMeters
     public static final double encoderTicksToMeters = 0.005855208 * (15./9.); // gearbox conversion
@@ -108,7 +108,7 @@ public final class Constants {
   }
 
   public static class CompNeoBalanceConstants {
-    public static final double kp = .022;// .006
+    public static final double kp = .026;// .022
     public static final double ki = .0095;
     public static final double kd = .0032;//Was .0008, .0015, semi-worked at .0025, then 0.003
     public static final double IRange = 7; //range, in degrees, in which the integral will start accumulating
