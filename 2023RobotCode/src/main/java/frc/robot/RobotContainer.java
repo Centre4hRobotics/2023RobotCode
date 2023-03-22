@@ -5,7 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.Offset;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoPickup;
 import frc.robot.commands.Balance;
 import frc.robot.commands.BasicBalance;
 import frc.robot.commands.CloseGripper;
@@ -150,12 +152,10 @@ public class RobotContainer {
 
     //Right Drive Joystick
     JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
-    r4.onTrue(new TurnSlow(_driveTrain, true));
+    r4.onTrue(new AutoPickup(_driveTrain, _arm, _vision, Offset.RIGHT));
     
     JoystickButton r3 = new JoystickButton(_rightDriveJoystick, 3);
-    r3.onTrue(new TurnSlow(_driveTrain, false));
-
-
+    r3.onTrue(new AutoPickup(_driveTrain, _arm, _vision, Offset.LEFT));
 
     //Left Drive Joystick
     JoystickButton l4 = new JoystickButton(_leftDriveJoystick, 4);

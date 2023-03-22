@@ -154,7 +154,7 @@ public final class Constants {
     public static final double width = .85;
   }
 
-  public static class AprilTagPoses{
+  public static class AprilTagPoses {
     private static final Pose3d[] Poses = {
       new Pose3d(15.51356, 1.071626, 0.462788, new Rotation3d(0, 0, Math.PI)), //tag 1
       new Pose3d(15.51356, 2.748026, 0.462788, new Rotation3d(0, 0, Math.PI)),
@@ -174,6 +174,9 @@ public final class Constants {
 
       return Poses[tagID-1];
     }
+  }
+  public static enum Offset {
+    LEFT, RIGHT
   }
 
   public static class CameraPoses{
