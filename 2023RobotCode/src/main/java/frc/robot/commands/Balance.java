@@ -31,6 +31,11 @@ public class Balance extends CommandBase {
   double kp, ki, kd, IRange, base;
   PIDController _PidController;
 
+  //Slow down every time we osilate
+  // private double speedCoeficient = 1;
+  // private double deltaCoeficent = -0.1;
+  // private int previousSign = 1;
+
   
 
   public Balance(DriveTrain driveTrain) {
@@ -61,6 +66,9 @@ public class Balance extends CommandBase {
 
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Balance PID").getEntry("running").setValue(true);
+
+    // speedCoeficient = 1;
+    // previousSign = getAngleSign();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -94,11 +102,17 @@ public class Balance extends CommandBase {
     }
 
     if(Math.abs(_driveTrain.getRoll())>5) {//Was 1
-      _driveTrain.arcadeDrive(pidValue, 0);
+      _driveTrain.arcadeDrive(pidValue, 0);//*speedCoef
     } else {
       _driveTrain.arcadeDrive(0, 0);
     }
     
+
+    //If we change angle sign, decrease power
+    // if(getAngleSign() != 1) {
+    //   speedCoeficient += deltaCoeficent;
+    //   previousSign *= -1;
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -136,6 +150,10 @@ public class Balance extends CommandBase {
       nt.getTable("Balance PID").getEntry("IRange").setValue(IRange);
       nt.getTable("Balance PID").getEntry("base power").setValue(base);
     }
+  }
+
+  private int getAngleSign(){
+    return (int)Math.signum(_driveTrain.getRoll());
   }
 
 }

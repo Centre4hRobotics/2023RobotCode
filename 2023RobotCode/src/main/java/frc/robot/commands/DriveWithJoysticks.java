@@ -38,7 +38,7 @@ public class DriveWithJoysticks extends CommandBase {
 
     // _driveTrain.tankDriveVolts(left * -5 * (_right.getThrottle()-1), right * -5 * (_right.getThrottle()-1));
     double throttle = (_right.getThrottle()-1)/-2; // gets from -1 to 1 to 1 to 0 ()
-    if(_left.getRawButton(1)) {
+    if(_left.getRawButton(1) && !_right.getRawButton(1)) {
       throttle = (_left.getThrottle()-1)/-2; // gets from -1 to 1 to 1 to 0 ()
     }
     throttle=.4+.6*throttle; // converts to 50% to 100% from 0% to 100%
@@ -52,7 +52,7 @@ public class DriveWithJoysticks extends CommandBase {
     rightVolts -= diff;
 
     //cut power by 1/2 if right trigger is pressed
-    if(_right.getRawButton(1) && !_left.getRawButton(1)) {
+    if(_right.getRawButton(1)) {
       leftVolts*=0.5;
       rightVolts*=0.5;
     }
