@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AprilTagPoses;
 import frc.robot.Constants.Offset;
 import frc.robot.subsystems.Arm;
@@ -43,8 +42,8 @@ public class AutoPickup extends CommandBase {
     Rotation2d targetRotation;
     if(_driveTrain.getPose().getX()<8) {
       //tag 8
-      targetX = AprilTagPoses.getPose(8).getX()+.5334;
-      targetY = AprilTagPoses.getPose(8).getY();
+      targetX = AprilTagPoses.getPose(5).getX()+.5334;
+      targetY = AprilTagPoses.getPose(5).getY();
       if(_offset == Offset.RIGHT) {
         targetY+=.762;
       }
