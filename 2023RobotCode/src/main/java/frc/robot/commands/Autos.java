@@ -68,7 +68,8 @@ public final class Autos {
       // ), false, velocityCoefficient))    
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.2))
-      .andThen(new Intake(groundControl, -.9));
+      .andThen(new Intake(groundControl, -.9).withTimeout(0.08))
+      .andThen(new Intake(groundControl, -.28));
   }
 
   public static CommandBase sideAutoTest(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node, Vision vision) throws Exception {
@@ -142,7 +143,7 @@ public final class Autos {
       .andThen(new Log("Auto", "after set arm height"))
       .andThen(new OpenGripper(gripper))
       .andThen(new Log("Auto", "after open gripper"))
-      .andThen(new WaitCommand(.25))
+      .andThen(new WaitCommand(.15))//was .25
       .andThen(new SetArmHeight(arm, ArmConstants.retracted))
       .andThen(new RaiseArm(arm));
   }

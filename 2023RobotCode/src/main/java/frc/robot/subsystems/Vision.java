@@ -79,8 +79,8 @@ public class Vision extends SubsystemBase {
           Pose3d robotPose3d = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTargetPose, tagPose, robotToCameraPose); //Get robot's position on field
           Pose2d robotPose2d = robotPose3d.toPose2d();
 
-          //Check for major differences between last accepted position
-          if(Math.abs(robotPose2d.getY()-poseY) > yTolerance || Math.abs(robotPose2d.getX()-poseX) > xTolerance){
+          //Check for major differences between last accepted position;  If we are close enough, current pose is accurate and should overrule
+          if((Math.abs(robotPose2d.getY()-poseY) > yTolerance || Math.abs(robotPose2d.getX()-poseX) > xTolerance) && Math.abs(poseX-16.54)<3.8){
             //See if alternate position works
             Transform3d AltCameraToTargetPose = t.getAlternateCameraToTarget();
             Transform3d AltRobotToCameraPose = CameraPoses.getCameraPose(_arm.isRaised(), _isCompBot);
