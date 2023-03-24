@@ -29,10 +29,10 @@ public class FollowTrajectoryToPose extends CommandBase {
   double _offsetX, _offsetY, _maxVelocityCoefficient;
   private RamseteCommand _command;
   
-  private DoubleLogEntry odometryX;
-  private DoubleLogEntry odometryY;
-  private DoubleLogEntry visionX;
-  private DoubleLogEntry visionY;
+  // private DoubleLogEntry odometryX;
+  // private DoubleLogEntry odometryY;
+  // private DoubleLogEntry visionX;
+  // private DoubleLogEntry visionY;
 
   private boolean _reversed;
 
@@ -106,28 +106,28 @@ public class FollowTrajectoryToPose extends CommandBase {
       bestTrajectory = Trajectories.generateToPose(_positions, _reversed, _maxVelocityCoefficient);
     }
 
-    NetworkTableInstance nt = NetworkTableInstance.getDefault();
-    nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Running " + bestTrajectory.getInitialPose().toString());
+    // NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    // nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Running " + bestTrajectory.getInitialPose().toString());
 
     _command = new FollowTrajectory(_driveTrain, bestTrajectory);
-    _command.schedule();
+    _command.initialize();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     _command.execute();
-    visionX.append(_driveTrain.getPose().getX());
-    visionY.append(_driveTrain.getPose().getY());
-    odometryX.append(_driveTrain.getPose().getX());
-    odometryY.append(_driveTrain.getPose().getY());
+    // visionX.append(_driveTrain.getPose().getX());
+    // visionY.append(_driveTrain.getPose().getY());
+    // odometryX.append(_driveTrain.getPose().getX());
+    // odometryY.append(_driveTrain.getPose().getY());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    NetworkTableInstance nt = NetworkTableInstance.getDefault();
-    nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Not Running");
+    // NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    // nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Not Running");
     _command.end(interrupted);
   }
 
