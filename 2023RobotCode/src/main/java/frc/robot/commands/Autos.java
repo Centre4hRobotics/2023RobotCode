@@ -15,7 +15,6 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
 import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -46,6 +45,19 @@ public final class Autos {
       // //.andThen(new GetOnChargingStation(driveTrain, .6, -1).withTimeout(1.85))//Was .5
       // .andThen(new DriveForDistance(driveTrain, 2, -.7))
       // .andThen(new Balance(driveTrain));
+  }
+  public static SequentialCommandGroup scoreCenterExpiremental(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int node) throws Exception {
+    double d = 1;
+    return 
+      score(arm, gripper, ArmConstants.highPosition)
+      .andThen(new DriveForDistance(driveTrain, 2, -.7))
+      .andThen(new DriveForDistance(driveTrain, 2, -.5))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getStagingPose(side, 1, 0), node))
+      .andThen(new DriveForDistance(driveTrain, d, .7))
+      .andThen(new LowerGroundControl(groundControl))
+      .andThen(new CloseGroundControl(groundControl))
+      .andThen(new DriveForDistance(driveTrain, d+1.8, -.7))
+      .andThen(new Balance(driveTrain));
   }
 
   public static CommandBase sideAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {

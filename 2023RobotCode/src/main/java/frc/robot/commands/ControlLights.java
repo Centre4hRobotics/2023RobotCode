@@ -29,8 +29,7 @@ public class ControlLights extends InstantCommand {
       _lights.setCube();
     }
     else {
-      _lights.setOff();
+      _lights.pulse();
     }
   }
-
 }
