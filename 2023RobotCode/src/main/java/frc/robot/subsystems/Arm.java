@@ -26,11 +26,11 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   public Arm() {
     super();
-    _leadMotor.getPIDController().setP(.103); // change only this one, .108
+    _leadMotor.getPIDController().setP(1.2); // change only this one, .108
     _leadMotor.getPIDController().setI(0.00005*(9.0/5.0));
     _leadMotor.getPIDController().setD(0);
     _leadMotor.getPIDController().setIZone(15*(9.0/5.0));
-    _leadMotor.getPIDController().setFF(0);
+    _leadMotor.getPIDController().setFF(.07);
     _leadMotor.getPIDController().setOutputRange(-.5, 1);
 
     _leadMotor.setSmartCurrentLimit(20);

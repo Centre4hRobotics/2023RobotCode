@@ -13,6 +13,8 @@ public class Lights extends SubsystemBase {
   /** Creates a new Lights. */
   private AddressableLED stripLED;
   private AddressableLEDBuffer stripBuffer;
+  private int lightActive = 3;
+  private boolean desc = false;
 
   
   public Lights() {
@@ -87,6 +89,32 @@ stripLED.start();
  }
  
  rightLED.setData(rightBuffer);*/
+  }
+  public void pulse() {
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Lights").getEntry("state").setValue("pulse");
+    for (var i = 0; i < stripBuffer.getLength(); i++) {
+      int ticks = 65;
+      // Sets the specified LED to the RGB values for red
+      if(lightActive/ticks==i||lightActive/ticks==i+1) {
+        stripBuffer.setRGB(i, 0, 255, 0);
+      }
+      else {
+        stripBuffer.setRGB(i, 0,0, 0);
+      }
+      if(desc) {
+        lightActive-=1;
+      }
+      else { 
+        lightActive+=1;
+      }
+      if(lightActive==21*ticks-1||lightActive==1) {
+        desc = !desc;
+
+      }
+    }
+    stripLED.setData(stripBuffer);
+    stripLED.start();
   }
   
   public void setFloorCube() {

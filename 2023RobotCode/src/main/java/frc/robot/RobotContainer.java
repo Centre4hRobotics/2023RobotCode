@@ -77,6 +77,7 @@ public class RobotContainer {
     _driveTrain.setDefaultCommand(new DriveWithJoysticks(_driveTrain, _leftDriveJoystick, _rightDriveJoystick));// for tank drive
     _arm.setDefaultCommand(new ExtendArmWithJoystick(_arm, _functionJoystick2));//Was with buttons
     _groundControl.setDefaultCommand(new IntakeWithSwitch(_groundControl, _functionJoystick, .25));
+    _lights.setDefaultCommand(new ControlLights(_lights, _functionJoystick));
     // Configure the trigger bindings
     configureBindings();
     autoChooserInit();
@@ -114,14 +115,14 @@ public class RobotContainer {
     one.whileTrue(new Intake(_groundControl, -.8));
     two.whileTrue(new Intake(_groundControl, .4));
 
-    four.onTrue(new ControlLights(_lights, _functionJoystick));
-    four.onFalse(new ControlLights(_lights, _functionJoystick));
-    five.onTrue(new ControlLights(_lights, _functionJoystick));
-    five.onFalse(new ControlLights(_lights, _functionJoystick));
-    six.onTrue(new ControlLights(_lights, _functionJoystick));
-    six.onFalse(new ControlLights(_lights, _functionJoystick));
-    seven.onTrue(new ControlLights(_lights, _functionJoystick));
-    seven.onFalse(new ControlLights(_lights, _functionJoystick));
+    // four.onTrue(new ControlLights(_lights, _functionJoystick));
+    // four.onFalse(new ControlLights(_lights, _functionJoystick));
+    // five.onTrue(new ControlLights(_lights, _functionJoystick));
+    // five.onFalse(new ControlLights(_lights, _functionJoystick));
+    // six.onTrue(new ControlLights(_lights, _functionJoystick));
+    // six.onFalse(new ControlLights(_lights, _functionJoystick));
+    // seven.onTrue(new ControlLights(_lights, _functionJoystick));
+    // seven.onFalse(new ControlLights(_lights, _functionJoystick));
 
     one2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted)
     .andThen(new RaiseArm(_arm)));
