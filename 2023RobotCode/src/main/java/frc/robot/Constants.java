@@ -176,7 +176,7 @@ public final class Constants {
     }
   }
   public static enum Offset {
-    LEFT, RIGHT
+    LEFT, RIGHT, CENTER
   }
 
   public static class CameraPoses{
