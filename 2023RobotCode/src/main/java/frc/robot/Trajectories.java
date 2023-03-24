@@ -29,16 +29,41 @@ public class Trajectories {
     
     
     public static Trajectory generateToPose(Pose2d startPosition, Pose2d endPosition, boolean reversed, double velocityCoefficient) {
-      return TrajectoryGenerator.generateTrajectory(
+      Trajectory t;
+      try{
+        t = TrajectoryGenerator.generateTrajectory(
         List.of(startPosition, endPosition),
         getNewConfig(velocityCoefficient, .6).setReversed(reversed)
-      );
+        );
+      } catch(Exception e){
+        e.printStackTrace();
+        System.out.print("Start Pose: " + startPosition.toString());
+        System.out.print("End Pose: " + endPosition.toString());
+        Pose2d pose = new Pose2d(0, 0,  new Rotation2d(0));
+        t = TrajectoryGenerator.generateTrajectory(
+          List.of(pose, pose),
+          getNewConfig(.1, .1)
+          );
+      }
+      return t;
     }
     public static Trajectory generateToPose(List<Pose2d> points, boolean reversed, double velocityCoefficient) {
-      return TrajectoryGenerator.generateTrajectory(
-      points,
-      getNewConfig(velocityCoefficient, .6).setReversed(reversed)
-      );
+      Trajectory t;
+      try{
+        t = TrajectoryGenerator.generateTrajectory(
+        points,
+        getNewConfig(velocityCoefficient, .6).setReversed(reversed)
+        );
+      }catch(Exception e){
+        e.printStackTrace();
+        System.out.print("Poses: " + points.toString());
+        Pose2d pose = new Pose2d(0, 0,  new Rotation2d(0));
+        t = TrajectoryGenerator.generateTrajectory(
+          List.of(pose, pose),
+          getNewConfig(.1, .1)
+          );
+      }
+      return t;
     }
 
     public static Trajectory generateToPoseFromDrive(DriveTrain drive, Pose2d endPosition) {
