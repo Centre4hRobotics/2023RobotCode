@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.AprilTagPoses;
 import frc.robot.Constants.CameraPoses;
 
@@ -80,7 +81,7 @@ public class Vision extends SubsystemBase {
           Pose2d robotPose2d = robotPose3d.toPose2d();
 
           //Check for major differences between last accepted position;  If we are close enough, current pose is accurate and should overrule
-          if((Math.abs(robotPose2d.getY()-poseY) > yTolerance || Math.abs(robotPose2d.getX()-poseX) > xTolerance) && Math.abs(poseX-16.54)<3.8){
+          if((Math.abs(robotPose2d.getY()-poseY) > yTolerance || Math.abs(robotPose2d.getX()-poseX) > xTolerance) && Math.abs(poseX-Constants.fieldCenterX)<4){
             //See if alternate position works
             Transform3d AltCameraToTargetPose = t.getAlternateCameraToTarget();
             Transform3d AltRobotToCameraPose = CameraPoses.getCameraPose(_arm.isRaised(), _isCompBot);
@@ -165,7 +166,7 @@ public class Vision extends SubsystemBase {
   public boolean updateOdomentry(DriveTrain driveTrain, boolean useReasonable){
     double xAcceptable = 1;
     double yAcceptable = 1.5;
-    if (numberOfTargets >= 1) {
+    if (hasValue) {
 
       if(useReasonable){
         if (Math.abs(poseX - driveTrain.getPose().getX()) > xAcceptable || Math.abs(poseY - driveTrain.getPose().getY()) > yAcceptable){
