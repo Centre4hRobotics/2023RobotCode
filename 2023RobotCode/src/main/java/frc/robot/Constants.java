@@ -74,7 +74,7 @@ public final class Constants {
     public static final double lowPosition = .1522;
     public static final double middlePosition = .6522;//was .6722
     public static final double highPosition = 1.06; // 1.0247 / was 184.6*old encoderTicksToMeters; 1.075
-    public static final double pickupPosition = .2997; // was 48.5, 50.5*old encoderTicksToMeters
+    public static final double pickupPosition = .333; //was .2997
     public static final double maxExtention = 1.115; // 1.0305 / was 199.6*old encoderTicksToMeters
     public static final double encoderTicksToMeters = 0.005855208 * (15./5.); // gearbox conversion
   }
