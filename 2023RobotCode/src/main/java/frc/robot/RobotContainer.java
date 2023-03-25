@@ -18,10 +18,12 @@ import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.Intake;
 import frc.robot.commands.IntakeWithSwitch;
 import frc.robot.commands.LowerArm;
+import frc.robot.commands.LowerBoxingGloves;
 import frc.robot.commands.LowerGroundControl;
 import frc.robot.commands.OpenGripper;
 import frc.robot.commands.OpenGroundControl;
 import frc.robot.commands.RaiseArm;
+import frc.robot.commands.RaiseBoxingGloves;
 import frc.robot.commands.RaiseGroundControl;
 import frc.robot.commands.ResetArmEncoder;
 import frc.robot.commands.LockPosition;
@@ -29,6 +31,7 @@ import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnSlow;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.BoxingGloves;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
@@ -57,6 +60,7 @@ public class RobotContainer {
   private final Gripper _gripper = new Gripper();
   private final Lights _lights = new Lights();
   private final Vision _vision = new Vision(true, _arm);
+  private final BoxingGloves _boxingGloves = new BoxingGloves();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
 
@@ -123,6 +127,9 @@ public class RobotContainer {
     // six.onFalse(new ControlLights(_lights, _functionJoystick));
     // seven.onTrue(new ControlLights(_lights, _functionJoystick));
     // seven.onFalse(new ControlLights(_lights, _functionJoystick));
+
+    five.onTrue(new RaiseBoxingGloves(_boxingGloves));
+    five.onTrue(new LowerBoxingGloves(_boxingGloves));
 
     one2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted)
     .andThen(new RaiseArm(_arm)));

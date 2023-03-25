@@ -5,10 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Lights;
 
-public class ControlLights extends InstantCommand {
+public class ControlLights extends CommandBase {
   /** Creates a new ControlLights. */
   private Lights _lights;
   private Joystick _functionJoystick;
@@ -21,15 +21,29 @@ public class ControlLights extends InstantCommand {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    if(_functionJoystick.getRawButton(4)||_functionJoystick.getRawButton(5)) {
+  public void initialize() {}
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    if(_functionJoystick.getRawButton(4) ){//||_functionJoystick.getRawButton(5)) {
       _lights.setCone();
     }
-    else if(_functionJoystick.getRawButton(6)||_functionJoystick.getRawButton(7)) {
+    else if(_functionJoystick.getRawButton(6) ){//||_functionJoystick.getRawButton(7)) {
       _lights.setCube();
     }
     else {
       _lights.pulse();
     }
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {}
+
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }
