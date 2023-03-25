@@ -15,6 +15,7 @@ public class Lights extends SubsystemBase {
   private AddressableLEDBuffer stripBuffer;
   private int lightActive = 3;
   private boolean desc = false;
+  private boolean wasOn = true;
 
   
   public Lights() {
@@ -54,6 +55,7 @@ public class Lights extends SubsystemBase {
 }
 
   public void setCube() {
+    wasOn = true;
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lights").getEntry("state").setValue("cube");
     for (var i = 0; i < stripBuffer.getLength(); i++) {
@@ -73,6 +75,7 @@ stripLED.start();
 
   }
   public void setCone() {
+    wasOn = true;
     
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lights").getEntry("state").setValue("cone");
@@ -93,31 +96,44 @@ stripLED.start();
   public void pulse() {
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lights").getEntry("state").setValue("pulse");
-    for (var i = 0; i < stripBuffer.getLength(); i++) {
-      int ticks = 65;
-      // Sets the specified LED to the RGB values for red
-      if(lightActive/ticks==i||lightActive/ticks==i+1) {
-        stripBuffer.setRGB(i, 0, 255, 0);
+    int ticks = 5;
+    if(wasOn) {
+      for (var i = 0; i < stripBuffer.getLength(); i++) {
+        // Sets the specified LED to the RGB values for red
+        if(lightActive/ticks==i||lightActive/ticks==i+1) {
+          stripBuffer.setRGB(i, 0, 255, 0);
+        }
+        else {
+          stripBuffer.setRGB(i, 0, 0, 0);
+        }
       }
-      else {
-        stripBuffer.setRGB(i, 0,0, 0);
+      wasOn = false;
+    }
+    if(lightActive/ticks>0&&lightActive/ticks<20) {
+      if(lightActive/ticks>1) {
+        stripBuffer.setRGB(lightActive/ticks-2, 0, 0, 0);
       }
-      if(desc) {
-        lightActive-=1;
+      stripBuffer.setRGB(lightActive/ticks-1, 0, 255, 0);
+      stripBuffer.setRGB(lightActive/ticks, 0, 255, 0);
+      if(lightActive/ticks<19) {
+        stripBuffer.setRGB(lightActive/ticks+1, 0, 0, 0);
       }
-      else { 
-        lightActive+=1;
-      }
-      if(lightActive==21*ticks-1||lightActive==1) {
-        desc = !desc;
-
-      }
+    }
+    if(desc) {
+      lightActive-=1;
+    }
+    else {
+      lightActive+=1;
+    }
+    if(lightActive==21*ticks-1||lightActive==1) {
+      desc = !desc;
     }
     stripLED.setData(stripBuffer);
     stripLED.start();
   }
   
   public void setFloorCube() {
+    wasOn = true;
    
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lights").getEntry("state").setValue("floorCube");
