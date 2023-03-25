@@ -37,13 +37,9 @@ public class Trajectories {
         );
       } catch(Exception e){
         e.printStackTrace();
-        System.out.print("Start Pose: " + startPosition.toString());
-        System.out.print("End Pose: " + endPosition.toString());
-        Pose2d pose = new Pose2d(0, 0,  new Rotation2d(0));
-        t = TrajectoryGenerator.generateTrajectory(
-          List.of(pose, pose),
-          getNewConfig(.1, .1)
-          );
+        System.out.println("Start Pose: " + startPosition.toString());
+        System.out.println("End Pose: " + endPosition.toString());
+        t = new Trajectory();
       }
       return t;
     }
@@ -56,12 +52,8 @@ public class Trajectories {
         );
       }catch(Exception e){
         e.printStackTrace();
-        System.out.print("Poses: " + points.toString());
-        Pose2d pose = new Pose2d(0, 0,  new Rotation2d(0));
-        t = TrajectoryGenerator.generateTrajectory(
-          List.of(pose, pose),
-          getNewConfig(.1, .1)
-          );
+        System.out.println("Poses: " + points.toString());
+        t = new Trajectory();
       }
       return t;
     }
