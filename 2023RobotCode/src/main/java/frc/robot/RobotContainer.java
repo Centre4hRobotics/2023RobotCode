@@ -41,6 +41,7 @@ import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -129,7 +130,7 @@ public class RobotContainer {
     // seven.onFalse(new ControlLights(_lights, _functionJoystick));
 
     five.onTrue(new RaiseBoxingGloves(_boxingGloves));
-    five.onTrue(new LowerBoxingGloves(_boxingGloves));
+    five.onFalse(new LowerBoxingGloves(_boxingGloves));
 
     one2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted)
     .andThen(new RaiseArm(_arm)));
@@ -184,6 +185,14 @@ public class RobotContainer {
     l7.whileTrue(new BasicBalance(_driveTrain, .3, 1));
     JoystickButton l8 = new JoystickButton(_leftDriveJoystick, 8);
     l8.whileTrue(new Balance(_driveTrain));
+
+    //Throw object?
+    JoystickButton l11 = new JoystickButton(_leftDriveJoystick, 11);
+    l11.onTrue(new SequentialCommandGroup(
+      new LowerGroundControl(_groundControl),
+      new WaitCommand(.2),
+      new Intake(_groundControl, -1)
+    ));
 
   }
 
