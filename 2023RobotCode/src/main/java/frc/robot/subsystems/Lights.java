@@ -14,6 +14,7 @@ public class Lights extends SubsystemBase {
   private AddressableLED stripLED;
   private AddressableLEDBuffer stripBuffer;
   private int lightActive = 3;
+  private int count = 0;
   private boolean desc = false;
   private boolean wasOn = true;
 
@@ -26,7 +27,6 @@ public class Lights extends SubsystemBase {
     //rightBuffer = new AddressableLEDBuffer(6);
     //rightLED.setLength(rightBuffer.getLength());
   }
-  
 
   @Override
   public void periodic() {
@@ -137,5 +137,42 @@ stripLED.start();
    
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Lights").getEntry("state").setValue("floorCube");
+  }
+
+  public void scroll(int max) {
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Lights").getEntry("state").setValue("scroll");
+
+    if (lightActive == 0) {
+      final int n = 3;
+
+      for (int i = 0; i < max; i++) {
+        int j = i + count;
+        if (j >= max) j -= max;
+
+        // get scaled brightness based on position
+        // int val = (int) (255 * ((double) j / max));
+        int val = (int) (20.0 * (double) j / max + 128 * (max - j));
+        // alternate colors every n
+        if ((i / n) % 2 == 0) {
+          stripBuffer.setRGB(j, 0, val, 0);
+        } else {
+          stripBuffer.setRGB(j, val, val, val);
+        }
+      }
+      
+      count++;
+      if (count >= max) count = 0;
+      System.out.println(count);
+
+      stripLED.setData(stripBuffer);
+      stripLED.start();
+    }
+    lightActive++;
+    if (lightActive >= 4) lightActive = 0;
+  }
+
+  public void scroll() {
+    scroll(stripBuffer.getLength());
   }
 }

@@ -228,6 +228,11 @@ public final class Constants {
       0.92075, 0.92075 + 1.2192, 0.92075 + 2 * 1.2192, 0.92075 + 3 * 1.2192
     };
 
+    // bottom y coordinate of the loading zone
+    public static final double loadingY = 5.5;
+    
+    public static final double fieldWidth = 16.518;
+
     /**
      * Get pose of a scoring position
      * @param side Which side of the field, either LEFT (Blue) or RIGHT (Red)
@@ -258,6 +263,38 @@ public final class Constants {
       }
       if (node < 0 || node > 2) {
         throw new IllegalArgumentException("node should be between 0 and 2");
+      }
+      
+      double y = yScoringPositions[grid * 3 + node];
+
+      return new Pose2d(x, y, rotation);
+    }
+
+    /**
+     * Get pose of a physical scoring location
+     * @param side Which side of the field, either LEFT (Blue) or RIGHT (Red)
+     * @param grid Which grid of nodes 0-2, 0 being the left most when looking from the charging station
+     * @param node Which node in the grid 0-2, 0 being the left most when looking from the charging station
+     * @return
+     */
+    public static final Pose2d getHighNodePose(FieldSide side, int grid, int node) {
+      double offset = 1.01;
+
+      double x;
+      Rotation2d rotation;
+      switch (side) {
+        case LEFT: 
+          x = leftScoringX - offset;
+          rotation = new Rotation2d(Math.PI);
+          break;
+        case RIGHT: 
+          x = rightScoringX + offset;
+          rotation = new Rotation2d(0);
+          break;
+        default: 
+          System.out.println("side isn't correct...");
+          x = leftScoringX - offset;
+          rotation = new Rotation2d(0);
       }
       
       double y = yScoringPositions[grid * 3 + node];

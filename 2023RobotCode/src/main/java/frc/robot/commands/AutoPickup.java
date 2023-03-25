@@ -24,7 +24,7 @@ public class AutoPickup extends CommandBase {
   private Arm _arm;
   private Command _command;
   private Offset _offset;
-  private boolean _odometryIsReset;
+  private boolean _endEarly;
 
 
   public AutoPickup(DriveTrain driveTrain, Arm arm, Vision vision, Offset offset) {
@@ -39,33 +39,48 @@ public class AutoPickup extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    _odometryIsReset = _vision.updateOdomentry(_driveTrain);
+    _endEarly = !_vision.updateOdomentry(_driveTrain);
 
-    int bestTag = 1;
+    int bestTag = -1;
     Pose2d robotPose = _driveTrain.getPose();
-    double bestHypot = 50;
+    double bestHypot = 5;
 
     //Determine which tag we are closest to
-    for (int i = 1; i<9; i++){
-      Pose2d tagPose = AprilTagPoses.getPose(i).toPose2d();
+    int[] possibleTags;
+    if (robotPose.getY() >= FieldPoses.loadingY) {
+      possibleTags = new int[] {4, 5};
+    } else if (robotPose.getX() < FieldPoses.fieldWidth / 2) {
+      possibleTags = new int[] {6, 7, 8};
+    } else {
+      possibleTags = new int[] {1, 2, 3};
+    }
+
+    for (int i = 1; i <= possibleTags.length; i++){
+      Pose2d tagPose = AprilTagPoses.getPose(possibleTags[i]).toPose2d();
       double hypot = Math.hypot(robotPose.getX()-tagPose.getX(), robotPose.getY()-tagPose.getY());
       if(hypot < bestHypot){
         bestHypot = hypot;
-        bestTag = i;
+        bestTag = possibleTags[i];
       }
     }
 
     //Get target pose
-    FieldSide side;
-    int grid;
+    FieldSide side = null;
+    int grid = -1;
+    int node = -1;
     Pose2d targetPose;
 
-    if(bestTag <= 3){
+    if (bestTag == -1) {
+      _endEarly = true;
+      System.out.println("No tag is closer than " + bestHypot + "m");
+      targetPose = _driveTrain.getPose();
+    } else if(bestTag <= 3){
       side = FieldSide.RIGHT;
       grid = bestTag-1;
       if(_offset == Offset.RIGHT) {
         try {
           targetPose = FieldPoses.getScoringPose(side, grid, 2);
+          node = 2;
         } catch (Exception e) {
           e.printStackTrace();
           targetPose = _driveTrain.getPose();
@@ -74,6 +89,7 @@ public class AutoPickup extends CommandBase {
       else if(_offset == Offset.CENTER) {
         try {
           targetPose = FieldPoses.getScoringPose(side, grid, 1);
+          node = 1;
         } catch (Exception e) {
           e.printStackTrace();
           targetPose = _driveTrain.getPose();
@@ -82,6 +98,7 @@ public class AutoPickup extends CommandBase {
       else {
         try {
           targetPose = FieldPoses.getScoringPose(side, grid, 0);
+          node = 0;
         } catch (Exception e) {
           e.printStackTrace();
           targetPose = _driveTrain.getPose();
@@ -94,6 +111,7 @@ public class AutoPickup extends CommandBase {
       if(_offset == Offset.RIGHT) {
         try {
           targetPose = FieldPoses.getScoringPose(side, grid, 0);
+          node = 0;
         } catch (Exception e) {
           e.printStackTrace();
           targetPose = _driveTrain.getPose();
@@ -102,6 +120,7 @@ public class AutoPickup extends CommandBase {
       else if(_offset == Offset.CENTER) {
         try {
           targetPose = FieldPoses.getScoringPose(side, grid, 1);
+          node = 1;
         } catch (Exception e) {
           e.printStackTrace();
           targetPose = _driveTrain.getPose();
@@ -110,6 +129,7 @@ public class AutoPickup extends CommandBase {
       else {
         try {
           targetPose = FieldPoses.getScoringPose(side, grid, 2);
+          node = 2;
         } catch (Exception e) {
           e.printStackTrace();
           targetPose = _driveTrain.getPose();
@@ -127,7 +147,6 @@ public class AutoPickup extends CommandBase {
       }
       Rotation2d targetRotation = new Rotation2d(0);
       targetPose = new Pose2d(targetX, targetY, targetRotation);
-
     } else{ //tag is 5
       double targetX = AprilTagPoses.getPose(5).getX()+.5334-.04;
       double targetY = AprilTagPoses.getPose(5).getY();
@@ -144,13 +163,18 @@ public class AutoPickup extends CommandBase {
 
     
     
-      // if(Math.abs(targetX-_driveTrain.getPose().getX())<.5) {
-      //   _command = new FollowTrajectoryToPose(_driveTrain, new Pose2d((targetX+_driveTrain.getPose().getX())/2, targetY+1, targetRotation), .5);
-      //   _command.initialize();
-      // }
-    
+    // if(Math.abs(targetX-_driveTrain.getPose().getX())<.5) {
+    //   _command = new FollowTrajectoryToPose(_driveTrain, new Pose2d((targetX+_driveTrain.getPose().getX())/2, targetY+1, targetRotation), .5);
+    //   _command.initialize();
+    // }
 
-    _command = new FollowTrajectoryToPose(_driveTrain, targetPose, .3);
+    if (side == null || grid == -1 || node == -1) {
+      _command = new FollowTrajectoryToPose(_driveTrain, targetPose, .3);
+    } else {
+      _command = new FollowTrajectoryToPose(_driveTrain, targetPose, .3)
+      .andThen(new TurnToAngle(_driveTrain, FieldPoses.getHighNodePose(side, grid, node), 1))
+      .andThen(new DriveForDistance(_driveTrain, .5, .5));
+    }
     _command.initialize();
   }
 
@@ -169,6 +193,6 @@ public class AutoPickup extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return _command.isFinished() || !_odometryIsReset;
+    return _command.isFinished() || _endEarly;
   }
 }
