@@ -108,15 +108,20 @@ public class FollowTrajectoryToPose extends CommandBase {
 
     // NetworkTableInstance nt = NetworkTableInstance.getDefault();
     // nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Running " + bestTrajectory.getInitialPose().toString());
-
-    _command = new FollowTrajectory(_driveTrain, bestTrajectory);
-    _command.initialize();
+    try{
+      _command = new FollowTrajectory(_driveTrain, bestTrajectory);
+      _command.initialize();
+    } catch (Exception e){
+      _command = null;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _command.execute();
+    if(_command != null){
+      _command.execute();
+    }
     // visionX.append(_driveTrain.getPose().getX());
     // visionY.append(_driveTrain.getPose().getY());
     // odometryX.append(_driveTrain.getPose().getX());
@@ -128,12 +133,17 @@ public class FollowTrajectoryToPose extends CommandBase {
   public void end(boolean interrupted) {
     // NetworkTableInstance nt = NetworkTableInstance.getDefault();
     // nt.getTable("@debug").getEntry("FollowTrajectory").setValue("Not Running");
-    _command.end(interrupted);
+    if (_command != null){
+      _command.end(interrupted);
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(_command == null){
+      return true;
+    }
     return _command.isFinished();
   }
 }
