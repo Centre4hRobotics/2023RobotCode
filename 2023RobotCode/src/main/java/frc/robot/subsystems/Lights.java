@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Lights extends SubsystemBase {
@@ -22,7 +23,7 @@ public class Lights extends SubsystemBase {
   public Lights() {
     stripLED = new AddressableLED(0);
     //rightLED = new AddressableLED(1);
-    stripBuffer = new AddressableLEDBuffer(27);
+    stripBuffer = new AddressableLEDBuffer(60);
     stripLED.setLength(stripBuffer.getLength());
     //rightBuffer = new AddressableLEDBuffer(6);
     //rightLED.setLength(rightBuffer.getLength());
@@ -109,13 +110,13 @@ stripLED.start();
       }
       wasOn = false;
     }
-    if(lightActive/ticks>0&&lightActive/ticks<20) {
+    if(lightActive/ticks>0&&lightActive/ticks<stripBuffer.getLength()) {
       if(lightActive/ticks>1) {
         stripBuffer.setRGB(lightActive/ticks-2, 0, 0, 0);
       }
       stripBuffer.setRGB(lightActive/ticks-1, 0, 255, 0);
       stripBuffer.setRGB(lightActive/ticks, 0, 255, 0);
-      if(lightActive/ticks<19) {
+      if(lightActive/ticks<stripBuffer.getLength()-1) {
         stripBuffer.setRGB(lightActive/ticks+1, 0, 0, 0);
       }
     }
@@ -125,7 +126,54 @@ stripLED.start();
     else {
       lightActive+=1;
     }
-    if(lightActive==21*ticks-1||lightActive==1) {
+    if(lightActive==(stripBuffer.getLength()+1)*ticks-1||lightActive==1) {
+      desc = !desc;
+    }
+    stripLED.setData(stripBuffer);
+    stripLED.start();
+  }
+  public void pulse2() {
+    Color backround = new Color(0, 0, 0);
+    NetworkTableInstance nt = NetworkTableInstance.getDefault();
+    nt.getTable("Lights").getEntry("state").setValue("pulse");
+    int ticks = 5;
+    if(wasOn) {
+      for (var i = 0; i < stripBuffer.getLength(); i++) {
+        // Sets the specified LED to the RGB values for red
+        if((lightActive/ticks)%(stripBuffer.getLength()/3)==i||(lightActive/ticks)%(stripBuffer.getLength()/3)==i+1) {
+          stripBuffer.setRGB(i, 0, 255, 0);
+        }
+        else {
+          stripBuffer.setRGB(i, 0, 0, 0);
+        }
+      }
+      wasOn = false;
+    }
+    if(lightActive/ticks>0&&lightActive/ticks<stripBuffer.getLength()) {
+      if(lightActive/ticks>1) {
+        stripBuffer.setLED(lightActive/ticks-2, backround);
+        stripBuffer.setLED(lightActive/ticks-2+(stripBuffer.getLength()/3), backround);
+        stripBuffer.setLED(lightActive/ticks-2+(stripBuffer.getLength()/3)*2, backround);
+      }
+      stripBuffer.setRGB(lightActive/ticks-1, 0, 255, 0);
+      stripBuffer.setRGB(lightActive/ticks, 0, 255, 0);
+      stripBuffer.setRGB(lightActive/ticks-1+(stripBuffer.getLength()/3), 0, 255, 0);
+      stripBuffer.setRGB(lightActive/ticks+(stripBuffer.getLength()/3), 0, 255, 0);
+      stripBuffer.setRGB(lightActive/ticks-1+(stripBuffer.getLength()/3)*2, 0, 255, 0);
+      stripBuffer.setRGB(lightActive/ticks+(stripBuffer.getLength()/3)*2, 0, 255, 0);
+      if(lightActive/ticks<stripBuffer.getLength()/3-1) {
+        stripBuffer.setLED(lightActive/ticks+1, backround);
+        stripBuffer.setLED(lightActive/ticks+1+(stripBuffer.getLength()/3), backround);
+        stripBuffer.setLED(lightActive/ticks+1+(stripBuffer.getLength()/3)*2, backround);
+      }
+    }
+    if(desc) {
+      lightActive-=1;
+    }
+    else {
+      lightActive+=1;
+    }
+    if(lightActive==(stripBuffer.getLength()/3)*ticks-1||lightActive==1) {
       desc = !desc;
     }
     stripLED.setData(stripBuffer);

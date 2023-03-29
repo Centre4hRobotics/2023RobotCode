@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public final class Autos {
+public final class Autos {  
 
   public static SequentialCommandGroup scoreCenter(DriveTrain driveTrain, Arm arm, Gripper gripper, FieldSide side, int node) throws Exception {
     // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))

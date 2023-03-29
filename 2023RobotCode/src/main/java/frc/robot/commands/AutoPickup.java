@@ -55,7 +55,7 @@ public class AutoPickup extends CommandBase {
       possibleTags = new int[] {1, 2, 3};
     }
 
-    for (int i = 1; i <= possibleTags.length; i++){
+    for (int i = 1; i <= possibleTags.length; i++) {
       Pose2d tagPose = AprilTagPoses.getPose(possibleTags[i]).toPose2d();
       double hypot = Math.hypot(robotPose.getX()-tagPose.getX(), robotPose.getY()-tagPose.getY());
       if(hypot < bestHypot){
@@ -74,7 +74,7 @@ public class AutoPickup extends CommandBase {
       _endEarly = true;
       System.out.println("No tag is closer than " + bestHypot + "m");
       targetPose = _driveTrain.getPose();
-    } else if(bestTag <= 3){
+    } else if(bestTag <= 3) {
       side = FieldSide.RIGHT;
       grid = bestTag-1;
       if(_offset == Offset.RIGHT) {

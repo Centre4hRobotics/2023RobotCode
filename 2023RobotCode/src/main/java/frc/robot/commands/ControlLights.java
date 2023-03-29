@@ -33,7 +33,7 @@ public class ControlLights extends CommandBase {
       _lights.setCube();
     }
     else {
-      _lights.pulse();
+      _lights.pulse2();
     }
   }
 
