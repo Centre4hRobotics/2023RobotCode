@@ -70,9 +70,9 @@ public final class Autos {
     return 
       score(arm, gripper, ArmConstants.highPosition)
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(2))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(1.5))
       .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.CONE))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 5).withTimeout(2))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 5).withTimeout(1.5))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)))
       // .andThen(new FollowTrajectoryToPose(driveTrain, List.of(
       //   FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
@@ -81,7 +81,7 @@ public final class Autos {
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.2))
       .andThen(new Intake(groundControl, -.9).withTimeout(0.08))
-      .andThen(new Intake(groundControl, -.28));
+      .andThen(new Intake(groundControl, -.285));
   }
 
   public static CommandBase sideAutoTest(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node, Vision vision) throws Exception {
@@ -178,7 +178,10 @@ public final class Autos {
       return 
       new LowerGroundControl(groundControl)
       .andThen(new WaitCommand(.5))
-      .andThen(new DriveWithSpeed(driveTrain, .5).withTimeout(.85))//was .3, .4, .65
+      .andThen(new ParallelDeadlineGroup(
+        new DriveForDistance(driveTrain, .5, .5),
+        new Intake(groundControl, .3)))
+      //.andThen(new DriveWithSpeed(driveTrain, .5).withTimeout(.85))//was .3, .4, .65
       // .andThen(new FollowTrajectoryToPose(driveTrain, -.2, 0, .3))
       .andThen(new CloseGroundControl(groundControl))
       .andThen(new WaitCommand(.25))
