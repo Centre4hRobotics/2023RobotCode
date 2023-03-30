@@ -30,6 +30,7 @@ import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnSlow;
+import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.BoxingGloves;
 import frc.robot.subsystems.DriveTrain;
@@ -190,9 +191,16 @@ public class RobotContainer {
     JoystickButton l11 = new JoystickButton(_leftDriveJoystick, 11);
     l11.onTrue(new SequentialCommandGroup(
       new LowerGroundControl(_groundControl),
-      new WaitCommand(.2),
+      new WaitCommand(.27),
       new Intake(_groundControl, -1)
     ));
+
+    //For testing turn to angle
+    // JoystickButton l9 = new JoystickButton(_leftDriveJoystick, 9);
+    // l9.onTrue(new TurnToAngle(_driveTrain, 0, 0));
+
+    // JoystickButton l10 = new JoystickButton(_leftDriveJoystick, 10);
+    // l10.onTrue(new TurnToAngle(_driveTrain, 180, 0));
 
   }
 
