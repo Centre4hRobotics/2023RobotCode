@@ -31,7 +31,7 @@ public class Arm extends SubsystemBase {
     _leadMotor.getPIDController().setD(0);
     _leadMotor.getPIDController().setIZone(15*(9.0/5.0));
     _leadMotor.getPIDController().setFF(.001);
-    _leadMotor.getPIDController().setOutputRange(-.5, 1);
+    _leadMotor.getPIDController().setOutputRange(-.8, 1);
 
     _leadMotor.setSmartCurrentLimit(20);
 
