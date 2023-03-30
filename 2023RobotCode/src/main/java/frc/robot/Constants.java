@@ -98,11 +98,11 @@ public final class Constants {
   }
 
   public static class CompNeoTurnToAngleConstants {
-    public static final double kp = .007;
+    public static final double kp = .0078;//was .007
     public static final double ki = .018;
     public static final double kd = 0.00039;
     public static final double IRange = 9; //range, in degrees, in which the integral will start accumulating
-    public static final double base = .095;
+    public static final double base = 0;//was .095
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
     public static final double maxAccel = .3; //per 20 ms, from 0-1. .2 means you can go 0-full in .1s
   }
