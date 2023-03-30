@@ -34,6 +34,7 @@ public class DriveForDistance extends CommandBase {
   public void initialize() {
     initialLeft = _driveTrain.getLeftEncoder();
     initialRight = _driveTrain.getRightEncoder();
+    goneOver = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
