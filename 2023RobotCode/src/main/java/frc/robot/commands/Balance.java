@@ -32,9 +32,9 @@ public class Balance extends CommandBase {
   PIDController _PidController;
 
   //Slow down every time we osilate
-  // private double speedCoeficient = 1;
-  // private double deltaCoeficent = -0.1;
-  // private int previousSign = 1;
+  private double speedCoeficient = 1;
+  private double deltaCoeficent = .95;
+  private int previousSign = 1;
 
   
 
@@ -67,8 +67,8 @@ public class Balance extends CommandBase {
     NetworkTableInstance nt = NetworkTableInstance.getDefault();
     nt.getTable("Balance PID").getEntry("running").setValue(true);
 
-    // speedCoeficient = 1;
-    // previousSign = getAngleSign();
+    speedCoeficient = 1;
+    previousSign = getAngleSign();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -100,6 +100,8 @@ public class Balance extends CommandBase {
     else if(pidValue<-maxVal) {
       pidValue=-maxVal;
     }
+    // pidValue*=speedCoeficient;
+    pidValue*=.9;
 
     if(Math.abs(_driveTrain.getRoll())>5) {//Was 1
       _driveTrain.arcadeDrive(pidValue, 0);//*speedCoef
@@ -109,10 +111,10 @@ public class Balance extends CommandBase {
     
 
     //If we change angle sign, decrease power
-    // if(getAngleSign() != 1) {
-    //   speedCoeficient += deltaCoeficent;
-    //   previousSign *= -1;
-    // }
+    if(getAngleSign() != previousSign) {
+      speedCoeficient *= deltaCoeficent;
+      previousSign *= -1;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -152,7 +154,7 @@ public class Balance extends CommandBase {
     }
   }
 
-  private int getAngleSign(){
+  private int getAngleSign() {
     return (int)Math.signum(_driveTrain.getRoll());
   }
 
