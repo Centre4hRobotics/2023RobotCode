@@ -47,17 +47,30 @@ public final class Autos {
       // .andThen(new Balance(driveTrain));
   }
   public static SequentialCommandGroup scoreCenterExpiremental(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int node) throws Exception {
-    double d = 1;
+    double d = .7;
     return 
-      score(arm, gripper, ArmConstants.highPosition)
-      .andThen(new DriveForDistance(driveTrain, 2, -.7))
-      .andThen(new DriveForDistance(driveTrain, 2, -.5))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getStagingPose(side, 1, 0), node))
-      .andThen(new DriveForDistance(driveTrain, d, .7))
+      scoreWithoutRetract(arm, gripper, ArmConstants.highPosition)
+      .andThen(((new SetArmHeight(arm, ArmConstants.retracted))
+      .andThen(new LowerArm(arm)))
+      .alongWith(new DriveForDistance(driveTrain, 2, -.7)))
+      .andThen(new DriveForDistance(driveTrain, 1.8, -.5))
+      .andThen(new WaitCommand(.1))
+      .andThen(new TurnToAngle(driveTrain, 180, 5).withTimeout(1.5))
       .andThen(new LowerGroundControl(groundControl))
-      .andThen(new CloseGroundControl(groundControl))
-      .andThen(new DriveForDistance(driveTrain, d+1.8, -.7))
-      .andThen(new Balance(driveTrain));
+      .andThen(new WaitCommand(.25))
+      .andThen(new ParallelDeadlineGroup(new DriveForDistance(driveTrain, d, .9), new Intake(groundControl, .8)))
+      .andThen(new RaiseGroundControl(groundControl))
+      .andThen(new WaitCommand(.25))
+      .andThen(new TurnToAngle(driveTrain, 0, 5).withTimeout(1.5))
+      .andThen(new DriveForDistance(driveTrain, d+2.2, .7))
+      .andThen(new Balance(driveTrain)
+      .alongWith(new SequentialCommandGroup(
+        new LowerGroundControl(groundControl),
+        new WaitCommand(.27),
+        new CloseGroundControl(groundControl),
+        new Intake(groundControl, -1))
+      ))
+      ;
   }
 
   public static CommandBase sideAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
@@ -158,6 +171,16 @@ public final class Autos {
       .andThen(new WaitCommand(.15))//was .25
       .andThen(new SetArmHeight(arm, ArmConstants.retracted))
       .andThen(new RaiseArm(arm));
+  }
+  public static SequentialCommandGroup scoreWithoutRetract(Arm arm, Gripper gripper, double height){
+    return
+      new Log("Auto", "before set arm height")
+      .andThen(new SetArmHeight(arm, height)
+        .alongWith(new WaitCommand(.15).andThen(new LowerArm(arm))))
+      .andThen(new Log("Auto", "after set arm height"))
+      .andThen(new OpenGripper(gripper))
+      .andThen(new Log("Auto", "after open gripper"))
+      .andThen(new WaitCommand(.15));
   }
 
   public static CommandBase scoreWithMoveBack(DriveTrain driveTrain, Arm arm, Gripper gripper, double height) {
