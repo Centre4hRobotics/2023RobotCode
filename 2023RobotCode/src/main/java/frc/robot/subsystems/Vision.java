@@ -42,6 +42,8 @@ public class Vision extends SubsystemBase {
   private Rotation2d poseRotation = new Rotation2d();
   private final double yTolerance = .8;
   private final double xTolerance = .6;
+  private Pose2d lastRawPose;
+  private double latency;//Camera latency in seconds
 
   private boolean _isCompBot;
   private final Arm _arm;
@@ -79,6 +81,10 @@ public class Vision extends SubsystemBase {
           Transform3d robotToCameraPose = CameraPoses.getCameraPose(_arm.isRaised(), _isCompBot); //Get Camera's position relative to tag
           Pose3d robotPose3d = PhotonUtils.estimateFieldToRobotAprilTag(cameraToTargetPose, tagPose, robotToCameraPose); //Get robot's position on field
           Pose2d robotPose2d = robotPose3d.toPose2d();
+
+          //I added this
+          lastRawPose = robotPose2d;
+          latency = piCamInfo.getLatencyMillis()*1000;
 
           //Check for major differences between last accepted position;  If we are close enough, current pose is accurate and should overrule
           if((Math.abs(robotPose2d.getY()-poseY) > yTolerance || Math.abs(robotPose2d.getX()-poseX) > xTolerance) && Math.abs(poseX-Constants.fieldCenterX)<4){
@@ -201,6 +207,27 @@ public class Vision extends SubsystemBase {
   public boolean updateOdomentry(DriveTrain driveTrain){
     return updateOdomentry(driveTrain, false);
   }
+
+  /**
+   * Get unfiltered robot position based on camera
+   * @return calculated robot position or null if no target
+   */
+  public Pose2d getRawRobotPose() {
+    if(numberOfTargets > 0){
+      return lastRawPose;
+    } else{
+      return null;
+    }
+  }
+
+  /**
+   * Get camera latency
+   * @return camera latency in seconds
+   */
+  public double getCameraLatency(){
+    return latency;
+  }
+
 
   /**
    * Find the median of a running average data set
