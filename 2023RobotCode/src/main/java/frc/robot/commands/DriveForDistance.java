@@ -13,6 +13,7 @@ public class DriveForDistance extends CommandBase {
   private double _distance;
   private double _speed;
 
+  private double initialAngle;
   private double initialLeft, initialRight;
   private boolean goneOver = false;
   private final double tolerance = .01;
@@ -35,13 +36,20 @@ public class DriveForDistance extends CommandBase {
     initialLeft = _driveTrain.getLeftEncoder();
     initialRight = _driveTrain.getRightEncoder();
     goneOver = false;
+    initialAngle = _driveTrain.getAngle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (_distance - Math.abs(_driveTrain.getLeftEncoder() - initialLeft) > 0) {
-      _driveTrain.arcadeDrive(_speed, 0);
+      // if drifted left (angleDiff positive), turn right
+      double angleDiff = _driveTrain.getAngle() - initialAngle;
+      double steer = 0;
+      if (Math.abs(angleDiff) > 1) {
+        steer = .01 * Math.signum(angleDiff);
+      }
+      _driveTrain.arcadeDrive(_speed, steer);
     } else {
       goneOver = true;
     }
