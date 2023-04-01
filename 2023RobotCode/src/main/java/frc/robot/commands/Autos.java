@@ -97,6 +97,37 @@ public final class Autos {
       .andThen(new Intake(groundControl, -.285));
   }
 
+  public static CommandBase sideJeremiahAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
+    double velocityCoefficient = .99;
+    double angle=0;
+    if(side==FieldSide.RIGHT) {
+      angle-=Math.PI;
+    }
+    angle+=Math.PI;
+    return 
+      // score high
+      score(arm, gripper, ArmConstants.highPosition)
+      // move to pos + gloves move
+      .andThen(new ParallelDeadlineGroup(
+        new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)),
+        new RaiseBoxingGloves(_boxingGloves));
+        .alongWith(new WaitCommand(.5).andThen(new RaiseBoxingGloves(_boxingGloves))))
+      
+      // turn grab and go back
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(1.5))
+      .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.Cube))
+      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 5).withTimeout(1.5))
+      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)))  
+      // shooting sequence
+      .alongWith(new SequentialCommandGroup(
+        new LowerGroundControl(groundControl),
+        new WaitCommand(.25),
+        new CloseGroundControl(groundControl),
+        new Intake(groundControl, -1)))
+      // drive backwards at verry end
+      .andThen(new WaitCommand(.75))
+      .andThen(new DriveWithSpeed(driveTrain, -.4));}
+
   public static CommandBase sideAutoTest(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node, Vision vision) throws Exception {
     double velocityCoefficient = .4;
     double angle=0;
@@ -217,6 +248,7 @@ public final class Autos {
       .andThen(new ParallelDeadlineGroup(
         new DriveForDistance(driveTrain, .6, .55),
         new Intake(groundControl, .4)));
+      .andThen(new RaiseGroundControl(groundControl))
       // .andThen(new RaiseGroundControl(groundControl))
       // .andThen(new WaitCommand(.5));
     }
