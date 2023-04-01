@@ -10,6 +10,7 @@ import frc.robot.Constants.FieldPoses;
 import frc.robot.Constants.FieldSide;
 import frc.robot.Constants.GamePiece;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.BoxingGloves;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
@@ -50,19 +51,23 @@ public final class Autos {
     double d = .7;
     return 
       scoreWithoutRetract(arm, gripper, ArmConstants.highPosition)
-      .andThen(((new SetArmHeight(arm, ArmConstants.retracted))
-      .andThen(new LowerArm(arm)))
-      .alongWith(new DriveForDistance(driveTrain, 2, -.7)))
+        .andThen(((new SetArmHeight(arm, ArmConstants.retracted))
+        .andThen(new LowerArm(arm)))
+        .alongWith(new DriveForDistance(driveTrain, .25, -.5)
+        .andThen(new DriveForDistance(driveTrain, 1.75, -.7))))
       .andThen(new DriveForDistance(driveTrain, 1.8, -.5))
       .andThen(new WaitCommand(.1))
-      .andThen(new TurnToAngle(driveTrain, 180, 5).withTimeout(1.5))
+      .andThen(new TurnToAngle(driveTrain, 180, 5).withTimeout(1.75))
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.25))
       .andThen(new ParallelDeadlineGroup(new DriveForDistance(driveTrain, d, .9), new Intake(groundControl, .8)))
       .andThen(new RaiseGroundControl(groundControl))
-      .andThen(new WaitCommand(.25))
-      .andThen(new TurnToAngle(driveTrain, 0, 5).withTimeout(1.5))
-      .andThen(new DriveForDistance(driveTrain, d+2.2, .7))
+      .andThen(new ParallelDeadlineGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(.25),
+          new TurnToAngle(driveTrain, 0, 5).withTimeout(1.5),
+          new DriveForDistance(driveTrain, d+2.2, .7)),
+        new Intake(groundControl, .4)))
       .andThen(new Balance(driveTrain)
       .alongWith(new SequentialCommandGroup(
         new LowerGroundControl(groundControl),
@@ -97,7 +102,7 @@ public final class Autos {
       .andThen(new Intake(groundControl, -.285));
   }
 
-  public static CommandBase sideJeremiahAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
+  public static CommandBase sideJeremiahAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, BoxingGloves boxingGloves, FieldSide side, int grid, int node) throws Exception {
     double velocityCoefficient = .99;
     double angle=0;
     if(side==FieldSide.RIGHT) {
@@ -110,18 +115,21 @@ public final class Autos {
       // move to pos + gloves move
       .andThen(new ParallelDeadlineGroup(
         new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)),
-        new RaiseBoxingGloves(_boxingGloves));
-        .alongWith(new WaitCommand(.5).andThen(new RaiseBoxingGloves(_boxingGloves))))
+        new RaiseBoxingGloves(boxingGloves))
+          .andThen(new WaitCommand(.5)
+          .andThen(new LowerBoxingGloves(boxingGloves))))
       
       // turn grab and go back
       .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(1.5))
-      .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.Cube))
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 5).withTimeout(1.5))
-      .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)))  
+      .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.CUBE))
+      .andThen(new ParallelDeadlineGroup(
+        new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 5).withTimeout(1.5)
+        .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)))
+        , new Intake(groundControl, .4)))  
       // shooting sequence
-      .alongWith(new SequentialCommandGroup(
+      .andThen(new SequentialCommandGroup(
         new LowerGroundControl(groundControl),
-        new WaitCommand(.25),
+        new WaitCommand(.2),
         new CloseGroundControl(groundControl),
         new Intake(groundControl, -1)))
       // drive backwards at verry end
@@ -247,10 +255,9 @@ public final class Autos {
       .andThen(new WaitCommand(.5))
       .andThen(new ParallelDeadlineGroup(
         new DriveForDistance(driveTrain, .6, .55),
-        new Intake(groundControl, .4)));
+        new Intake(groundControl, .4)))
       .andThen(new RaiseGroundControl(groundControl))
-      // .andThen(new RaiseGroundControl(groundControl))
-      // .andThen(new WaitCommand(.5));
+      .andThen(new WaitCommand(.5));
     }
   }
 

@@ -11,6 +11,7 @@ import frc.robot.Constants.FieldSide;
 import frc.robot.commands.Autos;
 import frc.robot.commands.StopDrive;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.BoxingGloves;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
@@ -23,6 +24,7 @@ public class Commands {
     private Arm _arm;
     private Gripper _gripper;
     private Vision _vision;
+    private BoxingGloves _boxingGloves;
 
     private Command blueLeft;
     private Command blueCenter;
@@ -32,19 +34,20 @@ public class Commands {
     private Command redRight;
     
 
-    public Commands(DriveTrain driveTrain, GroundControl groundControl, Arm arm, Gripper gripper, Vision vision) {
+    public Commands(DriveTrain driveTrain, GroundControl groundControl, Arm arm, Gripper gripper, Vision vision, BoxingGloves boxingGloves) {
         _driveTrain = driveTrain;
         _groundControl = groundControl;
         _arm = arm;
         _gripper = gripper;
         _vision = vision;
+        _boxingGloves = boxingGloves;
         try {
             blueLeft = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 2, 2);
             blueCenter = Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0);
             blueRight = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, 0);
             redLeft = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.RIGHT, 0, 0);
-            redCenter = Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.RIGHT, 0);
-            redRight = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.RIGHT, 2, 2);
+            redCenter = Autos.scoreCenterExpiremental(_driveTrain, _arm, _gripper, _groundControl, FieldSide.RIGHT, 0);
+            redRight = Autos.sideJeremiahAuto(_driveTrain, _arm, _gripper, _groundControl, _boxingGloves, FieldSide.RIGHT, 2, 2);
         }
         catch (Exception e) {
             NetworkTableInstance nt = NetworkTableInstance.getDefault();
