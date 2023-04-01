@@ -31,6 +31,7 @@ import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnSlow;
 import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.UpdateMovingOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.BoxingGloves;
 import frc.robot.subsystems.DriveTrain;
@@ -61,7 +62,7 @@ public class RobotContainer {
   private final DriveTrain _driveTrain = new NeoDrive(_arm, true); // change to neoDrive for a neo bot
   private final Gripper _gripper = new Gripper();
   private final Lights _lights = new Lights();
-  private final Vision _vision = new Vision(true, _arm);
+  private final Vision _vision = new Vision(true, _arm, _driveTrain);
   private final BoxingGloves _boxingGloves = new BoxingGloves();
   private final Joystick _leftDriveJoystick = new Joystick(2);//For tank drive
   private final Joystick _rightDriveJoystick = new Joystick(3);//For tank drive
@@ -69,7 +70,7 @@ public class RobotContainer {
   private final Joystick _functionJoystick = new Joystick(0);
   private final Joystick _functionJoystick2 = new Joystick(1);
 
-  private final Commands _commands = new Commands(_driveTrain, _groundControl, _arm, _gripper, _vision);
+  private final Commands _commands = new Commands(_driveTrain, _groundControl, _arm, _gripper, _vision, _boxingGloves);
   
 
 
@@ -162,12 +163,15 @@ public class RobotContainer {
 
     //Right Drive Joystick
     JoystickButton r4 = new JoystickButton(_rightDriveJoystick, 4);
+    //r4.whileTrue(new UpdateMovingOdometry(_driveTrain, _vision).andThen(new AutoPickup(_driveTrain, _arm, _vision, Offset.RIGHT)));
     r4.whileTrue(new AutoPickup(_driveTrain, _arm, _vision, Offset.RIGHT));
     
     JoystickButton r3 = new JoystickButton(_rightDriveJoystick, 3);
+    //r3.whileTrue(new UpdateMovingOdometry(_driveTrain, _vision).andThen(new AutoPickup(_driveTrain, _arm, _vision, Offset.LEFT)));
     r3.whileTrue(new AutoPickup(_driveTrain, _arm, _vision, Offset.LEFT));
 
     JoystickButton r5 = new JoystickButton(_rightDriveJoystick, 5);
+    //r5.whileTrue(new UpdateMovingOdometry(_driveTrain, _vision).andThen(new AutoPickup(_driveTrain, _arm, _vision, Offset.CENTER)));
     r5.whileTrue(new AutoPickup(_driveTrain, _arm, _vision, Offset.CENTER));
 
     //Left Drive Joystick
