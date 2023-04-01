@@ -43,11 +43,11 @@ public class DriveForDistance extends CommandBase {
   @Override
   public void execute() {
     if (_distance - Math.abs(_driveTrain.getLeftEncoder() - initialLeft) > 0) {
-      // if drifted left (angleDiff positive), turn right
+      // if drifted left (angleDiff positive), turn right (negative steer)
       double angleDiff = _driveTrain.getAngle() - initialAngle;
       double steer = 0;
       if (Math.abs(angleDiff) > 1) {
-        steer = .01 * Math.signum(angleDiff);
+        steer = -.01 * Math.signum(angleDiff);
       }
       _driveTrain.arcadeDrive(_speed, steer);
     } else {
