@@ -398,7 +398,7 @@ public final class Constants {
     }
 
     public static final Pose2d getStagingPose(FieldSide side, int position, double angle) throws Exception {
-      double grabberOffset = .3;
+      double grabberOffset = .4;
   
       double x;
       Rotation2d rotation;
