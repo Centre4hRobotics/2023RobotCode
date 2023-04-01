@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Vision;
@@ -25,6 +26,7 @@ public class UpdateMovingOdometry extends CommandBase {
   double[] yValues = new double[totalIterations];
   double[] cosValues = new double[totalIterations];
   double[] sinValues = new double[totalIterations];
+  long previousTime;
 
 
   /** Creates a new UpdateMovingOdometry. */
@@ -41,24 +43,30 @@ public class UpdateMovingOdometry extends CommandBase {
   public void initialize() {
     index = 0;
     previousAngle = _driveTrain.getAngle();
+    previousTime = System.currentTimeMillis();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //Get time info
+    long currentTime = System.currentTimeMillis();
+    double deltaTime = (currentTime-previousTime)/1000.0;
+    previousTime = currentTime;
+
     //Get robot info
     DifferentialDriveWheelSpeeds wheelSpeeds = _driveTrain.getWheelSpeeds();
     double averageDriveVelocity = (wheelSpeeds.leftMetersPerSecond + wheelSpeeds.rightMetersPerSecond)/2.;
     double currentAngle = _driveTrain.getAngle();
-    double angleVelocity = (currentAngle-previousAngle)/.02;
+    double angleVelocity = (currentAngle-previousAngle)/deltaTime;
     previousAngle = currentAngle;
-
+    
     //Update previous positions based on how the robot has traveled
     for(int i = index-1; i>=0; i--) {
-      xValues[i] = xValues[i] + averageDriveVelocity*cosValues[i]*0.02;
-      yValues[i] = yValues[i] + averageDriveVelocity*sinValues[i]*0.02;
+      xValues[i] = xValues[i] + averageDriveVelocity*cosValues[i]*deltaTime;
+      yValues[i] = yValues[i] + averageDriveVelocity*sinValues[i]*deltaTime;
 
-      double newRotation = Math.atan2(sinValues[i], cosValues[i]) + angleVelocity/180*3.1415*0.02;
+      double newRotation = Math.atan2(sinValues[i], cosValues[i]) + angleVelocity/180*3.1415*deltaTime;
       cosValues[i] = Math.cos(newRotation);
       sinValues[i] = Math.sin(newRotation);
     }
@@ -116,8 +124,8 @@ public class UpdateMovingOdometry extends CommandBase {
 
       goodTags ++;
       //Sort value into ordered
-      for(int i = 0; i < data.length; i++){
-        if(value < data[i]) {
+      for(int i = 0; i < ordered.size(); i++){
+        if(value < ordered.get(i)) {
           ordered.add(i, value);
           break;
         }
