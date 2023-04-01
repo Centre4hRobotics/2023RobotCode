@@ -98,11 +98,11 @@ public final class Constants {
   }
 
   public static class CompNeoTurnToAngleConstants {
-    public static final double kp = .0078;//was .007
+    public static final double kp = .0074;//was .007
     public static final double ki = .018;
     public static final double kd = 0.00039;
     public static final double IRange = 9; //range, in degrees, in which the integral will start accumulating
-    public static final double base = 0;//was .095
+    public static final double base = .1;//was .095
     public static final double maxEndVelocity = .1; //in degrees per 20ms, .1 converts to 5 deg/s
     public static final double maxAccel = .3; //per 20 ms, from 0-1. .2 means you can go 0-full in .1s
   }
@@ -183,11 +183,11 @@ public final class Constants {
     private static final Translation3d practiceBotTranslation = new Translation3d(.2, .025, -.47);//Center of robot in relation to camera
     private static final Rotation3d practiceBotRotation = new Rotation3d(0, 0, 0);
 
-    private static final Translation3d compBotHighTranslation = new Translation3d(-0.231647, 0.087504, -0.5070817);//y was 0.094997
-    private static final Rotation3d compBotHighRotation = new Rotation3d(0, -0.144512, 0);
+    private static final Translation3d compBotHighTranslation = new Translation3d(-0.1495298, 0.087504, -0.531241);//y was 0.094997
+    private static final Rotation3d compBotHighRotation = new Rotation3d(0, -0.143466, 0);
 
-    private static final Translation3d compBotLowTranslation = new Translation3d(-0.190258, 0.087504, -0.4533225);//y was 0.094997
-    private static final Rotation3d compBotLowRotation = new Rotation3d(0, -0.004885, 0);
+    private static final Translation3d compBotLowTranslation = new Translation3d(-0.1808734, 0.087504, -0.4513072);//y was 0.094997
+    private static final Rotation3d compBotLowRotation = new Rotation3d(0, -0.003840, 0);
     
 
     public static final Transform3d getCameraPose(boolean armIsUp, boolean isCompBot) {
@@ -215,7 +215,7 @@ public final class Constants {
   }
 
   public static class FieldPoses {
-    private static final double leftScoringX = 1.377952756, rightScoringX = 15.16383033;
+    public static final double leftScoringX = 1.377952756, rightScoringX = 15.16383033;
     private static final double[] yScoringPositions = {
       // y calculated from +- (inner node width + divider width)
       0.5079988824, 1.0668, 1.625601118, 
