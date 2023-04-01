@@ -39,7 +39,7 @@ public class AutoPickup extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    _endEarly = !_vision.updateOdomentry(_driveTrain);
+    _endEarly = !_vision.updateOdomentry(_driveTrain);//false
 
     int bestTag = -1;
     Pose2d robotPose = _driveTrain.getPose();
@@ -160,8 +160,9 @@ public class AutoPickup extends CommandBase {
       targetPose = new Pose2d(targetX, targetY, targetRotation);
     }
 
-
-    
+    if (Math.abs(robotPose.getX() - targetPose.getX()) < .4) {
+      _endEarly = true;
+    }
     
     // if(Math.abs(targetX-_driveTrain.getPose().getX())<.5) {
     //   _command = new FollowTrajectoryToPose(_driveTrain, new Pose2d((targetX+_driveTrain.getPose().getX())/2, targetY+1, targetRotation), .5);
@@ -169,11 +170,11 @@ public class AutoPickup extends CommandBase {
     // }
 
     if (side == null || grid == -1 || node == -1) {
-      _command = new FollowTrajectoryToPose(_driveTrain, targetPose, .3);
+      _command = new FollowTrajectoryToPose(_driveTrain, targetPose, .4);
     } else {
-      _command = new FollowTrajectoryToPose(_driveTrain, targetPose, .3)
+      _command = new FollowTrajectoryToPose(_driveTrain, targetPose, .4)
       .andThen(new TurnToAngle(_driveTrain, FieldPoses.getHighNodePose(side, grid, node), 1))
-      .andThen(new DriveForDistance(_driveTrain, .5, .5));
+      .andThen(new DriveWithSpeed(_driveTrain, .2));
     }
     _command.initialize();
   }
