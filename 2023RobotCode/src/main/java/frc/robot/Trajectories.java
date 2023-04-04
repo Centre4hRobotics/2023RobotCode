@@ -120,7 +120,7 @@ public class Trajectories {
         return generateToPose(List.of(
           FieldPoses.getStagingPose(side, stagePosition),
           FieldPoses.getAvoidChargingStationPose(side, grid==0, true),
-          new Pose2d(FieldPoses.getScoringPose(side, grid, node).getX(), FieldPoses.getScoringPose(side, grid, node).getY()+(grid==0?-.15:.15), FieldPoses.getScoringPose(side, grid, node).getRotation()) // .1, -.1 for Jeremiah side auto
+          new Pose2d(FieldPoses.getScoringPose(side, grid, node).getX(), FieldPoses.getScoringPose(side, grid, node).getY()+(grid==0?.1:-.1), FieldPoses.getScoringPose(side, grid, node).getRotation()) // .1, -.1 for Jeremiah side auto
         ), false, velocityCoefficient);
       }
       return generateToPose(

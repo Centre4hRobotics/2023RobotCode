@@ -90,6 +90,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     autoChooserInit();
+    
   }
 
   /**
@@ -251,7 +252,8 @@ public class RobotContainer {
 
   public void autoChooserInit() {
     String[] autoselector = {
-      "Blue Left", "Blue Center", "Blue Right", "Red Left", "Red Center", "Red Right"
+      "Left", "Center", "Right", "Left score mid", "Center score double", "Right score mid",
+      "Punching Left", "Punching Center", "Punching Right", "Punching Left score mid", "Punching Center score double", "Punching Right score mid",
     };
     SmartDashboard.putStringArray("Auto List", autoselector);
   }
