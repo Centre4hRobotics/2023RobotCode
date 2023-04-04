@@ -121,21 +121,19 @@ public final class Autos {
       ))
       
       // turn grab and go back
-      .andThen(new TurnToAngle(driveTrain, 180, 3).withTimeout(1.5))
+      .andThen(new TurnToAngle(driveTrain, 180, 3).withTimeout(2))
       .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.CUBE))
       .andThen(new ParallelDeadlineGroup(
-        new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 5).withTimeout(1.5)
+        new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 5).withTimeout(2)
         .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)))
-        , new Intake(groundControl, .4)))  
+        , new Intake(groundControl, .4)))
       // shooting sequence
       .andThen(new SequentialCommandGroup(
         new LowerGroundControl(groundControl),
-        new WaitCommand(.2),
+        new WaitCommand(.15),
         new CloseGroundControl(groundControl),
-        new Intake(groundControl, -1)))
-      // drive backwards at verry end
-      .andThen(new WaitCommand(.75))
-      .andThen(new DriveWithSpeed(driveTrain, -.4));}
+        new Intake(groundControl, -1)));
+    }
 
   public static CommandBase sideAutoTest(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node, Vision vision) throws Exception {
     double velocityCoefficient = .4;
@@ -210,7 +208,7 @@ public final class Autos {
     return
       new Log("Auto", "before set arm height")
       .andThen(new SetArmHeight(arm, height)
-        .alongWith(new WaitCommand(.15).andThen(new LowerArm(arm))))
+        .alongWith(new WaitCommand(.25).andThen(new LowerArm(arm))))
       .andThen(new Log("Auto", "after set arm height"))
       .andThen(new OpenGripper(gripper))
       .andThen(new Log("Auto", "after open gripper"))
@@ -222,7 +220,7 @@ public final class Autos {
     return
       new Log("Auto", "before set arm height")
       .andThen(new SetArmHeight(arm, height)
-        .alongWith(new WaitCommand(.15).andThen(new LowerArm(arm))))
+        .alongWith(new WaitCommand(.25).andThen(new LowerArm(arm))))
       .andThen(new Log("Auto", "after set arm height"))
       .andThen(new OpenGripper(gripper))
       .andThen(new Log("Auto", "after open gripper"))
@@ -232,7 +230,7 @@ public final class Autos {
   public static CommandBase scoreWithMoveBack(DriveTrain driveTrain, Arm arm, Gripper gripper, double height) {
     return
       (new SetArmHeight(arm, height)
-        .alongWith(new WaitCommand(.15).andThen(new LowerArm(arm))))
+        .alongWith(new WaitCommand(.25).andThen(new LowerArm(arm))))
       .andThen(new OpenGripper(gripper))
       .andThen(new WaitCommand(.25))
       .andThen(new ParallelDeadlineGroup(
