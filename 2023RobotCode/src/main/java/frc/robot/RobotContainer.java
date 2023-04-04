@@ -13,6 +13,7 @@ import frc.robot.commands.BasicBalance;
 import frc.robot.commands.CloseGripper;
 import frc.robot.commands.CloseGroundControl;
 import frc.robot.commands.ControlLights;
+import frc.robot.commands.DriveForDistance;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.Intake;
@@ -31,6 +32,7 @@ import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
 import frc.robot.commands.TurnSlow;
 import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.TurnWithJoystick;
 import frc.robot.commands.UpdateMovingOdometry;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.BoxingGloves;
@@ -134,6 +136,16 @@ public class RobotContainer {
     five.onTrue(new RaiseBoxingGloves(_boxingGloves));
     five.onFalse(new LowerBoxingGloves(_boxingGloves));
 
+    //Throw object
+    seven.onTrue(new SequentialCommandGroup(
+      new LowerGroundControl(_groundControl),
+      new WaitCommand(.27),
+      new Intake(_groundControl, -1),
+      new WaitCommand(1),
+      new Intake(_groundControl, 0)
+    ));
+
+
     one2.onTrue(new SetArmHeight(_arm, ArmConstants.retracted)
     .andThen(new RaiseArm(_arm)));
     two2.onTrue(new OpenGroundControl(_groundControl)
@@ -174,30 +186,29 @@ public class RobotContainer {
     //r5.whileTrue(new UpdateMovingOdometry(_driveTrain, _vision).andThen(new AutoPickup(_driveTrain, _arm, _vision, Offset.CENTER)));
     r5.whileTrue(new AutoPickup(_driveTrain, _arm, _vision, Offset.CENTER));
 
+    JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
+    r7.onTrue(new ResetArmEncoder(_arm));
+
+    
     //Left Drive Joystick
     JoystickButton l4 = new JoystickButton(_leftDriveJoystick, 4);
     l4.whileTrue(new LockPosition(_driveTrain));
 
     JoystickButton l3 = new JoystickButton(_leftDriveJoystick, 3);
-    l3.whileTrue(new Balance(_driveTrain));
+    l3.whileTrue(new TurnWithJoystick(_driveTrain, _rightDriveJoystick));
 
-    JoystickButton r7 = new JoystickButton(_rightDriveJoystick, 7);
-    r7.onTrue(new ResetArmEncoder(_arm));    
+    JoystickButton l5 = new JoystickButton(_leftDriveJoystick, 5);
+    l5.whileTrue(new Balance(_driveTrain));
+        
 
     // expiremental - remove before competition
 
-    JoystickButton l7 = new JoystickButton(_leftDriveJoystick, 7);
-    l7.whileTrue(new BasicBalance(_driveTrain, .3, 1));
-    JoystickButton l8 = new JoystickButton(_leftDriveJoystick, 8);
-    l8.whileTrue(new Balance(_driveTrain));
+    // JoystickButton l7 = new JoystickButton(_leftDriveJoystick, 7);
+    // l7.whileTrue(new BasicBalance(_driveTrain, .3, 1));
+    // JoystickButton l8 = new JoystickButton(_leftDriveJoystick, 8);
+    // l8.whileTrue(new Balance(_driveTrain));
+    
 
-    //Throw object?
-    JoystickButton l11 = new JoystickButton(_leftDriveJoystick, 11);
-    l11.onTrue(new SequentialCommandGroup(
-      new LowerGroundControl(_groundControl),
-      new WaitCommand(.27),
-      new Intake(_groundControl, -1)
-    ));
 
     //For testing turn to angle
     // JoystickButton l9 = new JoystickButton(_leftDriveJoystick, 9);
