@@ -126,8 +126,8 @@ public class NeoDrive extends DriveTrain {
      */
     @Override
     public void arcadeDrive(double speed, double steer) {
-        speed = Math.signum(speed) * Math.min(Math.abs(speed), getDriveScale(.08, 1));
-        steer = Math.signum(steer) * Math.min(Math.abs(steer), getDriveScale(.08, 1));
+        speed = Math.signum(speed) * Math.min(Math.abs(speed), getDriveScale(.22, 1));
+        steer = Math.signum(steer) * Math.min(Math.abs(steer), getDriveScale(.22, 1));
 
         _drive.arcadeDrive(speed, steer);
         _drive.feed();//makes sure differencial drive knows something bad hasn't happened
