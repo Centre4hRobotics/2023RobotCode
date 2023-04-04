@@ -183,10 +183,10 @@ public final class Constants {
     private static final Translation3d practiceBotTranslation = new Translation3d(.2, .025, -.47);//Center of robot in relation to camera
     private static final Rotation3d practiceBotRotation = new Rotation3d(0, 0, 0);
 
-    private static final Translation3d compBotHighTranslation = new Translation3d(-0.1495298, 0.087504, -0.531241);//y was 0.094997
+    private static final Translation3d compBotHighTranslation = new Translation3d(-0.1495298, 0, -0.531241);//y was 0.094997, 0.087504
     private static final Rotation3d compBotHighRotation = new Rotation3d(0, -0.143466, 0);
 
-    private static final Translation3d compBotLowTranslation = new Translation3d(-0.1808734, 0.087504, -0.4513072);//y was 0.094997
+    private static final Translation3d compBotLowTranslation = new Translation3d(-0.1808734, 0, -0.4513072);//y was 0.094997, 0.087504
     private static final Rotation3d compBotLowRotation = new Rotation3d(0, -0.003840, 0);
     
 
