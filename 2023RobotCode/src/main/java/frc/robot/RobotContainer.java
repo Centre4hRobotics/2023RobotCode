@@ -69,7 +69,7 @@ public class RobotContainer {
   private final Joystick _functionJoystick = new Joystick(0);
   private final Joystick _functionJoystick2 = new Joystick(1);
 
-  private final Commands _commands = new Commands(_driveTrain, _groundControl, _arm, _gripper, _vision);
+  private final Commands _commands = new Commands(_driveTrain, _groundControl, _arm, _gripper, _vision, _boxingGloves);
   
 
 
@@ -87,6 +87,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     autoChooserInit();
+    
   }
 
   /**
@@ -236,7 +237,7 @@ public class RobotContainer {
 
   public void autoChooserInit() {
     String[] autoselector = {
-      "Blue Left", "Blue Center", "Blue Right", "Red Left", "Red Center", "Red Right"
+      "Left", "Center", "Right", "Left score mid", "Center score double", "Right score mid"
     };
     SmartDashboard.putStringArray("Auto List", autoselector);
   }

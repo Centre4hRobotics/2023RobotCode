@@ -47,7 +47,7 @@ public final class Autos {
       // .andThen(new DriveForDistance(driveTrain, 2, -.7))
       // .andThen(new Balance(driveTrain));
   }
-  public static SequentialCommandGroup scoreCenterExpiremental(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int node) throws Exception {
+  public static SequentialCommandGroup scoreCenterExperimental(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int node) throws Exception {
     double d = .7;
     return 
       scoreWithoutRetract(arm, gripper, ArmConstants.highPosition)
