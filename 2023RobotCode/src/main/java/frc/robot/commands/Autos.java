@@ -115,12 +115,13 @@ public final class Autos {
       // move to pos + gloves move
       .andThen(new ParallelDeadlineGroup(
         new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)),
-        new RaiseBoxingGloves(boxingGloves))
-          .andThen(new WaitCommand(.5)
-          .andThen(new LowerBoxingGloves(boxingGloves))))
+        new RaiseBoxingGloves(boxingGloves)
+          .andThen(new WaitCommand(.25))
+          .andThen(new LowerBoxingGloves(boxingGloves))
+      ))
       
       // turn grab and go back
-      .andThen(new TurnToAngle(driveTrain, FieldPoses.getTrueStagingPose(side, grid==0?0:3), 3).withTimeout(1.5))
+      .andThen(new TurnToAngle(driveTrain, 180, 3).withTimeout(1.5))
       .andThen(groundGrabWithMoveForward(driveTrain, groundControl, GamePiece.CUBE))
       .andThen(new ParallelDeadlineGroup(
         new TurnToAngle(driveTrain, FieldPoses.getAvoidChargingStationPose(side, grid==0, true), 5).withTimeout(1.5)
@@ -255,6 +256,32 @@ public final class Autos {
       .andThen(new WaitCommand(.5))
       .andThen(new ParallelDeadlineGroup(
         new DriveForDistance(driveTrain, .6, .55),
+        new Intake(groundControl, .4)))
+      .andThen(new RaiseGroundControl(groundControl))
+      .andThen(new WaitCommand(.5));
+    }
+  }
+
+  public static SequentialCommandGroup groundGrabWithSmallMoveForward(DriveTrain driveTrain, GroundControl groundControl, GamePiece piece) {
+    if (piece == GamePiece.CONE) {
+      return 
+      new LowerGroundControl(groundControl)
+      .andThen(new WaitCommand(.5))
+      .andThen(new ParallelDeadlineGroup(
+        new DriveForDistance(driveTrain, .25, .5),
+        new Intake(groundControl, .3)))
+      //.andThen(new DriveWithSpeed(driveTrain, .5).withTimeout(.85))//was .3, .4, .65
+      // .andThen(new FollowTrajectoryToPose(driveTrain, -.2, 0, .3))
+      .andThen(new CloseGroundControl(groundControl))
+      .andThen(new WaitCommand(.25))
+      .andThen(new RaiseGroundControl(groundControl))
+      .andThen(new WaitCommand(.5));
+    } else {
+      return 
+      new LowerGroundControl(groundControl)
+      .andThen(new WaitCommand(.5))
+      .andThen(new ParallelDeadlineGroup(
+        new DriveForDistance(driveTrain, .25, .55),
         new Intake(groundControl, .4)))
       .andThen(new RaiseGroundControl(groundControl))
       .andThen(new WaitCommand(.5));
