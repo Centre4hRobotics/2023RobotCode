@@ -241,7 +241,8 @@ public class RobotContainer {
 
   public void autoChooserInit() {
     String[] autoselector = {
-      "Left", "Center", "Right", "Left score mid", "Center score double", "Right score mid"
+      "Left", "Center", "Right", "Left score mid", "Center score double", "Right score mid",
+      "Punching Left", "Punching Center", "Punching Right", "Punching Left score mid", "Punching Center score double", "Punching Right score mid",
     };
     SmartDashboard.putStringArray("Auto List", autoselector);
   }

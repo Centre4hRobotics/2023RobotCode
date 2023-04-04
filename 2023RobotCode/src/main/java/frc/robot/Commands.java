@@ -26,12 +26,8 @@ public class Commands {
     private Vision _vision;
     private BoxingGloves _boxingGloves;
 
-    private Command left;
-    private Command center;
-    private Command right;
-    private Command leftMid;
-    private Command centerDouble;
-    private Command rightMid;
+    private Command left, center, right, leftMid, centerDouble, rightMid;
+    private Command leftPunching, centerPunching, rightPunching, leftMidPunching, centerDoublePunching, rightMidPunching;
     
 
     public Commands(DriveTrain driveTrain, GroundControl groundControl, Arm arm, Gripper gripper, Vision vision, BoxingGloves boxingGloves) {
@@ -42,12 +38,19 @@ public class Commands {
         _vision = vision;
         _boxingGloves = boxingGloves;
         try {
-            left = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 2, 2);
-            center = Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0);
-            right = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, 0);
-            leftMid = Autos.sideJeremiahAuto(_driveTrain, _arm, _gripper, _groundControl, _boxingGloves, FieldSide.LEFT, 2, 2);
-            centerDouble = Autos.scoreCenterExperimental(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0);
-            rightMid = Autos.sideJeremiahAuto(_driveTrain, _arm, _gripper, _groundControl, _boxingGloves, FieldSide.LEFT, 0, 0);
+            left = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 2, 2, _boxingGloves, false);
+            center = Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0, _boxingGloves, false);
+            right = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, 0, _boxingGloves, false);
+            leftMid = Autos.sideJeremiahAuto(_driveTrain, _arm, _gripper, _groundControl, _boxingGloves, FieldSide.LEFT, 2, 2, false);
+            centerDouble = Autos.scoreCenterExperimental(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, _boxingGloves, false);
+            rightMid = Autos.sideJeremiahAuto(_driveTrain, _arm, _gripper, _groundControl, _boxingGloves, FieldSide.LEFT, 0, 0, false);
+            
+            leftPunching = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 2, 2, _boxingGloves, true);
+            centerPunching = Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0, _boxingGloves, true);
+            rightPunching = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, 0, _boxingGloves, true);
+            leftMidPunching = Autos.sideJeremiahAuto(_driveTrain, _arm, _gripper, _groundControl, _boxingGloves, FieldSide.LEFT, 2, 2, true);
+            centerDoublePunching = Autos.scoreCenterExperimental(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, _boxingGloves, true);
+            rightMidPunching = Autos.sideJeremiahAuto(_driveTrain, _arm, _gripper, _groundControl, _boxingGloves, FieldSide.LEFT, 0, 0, true);
         }
         catch (Exception e) {
             NetworkTableInstance nt = NetworkTableInstance.getDefault();
@@ -86,6 +89,29 @@ public class Commands {
             case("Left score mid"):
                 _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 2));
                 return leftMid;
+            case("Punching Center"):
+                _driveTrain.resetGyro();
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 1, 0));
+                return centerPunching;
+            case("Punching Right"):
+                _driveTrain.resetGyro();
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
+                // return Autos.bottomAutoThree(_driveTrain, FieldSide.LEFT, 0, 0);
+                return rightPunching;
+            case("Punching Left"):
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 2));
+                return leftPunching;
+            case("Punching Center score double"):
+                _driveTrain.resetGyro();
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 1, 0));
+                return centerDoublePunching;
+            case("Punching Right score mid"):
+                _driveTrain.resetGyro();
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 0, 0));
+                return rightMidPunching;
+            case("Punching Left score mid"):
+                _driveTrain.resetOdometry(FieldPoses.getScoringPose(FieldSide.LEFT, 2, 2));
+                return leftMidPunching;
             default:    
                 return new StopDrive(_driveTrain);
             }

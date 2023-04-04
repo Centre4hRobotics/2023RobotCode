@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public final class Autos {  
 
-  public static SequentialCommandGroup scoreCenter(DriveTrain driveTrain, Arm arm, Gripper gripper, FieldSide side, int node) throws Exception {
+  public static SequentialCommandGroup scoreCenter(DriveTrain driveTrain, Arm arm, Gripper gripper, FieldSide side, int node, BoxingGloves boxingGloves, boolean isPunching) throws Exception {
     // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
     return 
       score(arm, gripper, ArmConstants.highPosition)
@@ -30,7 +30,8 @@ public final class Autos {
       .andThen(new DriveForDistance(driveTrain, 2, -.5))
       .andThen(new WaitCommand(1))
       .andThen(new DriveForDistance(driveTrain, 1.8, .7))
-      .andThen(new Balance(driveTrain));
+      .andThen(new Balance(driveTrain))
+      .andThen(isPunching ? punch(boxingGloves) : new WaitCommand(0));
       // .andThen(new GetOnChargingStation(driveTrain, .5, -1))
       // .andThen(new GetOffChargingStation(driveTrain, .5, -1))
       // .andThen(new DriveWithSpeed(driveTrain, -.5).withTimeout(1))
@@ -47,7 +48,7 @@ public final class Autos {
       // .andThen(new DriveForDistance(driveTrain, 2, -.7))
       // .andThen(new Balance(driveTrain));
   }
-  public static SequentialCommandGroup scoreCenterExperimental(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int node) throws Exception {
+  public static SequentialCommandGroup scoreCenterExperimental(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int node, BoxingGloves boxingGloves, boolean isPunching) throws Exception {
     double d = .7;
     return 
       scoreWithoutRetract(arm, gripper, ArmConstants.highPosition)
@@ -75,10 +76,10 @@ public final class Autos {
         new CloseGroundControl(groundControl),
         new Intake(groundControl, -1))
       ))
-      ;
+      .andThen(isPunching ? punch(boxingGloves) : new WaitCommand(0));
   }
 
-  public static CommandBase sideAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node) throws Exception {
+  public static CommandBase sideAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int grid, int node, BoxingGloves boxingGloves, boolean isPunching) throws Exception {
     double velocityCoefficient = .99;
     double angle=0;
     if(side==FieldSide.RIGHT) {
@@ -99,10 +100,11 @@ public final class Autos {
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.2))
       .andThen(new Intake(groundControl, -.9).withTimeout(0.08))
-      .andThen(new Intake(groundControl, -.285));
+      .andThen(new Intake(groundControl, -.285))
+      .andThen(isPunching ? punch(boxingGloves) : new WaitCommand(0));
   }
 
-  public static CommandBase sideJeremiahAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, BoxingGloves boxingGloves, FieldSide side, int grid, int node) throws Exception {
+  public static CommandBase sideJeremiahAuto(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, BoxingGloves boxingGloves, FieldSide side, int grid, int node, boolean isPunching) throws Exception {
     double velocityCoefficient = .99;
     double angle=0;
     if(side==FieldSide.RIGHT) {
@@ -115,9 +117,7 @@ public final class Autos {
       // move to pos + gloves move
       .andThen(new ParallelDeadlineGroup(
         new FollowTrajectory(driveTrain, Trajectories.generateScoreToStage(side, grid, node, grid==0?0:3, velocityCoefficient, angle, true)),
-        new RaiseBoxingGloves(boxingGloves)
-          .andThen(new WaitCommand(.25))
-          .andThen(new LowerBoxingGloves(boxingGloves))
+        isPunching ? punch(boxingGloves) : new WaitCommand(0)
       ))
       
       // turn grab and go back
@@ -188,6 +188,12 @@ public final class Autos {
       .andThen(new TurnToAngle(driveTrain, 20, 3).withTimeout(.5))
       .andThen(new FollowTrajectory(driveTrain, Trajectories.generateStageToScore(side, grid, 1, grid==0?0:3, velocityCoefficient, true)));
       
+  }
+
+  public static CommandBase punch(BoxingGloves boxingGloves) {
+    return new RaiseBoxingGloves(boxingGloves)
+      .andThen(new WaitCommand(.25))
+      .andThen(new LowerBoxingGloves(boxingGloves));
   }
 
   public static CommandBase balance(DriveTrain driveTrain) {
