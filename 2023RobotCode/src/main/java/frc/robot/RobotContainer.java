@@ -13,7 +13,6 @@ import frc.robot.commands.BasicBalance;
 import frc.robot.commands.CloseGripper;
 import frc.robot.commands.CloseGroundControl;
 import frc.robot.commands.ControlLights;
-import frc.robot.commands.DriveForDistance;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.Intake;
@@ -30,7 +29,6 @@ import frc.robot.commands.ResetArmEncoder;
 import frc.robot.commands.LockPosition;
 import frc.robot.commands.SetArmHeight;
 import frc.robot.commands.StopDrive;
-import frc.robot.commands.TurnSlow;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.commands.TurnWithJoystick;
 import frc.robot.commands.UpdateMovingOdometry;
@@ -140,7 +138,7 @@ public class RobotContainer {
     //Throw object
     seven.onTrue(new SequentialCommandGroup(
       new LowerGroundControl(_groundControl),
-      new WaitCommand(.27),
+      new WaitCommand(.2),
       new Intake(_groundControl, -1),
       new WaitCommand(1),
       new Intake(_groundControl, 0)
