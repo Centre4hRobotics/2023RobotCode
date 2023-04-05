@@ -22,7 +22,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.AprilTagPoses;
 import frc.robot.Constants.CameraPoses;
 
@@ -52,7 +51,7 @@ public class Vision extends SubsystemBase {
   private double latency;//Camera latency in seconds
   private long previousTime = 0;
   private double previousAngle = 0;
-  private int index;
+  private double previousVelocity = 0;
 
   private boolean _isCompBot;
   private final Arm _arm;
@@ -186,14 +185,16 @@ public class Vision extends SubsystemBase {
     //Get robot info
     DifferentialDriveWheelSpeeds wheelSpeeds = _driveTrain.getWheelSpeeds();
     double averageDriveVelocity = (wheelSpeeds.leftMetersPerSecond + wheelSpeeds.rightMetersPerSecond)/2.;
+    double averageDriveAceleration = (averageDriveVelocity-previousVelocity)/deltaTime;
+    previousVelocity = averageDriveVelocity;
     double currentAngle = _driveTrain.getAngle();
     double angleVelocity = (currentAngle-previousAngle)/deltaTime;
     previousAngle = currentAngle;
 
     //Update previous positions based on how the robot has traveled
     for(int i = 0; i<RAPoseX.size(); i++) {
-      RAPoseX.set(i, RAPoseX.get(i) + averageDriveVelocity*RAPoseCos.get(i)*deltaTime);
-      RAPoseY.set(i, RAPoseY.get(i) + averageDriveVelocity*RAPoseSin.get(i)*deltaTime);
+      RAPoseX.set(i, RAPoseX.get(i) + averageDriveVelocity*RAPoseCos.get(i)*deltaTime + averageDriveAceleration*RAPoseCos.get(i)*deltaTime*deltaTime/2.);
+      RAPoseY.set(i, RAPoseY.get(i) + averageDriveVelocity*RAPoseSin.get(i)*deltaTime + averageDriveAceleration*RAPoseSin.get(i)*deltaTime*deltaTime/2.);
 
       double newRotation = Math.atan2(RAPoseSin.get(i), RAPoseCos.get(i)) + angleVelocity/180*3.1415*deltaTime;
       RAPoseCos.set(i, Math.cos(newRotation));
@@ -231,8 +232,8 @@ public class Vision extends SubsystemBase {
 
 
           //Update running average with just-found data (based on latency)
-          RAPoseX.add(0, robotPose2d.getX() + averageDriveVelocity*CameraRotation.getCos()*latency);
-          RAPoseY.add(0, robotPose2d.getY() + averageDriveVelocity*CameraRotation.getSin()*latency);
+          RAPoseX.add(0, robotPose2d.getX() + averageDriveVelocity*CameraRotation.getCos()*latency + averageDriveAceleration*CameraRotation.getCos()*latency*latency/2.);
+          RAPoseY.add(0, robotPose2d.getY() + averageDriveVelocity*CameraRotation.getSin()*latency + averageDriveAceleration*CameraRotation.getSin()*latency*latency/2.);
           double latencyRotation = (CameraRotation.getDegrees() + angleVelocity*latency)/180*3.14159;
           RAPoseCos.add(0, Math.cos(latencyRotation));
           RAPoseSin.add(0, Math.sin(latencyRotation));
