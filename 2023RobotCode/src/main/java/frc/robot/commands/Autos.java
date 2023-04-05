@@ -100,7 +100,7 @@ public final class Autos {
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.2))
       .andThen(new Intake(groundControl, -.9).withTimeout(0.08))
-      .andThen(new Intake(groundControl, -.285))
+      .andThen(new Intake(groundControl, -.4))
       .andThen(isPunching ? punch(boxingGloves) : new WaitCommand(0));
   }
 
@@ -130,8 +130,7 @@ public final class Autos {
       // shooting sequence
       .andThen(new SequentialCommandGroup(
         new LowerGroundControl(groundControl),
-        new WaitCommand(.15),
-        new CloseGroundControl(groundControl),
+        new WaitCommand(.2),
         new Intake(groundControl, -1)));
     }
 

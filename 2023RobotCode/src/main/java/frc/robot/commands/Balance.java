@@ -100,10 +100,10 @@ public class Balance extends CommandBase {
     else if(pidValue<-maxVal) {
       pidValue=-maxVal;
     }
-    // pidValue*=speedCoeficient;
+    pidValue*=speedCoeficient;
     pidValue*=.9;
 
-    if(Math.abs(_driveTrain.getRoll())>5) {//Was 1
+    if(Math.abs(_driveTrain.getRoll())>1) {
       _driveTrain.arcadeDrive(pidValue, 0);//*speedCoef
     } else {
       _driveTrain.arcadeDrive(0, 0);
