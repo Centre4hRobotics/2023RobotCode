@@ -26,10 +26,14 @@ public final class Autos {
     // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
     return 
       score(arm, gripper, ArmConstants.highPosition)
-      .andThen(new DriveForDistance(driveTrain, 2, -.7))
+      .andThen(new DriveForDistance(driveTrain, .8, -.55))
+      .andThen(new WaitCommand(.5))
+      .andThen(new DriveForDistance(driveTrain, 2-.61, -.7))//.7
       .andThen(new DriveForDistance(driveTrain, 2, -.5))
       .andThen(new WaitCommand(1))
-      .andThen(new DriveForDistance(driveTrain, 1.8, .7))
+      .andThen(new DriveForDistance(driveTrain, .8, .5))
+      .andThen(new WaitCommand(.5))
+      .andThen(new DriveForDistance(driveTrain, 1.8-.7, .7))//.7
       .andThen(new Balance(driveTrain))
       .andThen(isPunching ? punch(boxingGloves) : new WaitCommand(0));
       // .andThen(new GetOnChargingStation(driveTrain, .5, -1))
@@ -55,10 +59,10 @@ public final class Autos {
         .andThen(((new SetArmHeight(arm, ArmConstants.retracted))
         .andThen(new LowerArm(arm)))
         .alongWith(new DriveForDistance(driveTrain, .25, -.5)
-        .andThen(new DriveForDistance(driveTrain, 1.75, -.7))))
-      .andThen(new DriveForDistance(driveTrain, 1.8, -.5))
+        .andThen(new DriveForDistance(driveTrain, 1.75, -.6))))//.7
+      .andThen(new DriveForDistance(driveTrain, 1.9, -.5))//1.8
       .andThen(new WaitCommand(.1))
-      .andThen(new TurnToAngle(driveTrain, 180, 5).withTimeout(1.75))
+      .andThen(new TurnToAngle(driveTrain, 180, 5).withTimeout(2))//1.75
       .andThen(new LowerGroundControl(groundControl))
       .andThen(new WaitCommand(.25))
       .andThen(new ParallelDeadlineGroup(new DriveForDistance(driveTrain, d, .9), new Intake(groundControl, .8)))
@@ -67,7 +71,7 @@ public final class Autos {
         new SequentialCommandGroup(
           new WaitCommand(.25),
           new TurnToAngle(driveTrain, 0, 5).withTimeout(1.5),
-          new DriveForDistance(driveTrain, d+2.2, .7)),
+          new DriveForDistance(driveTrain, d+2.4, .8)),//2.2, .7
         new Intake(groundControl, .4)))
       .andThen(new Balance(driveTrain)
       .alongWith(new SequentialCommandGroup(
