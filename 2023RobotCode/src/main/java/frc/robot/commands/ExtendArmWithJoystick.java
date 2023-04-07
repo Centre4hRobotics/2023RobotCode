@@ -41,7 +41,7 @@ public class ExtendArmWithJoystick extends CommandBase {
       wasPressedLastCycle = true;
     }
     else if(_joystick.getY() < -0.5) { //If joystick is pressed up
-      _arm.extendVolts(9);
+      _arm.extendVolts(12);
       wasPressedLastCycle = true;
     }
     else if(wasPressedLastCycle) {
