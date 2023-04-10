@@ -16,6 +16,7 @@ import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.GroundControl;
 import frc.robot.subsystems.Vision;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -52,6 +53,49 @@ public final class Autos {
       // .andThen(new DriveForDistance(driveTrain, 2, -.7))
       // .andThen(new Balance(driveTrain));
   }
+
+  public static SequentialCommandGroup scoreCenterOld(DriveTrain driveTrain, Arm arm, Gripper gripper, FieldSide side, int node, BoxingGloves boxingGloves, boolean isPunching) throws Exception {
+    // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
+    return 
+      score(arm, gripper, ArmConstants.highPosition)
+      .andThen(new DriveForDistance(driveTrain, 2, -.7))//.7
+      .andThen(new DriveForDistance(driveTrain, 2, -.5))
+      .andThen(new WaitCommand(1))
+      .andThen(new DriveForDistance(driveTrain, 1.8, .7))//.7
+      .andThen(new Balance(driveTrain))
+      .andThen(isPunching ? punch(boxingGloves) : new WaitCommand(0));
+  }
+
+  public static SequentialCommandGroup scoreCenterNoMobility(DriveTrain driveTrain, Arm arm, Gripper gripper, FieldSide side, int node, BoxingGloves boxingGloves, boolean isPunching) throws Exception {
+    // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
+    return 
+      score(arm, gripper, ArmConstants.highPosition)
+      //.andThen(new DriveForDistance(driveTrain, 2, -.7))
+      .andThen(new DriveForDistance(driveTrain, .2, -.5))
+      .andThen(new TurnToAngle(driveTrain, 35, 5).withTimeout(1.5))
+      // .andThen(new DriveForDistance(driveTrain, 2, -.7))
+      // .andThen(new WaitCommand(.5))
+      // .andThen(new DriveForDistance(driveTrain, .5, -.6))
+      .andThen(new LowerChargingStation(driveTrain))
+      .andThen(new Balance(driveTrain))
+      .andThen(isPunching ? punch(boxingGloves) : new WaitCommand(0));
+  }
+
+  public static SequentialCommandGroup scoreCenterWithRedo(DriveTrain driveTrain, Arm arm, Gripper gripper, FieldSide side, int node, BoxingGloves boxingGloves, boolean isPunching) throws Exception {
+    // new FollowTrajectory(driveTrain, Trajectories.generateScoreToCharge(side, 1, node, true))
+    return 
+      score(arm, gripper, ArmConstants.highPosition)
+      .andThen(new DriveForDistance(driveTrain, 0.4, -.6))
+      .andThen(new TurnToAngle(driveTrain, 160, 5).withTimeout(1.8))
+      .andThen(new LowerArm(arm))
+      .andThen(new SetArmHeight(arm, ArmConstants.lowPosition))
+      .andThen(new LowerChargingStation(driveTrain))
+      .andThen(new ParallelCommandGroup(
+        new Balance(driveTrain),
+        new SetArmHeight(arm, ArmConstants.retracted)
+      ));
+  }
+
   public static SequentialCommandGroup scoreCenterExperimental(DriveTrain driveTrain, Arm arm, Gripper gripper, GroundControl groundControl, FieldSide side, int node, BoxingGloves boxingGloves, boolean isPunching) throws Exception {
     double d = .7;
     return 
@@ -210,13 +254,13 @@ public final class Autos {
   public static SequentialCommandGroup score(Arm arm, Gripper gripper, double height){
     return
       new Log("Auto", "before set arm height")
-      .andThen(new SetArmHeight(arm, height)
+      .andThen(new SetArmHeight(arm, height).withTimeout(1.5)
         .alongWith(new WaitCommand(.25).andThen(new LowerArm(arm))))
       .andThen(new Log("Auto", "after set arm height"))
       .andThen(new OpenGripper(gripper))
       .andThen(new Log("Auto", "after open gripper"))
       .andThen(new WaitCommand(.15))//was .25
-      .andThen(new SetArmHeight(arm, ArmConstants.retracted))
+      .andThen(new SetArmHeight(arm, ArmConstants.retracted).withTimeout(1.5))
       .andThen(new RaiseArm(arm));
   }
   public static SequentialCommandGroup scoreWithoutRetract(Arm arm, Gripper gripper, double height){

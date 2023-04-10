@@ -5,14 +5,17 @@
 package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.FieldSide;
 import frc.robot.Constants.Offset;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoPickup;
+import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.BasicBalance;
 import frc.robot.commands.CloseGripper;
 import frc.robot.commands.CloseGroundControl;
 import frc.robot.commands.ControlLights;
+import frc.robot.commands.DriveForDistance;
 import frc.robot.commands.DriveWithJoysticks;
 import frc.robot.commands.ExtendArmWithJoystick;
 import frc.robot.commands.Intake;
@@ -206,6 +209,19 @@ public class RobotContainer {
     // l7.whileTrue(new BasicBalance(_driveTrain, .3, 1));
     // JoystickButton l8 = new JoystickButton(_leftDriveJoystick, 8);
     // l8.whileTrue(new Balance(_driveTrain));
+    JoystickButton l8 = new JoystickButton(_leftDriveJoystick, 8);
+    try{
+      l8.whileTrue(Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0, _boxingGloves, false));
+    } catch (Exception e) {
+      System.out.print(e.getMessage().toString());
+    }
+
+    JoystickButton l7 = new JoystickButton(_leftDriveJoystick, 7);
+    try{
+      l7.whileTrue(Autos.scoreCenterOld(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0, _boxingGloves, false));
+    } catch (Exception e) {
+      System.out.print(e.getMessage().toString());
+    }
     
 
 

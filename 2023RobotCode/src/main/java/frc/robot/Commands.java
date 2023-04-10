@@ -39,7 +39,8 @@ public class Commands {
         _boxingGloves = boxingGloves;
         try {
             left = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 2, 2, _boxingGloves, false);
-            center = Autos.scoreCenter(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0, _boxingGloves, false);
+            // center = Autos.scoreCenterWithRedo(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0, _boxingGloves, false);
+            center = Autos.scoreCenterNoMobility(_driveTrain, _arm, _gripper, FieldSide.LEFT, 0, _boxingGloves, false);
             right = Autos.sideAuto(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, 0, _boxingGloves, false);
             leftMid = Autos.sideJeremiahAuto(_driveTrain, _arm, _gripper, _groundControl, _boxingGloves, FieldSide.LEFT, 2, 2, false);
             centerDouble = Autos.scoreCenterExperimental(_driveTrain, _arm, _gripper, _groundControl, FieldSide.LEFT, 0, _boxingGloves, false);

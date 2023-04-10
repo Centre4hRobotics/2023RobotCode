@@ -101,7 +101,7 @@ public class Balance extends CommandBase {
       pidValue=-maxVal;
     }
     pidValue*=speedCoeficient;
-    pidValue*=.9;
+    pidValue*=.95;
 
     if(Math.abs(_driveTrain.getRoll())>1) {
       _driveTrain.arcadeDrive(pidValue, 0);//*speedCoef
